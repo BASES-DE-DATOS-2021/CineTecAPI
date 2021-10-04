@@ -1,0 +1,6 @@
+INSERT INTO public.employee(
+	branch_id, first_name, middle_name, first_surname, second_surname, birth_date, phone_number, username, password)
+	VALUES ('cinepolis', 'pedro', 'perico', 'mora', 'rojas', '5-12-1999', '88212212', 'pedro', 'perico');
+
+
+# Tiene que existir una branch con ese nombre
