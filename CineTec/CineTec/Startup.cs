@@ -1,21 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CineTec.Context;
-using Swashbuckle.SwaggerUi;
-using Swashbuckle.Swagger;
-using Swashbuckle;
-using Swashbuckle.Application;
 using Microsoft.OpenApi.Models;
 
 namespace CineTec
@@ -33,7 +22,9 @@ namespace CineTec
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            var connString = "Host=localhost;Username=admin;Password=admin;Database=cinetecdb";
+
+            // Instancia de clase PostgreSQLCOnfiguration.
+            var connString = Configuration.GetConnectionString("PostgreSQLConnection");
             services.AddDbContext<CRUDContext>(options => options.UseNpgsql(connString));
 
             //Register Swagger

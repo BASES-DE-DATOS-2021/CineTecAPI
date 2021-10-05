@@ -10,55 +10,54 @@ namespace CineTec.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentsController : ControllerBase
+    public class ProjectionsController : ControllerBase
     {
-
         private readonly CRUDContext _CRUDContext;
-        
-        public StudentsController(CRUDContext CRUDContext)
+
+        public ProjectionsController(CRUDContext CRUDContext)
         {
             _CRUDContext = CRUDContext;
         }
 
-
-        // GET: api/Students
+        // GET: api/Projections
         [HttpGet]
-        public IEnumerable<Student> Get()
+        public IEnumerable<Projection> Get()
         {
-            return _CRUDContext.Students;
+            return _CRUDContext.Projections;
         }
 
-        // GET api/Students/5
+        // GET api/Projections/5
         [HttpGet("{id}")]
-        public Student Get(int id)
+        public Projection Get(int id)
         {
-            return _CRUDContext.Students.SingleOrDefault(x => x.StudentId == id);
+            return _CRUDContext.Projections.SingleOrDefault(x => x.id == id);
         }
 
-        // POST api/Students
+        // POST api/Projections
         [HttpPost]
-        public void Post([FromBody] Student student)
+        public void Post([FromBody] Projection Projection)
         {
-            _CRUDContext.Students.Add(student);
+            _CRUDContext.Projections.Add(Projection);
             _CRUDContext.SaveChanges();
         }
 
-        // PUT api/Students/5
+        // PUT api/Projections/5
         [HttpPut("{id}")]
-        public void Put([FromBody] Student student)
+        public void Put(int id, [FromBody] Projection projection)
         {
-            _CRUDContext.Students.Update(student);
+            projection.id = id;
+            _CRUDContext.Projections.Update(projection);
             _CRUDContext.SaveChanges();
         }
 
-        // DELETE api/Students/5
+        // DELETE api/Projections/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            var item = _CRUDContext.Students.FirstOrDefault(x => x.StudentId == id);
+            var item = _CRUDContext.Projections.FirstOrDefault(x => x.id == id);
             if (item != null)
             {
-                _CRUDContext.Students.Remove(item);
+                _CRUDContext.Projections.Remove(item);
                 _CRUDContext.SaveChanges();
             }
         }

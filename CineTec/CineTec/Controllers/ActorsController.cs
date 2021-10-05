@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CineTec.Context;
 using CineTec.Models;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,55 +11,54 @@ namespace CineTec.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentsController : ControllerBase
+    public class ActorsController : ControllerBase
     {
-
         private readonly CRUDContext _CRUDContext;
-        
-        public StudentsController(CRUDContext CRUDContext)
+
+        public ActorsController(CRUDContext CRUDContext)
         {
             _CRUDContext = CRUDContext;
         }
 
-
-        // GET: api/Students
+        // GET: api/Actors
         [HttpGet]
-        public IEnumerable<Student> Get()
+        public IEnumerable<Actor> Get()
         {
-            return _CRUDContext.Students;
+            return _CRUDContext.Actors;
         }
 
-        // GET api/Students/5
+        // GET api/Actors/5
         [HttpGet("{id}")]
-        public Student Get(int id)
+        public Actor Get(int id)
         {
-            return _CRUDContext.Students.SingleOrDefault(x => x.StudentId == id);
+            return _CRUDContext.Actors.SingleOrDefault(x => x.id == id);
         }
 
-        // POST api/Students
+        // POST api/Actors
         [HttpPost]
-        public void Post([FromBody] Student student)
+        public void Post([FromBody] Actor actor)
         {
-            _CRUDContext.Students.Add(student);
+            _CRUDContext.Actors.Add(actor);
             _CRUDContext.SaveChanges();
         }
 
-        // PUT api/Students/5
+        // PUT api/Actors/5
         [HttpPut("{id}")]
-        public void Put([FromBody] Student student)
+        public void Put(int id, [FromBody] Actor actor)
         {
-            _CRUDContext.Students.Update(student);
+            actor.id = id;
+            _CRUDContext.Actors.Update(actor);
             _CRUDContext.SaveChanges();
         }
 
-        // DELETE api/Students/5
+        // DELETE api/Actors/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            var item = _CRUDContext.Students.FirstOrDefault(x => x.StudentId == id);
+            var item = _CRUDContext.Actors.FirstOrDefault(x => x.id == id);
             if (item != null)
             {
-                _CRUDContext.Students.Remove(item);
+                _CRUDContext.Actors.Remove(item);
                 _CRUDContext.SaveChanges();
             }
         }

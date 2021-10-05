@@ -10,55 +10,54 @@ namespace CineTec.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentsController : ControllerBase
+    public class MoviesController : ControllerBase
     {
-
         private readonly CRUDContext _CRUDContext;
-        
-        public StudentsController(CRUDContext CRUDContext)
+
+        public MoviesController(CRUDContext CRUDContext)
         {
             _CRUDContext = CRUDContext;
         }
 
-
-        // GET: api/Students
+        // GET: api/Movies
         [HttpGet]
-        public IEnumerable<Student> Get()
+        public IEnumerable<Movie> Get()
         {
-            return _CRUDContext.Students;
+            return _CRUDContext.Movies;
         }
 
-        // GET api/Students/5
+        // GET api/Movies/5
         [HttpGet("{id}")]
-        public Student Get(int id)
+        public Movie Get(int id)
         {
-            return _CRUDContext.Students.SingleOrDefault(x => x.StudentId == id);
+            return _CRUDContext.Movies.SingleOrDefault(x => x.id == id);
         }
 
-        // POST api/Students
+        // POST api/Movies
         [HttpPost]
-        public void Post([FromBody] Student student)
+        public void Post([FromBody] Movie movie)
         {
-            _CRUDContext.Students.Add(student);
+            _CRUDContext.Movies.Add(movie);
             _CRUDContext.SaveChanges();
         }
 
-        // PUT api/Students/5
+        // PUT api/Movies/5
         [HttpPut("{id}")]
-        public void Put([FromBody] Student student)
+        public void Put(int id, [FromBody] Movie movie)
         {
-            _CRUDContext.Students.Update(student);
+            movie.id = id;
+            _CRUDContext.Movies.Update(movie);
             _CRUDContext.SaveChanges();
         }
 
-        // DELETE api/Students/5
+        // DELETE api/Movies/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            var item = _CRUDContext.Students.FirstOrDefault(x => x.StudentId == id);
+            var item = _CRUDContext.Movies.FirstOrDefault(x => x.id == id);
             if (item != null)
             {
-                _CRUDContext.Students.Remove(item);
+                _CRUDContext.Movies.Remove(item);
                 _CRUDContext.SaveChanges();
             }
         }

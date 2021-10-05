@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using CineTec.Context;
 using CineTec.Models;
 
@@ -28,11 +26,11 @@ namespace CineTec.Controllers
             return _CRUDContext.Branches;
         }
 
-        // GET api/Branches/5
-        [HttpGet("{id}")]
-        public Branch Get(string id)
+        // GET api/Branches/Cinectec Cartago
+        [HttpGet("{cinema_name}")]
+        public Branch Get(string cinema_name)
         {
-            return _CRUDContext.Branches.SingleOrDefault(x => x.cinema_name == id);
+            return _CRUDContext.Branches.SingleOrDefault(x => x.cinema_name == cinema_name);
         }
 
         // POST api/Branches
@@ -43,19 +41,20 @@ namespace CineTec.Controllers
             _CRUDContext.SaveChanges();
         }
 
-        // PUT api/Branches/5
-        [HttpPut("{id}")]
-        public void Put([FromBody] Branch branch)
+        // PUT api/Branches/Cinectec Cartago
+        [HttpPut("{cinema_name}")]
+        public void Put(string cinema_name, [FromBody] Branch branch)
         {
+            branch.cinema_name = cinema_name;
             _CRUDContext.Branches.Update(branch);
             _CRUDContext.SaveChanges();
         }
 
-        // DELETE api/Branches/5
-        [HttpDelete("{id}")]
-        public void Delete(string id)
+        // DELETE api/Branches/Cinectec Cartago
+        [HttpDelete("{cinema_name}")]
+        public void Delete(string cinema_name)
         {
-            var item = _CRUDContext.Branches.FirstOrDefault(x => x.cinema_name == id);
+            var item = _CRUDContext.Branches.FirstOrDefault(x => x.cinema_name == cinema_name);
             if (item != null)
             {
                 _CRUDContext.Branches.Remove(item);

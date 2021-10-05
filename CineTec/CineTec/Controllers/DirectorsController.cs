@@ -10,55 +10,55 @@ namespace CineTec.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentsController : ControllerBase
+    public class DirectorsController : ControllerBase
     {
-
         private readonly CRUDContext _CRUDContext;
-        
-        public StudentsController(CRUDContext CRUDContext)
+
+        public DirectorsController(CRUDContext CRUDContext)
         {
             _CRUDContext = CRUDContext;
         }
 
-
-        // GET: api/Students
+        // GET: api/Directors
         [HttpGet]
-        public IEnumerable<Student> Get()
+        public IEnumerable<Director> Get()
         {
-            return _CRUDContext.Students;
+            return _CRUDContext.Directors;
         }
 
-        // GET api/Students/5
+        // GET api/Directors/5
         [HttpGet("{id}")]
-        public Student Get(int id)
+        public Director Get(int id)
         {
-            return _CRUDContext.Students.SingleOrDefault(x => x.StudentId == id);
+            return _CRUDContext.Directors.SingleOrDefault(x => x.id == id);
         }
 
-        // POST api/Students
+        // POST api/Directors
         [HttpPost]
-        public void Post([FromBody] Student student)
+        public void Post([FromBody] Director director)
         {
-            _CRUDContext.Students.Add(student);
+            _CRUDContext.Directors.Add(director);
             _CRUDContext.SaveChanges();
         }
 
-        // PUT api/Students/5
+        // PUT api/Directors/5
         [HttpPut("{id}")]
-        public void Put([FromBody] Student student)
+        public void Put(int id, [FromBody] Director director)
         {
-            _CRUDContext.Students.Update(student);
+            director.id = id;
+            _CRUDContext.Directors.Update(director);
             _CRUDContext.SaveChanges();
         }
 
-        // DELETE api/Students/5
+
+        // DELETE api/Directors/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            var item = _CRUDContext.Students.FirstOrDefault(x => x.StudentId == id);
+            var item = _CRUDContext.Directors.FirstOrDefault(x => x.id == id);
             if (item != null)
             {
-                _CRUDContext.Students.Remove(item);
+                _CRUDContext.Directors.Remove(item);
                 _CRUDContext.SaveChanges();
             }
         }

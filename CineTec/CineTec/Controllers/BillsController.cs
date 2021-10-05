@@ -10,55 +10,54 @@ namespace CineTec.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentsController : ControllerBase
+    public class BillsController : ControllerBase
     {
-
         private readonly CRUDContext _CRUDContext;
-        
-        public StudentsController(CRUDContext CRUDContext)
+
+        public BillsController(CRUDContext CRUDContext)
         {
             _CRUDContext = CRUDContext;
         }
 
-
-        // GET: api/Students
+        // GET: api/Bills
         [HttpGet]
-        public IEnumerable<Student> Get()
+        public IEnumerable<Bill> Get()
         {
-            return _CRUDContext.Students;
+            return _CRUDContext.Bills;
         }
 
-        // GET api/Students/5
+        // GET api/Bills/5
         [HttpGet("{id}")]
-        public Student Get(int id)
+        public Bill Get(int id)
         {
-            return _CRUDContext.Students.SingleOrDefault(x => x.StudentId == id);
+            return _CRUDContext.Bills.SingleOrDefault(x => x.id == id);
         }
 
-        // POST api/Students
+        // POST api/Bills
         [HttpPost]
-        public void Post([FromBody] Student student)
+        public void Post([FromBody] Bill bill)
         {
-            _CRUDContext.Students.Add(student);
+            _CRUDContext.Bills.Add(bill);
             _CRUDContext.SaveChanges();
         }
 
-        // PUT api/Students/5
+        // PUT api/Bills/5
         [HttpPut("{id}")]
-        public void Put([FromBody] Student student)
+        public void Put(int id, [FromBody] Bill bill)
         {
-            _CRUDContext.Students.Update(student);
+            bill.id = id;
+            _CRUDContext.Bills.Update(bill);
             _CRUDContext.SaveChanges();
         }
 
-        // DELETE api/Students/5
+        // DELETE api/Bills/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            var item = _CRUDContext.Students.FirstOrDefault(x => x.StudentId == id);
+            var item = _CRUDContext.Bills.FirstOrDefault(x => x.id == id);
             if (item != null)
             {
-                _CRUDContext.Students.Remove(item);
+                _CRUDContext.Bills.Remove(item);
                 _CRUDContext.SaveChanges();
             }
         }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CineTec.Models
 {
-    public class Employee
+    public class Client
     {
         [Key]
         public int cedula { get; set; }
@@ -19,9 +19,6 @@ namespace CineTec.Models
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public int age { get; set; }
-
-        [ForeignKey("Branch")]
-        public string branch_id { get; set; }
     }
 }
  

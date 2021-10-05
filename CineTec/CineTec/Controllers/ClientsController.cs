@@ -10,54 +10,54 @@ namespace CineTec.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeesController : ControllerBase
+    public class ClientsController : ControllerBase
     {
         private readonly CRUDContext _CRUDContext;
 
-        public EmployeesController(CRUDContext CRUDContext)
+        public ClientsController(CRUDContext CRUDContext)
         {
             _CRUDContext = CRUDContext;
         }
 
-        // GET: api/Employees
+        // GET: api/Clients
         [HttpGet]
-        public IEnumerable<Employee> Get()
+        public IEnumerable<Client> Get()
         {
-            return _CRUDContext.Employees;
+            return _CRUDContext.Clients;
         }
 
-        // GET api/Employees/5
+        // GET api/Clients/5
         [HttpGet("{cedula}")]
-        public Employee Get(int cedula)
+        public Client Get(int cedula)
         {
-            return _CRUDContext.Employees.SingleOrDefault(x => x.cedula == cedula);
+            return _CRUDContext.Clients.SingleOrDefault(x => x.cedula == cedula);
         }
 
-        // POST api/Employees
+        // POST api/Clients
         [HttpPost]
-        public void Post([FromBody] Employee employee)
+        public void Post([FromBody] Client client)
         {
-            _CRUDContext.Employees.Add(employee);
+            _CRUDContext.Clients.Add(client);
             _CRUDContext.SaveChanges();
         }
 
-        // PUT api/Employees/5
+        // PUT api/Clients/5
         [HttpPut("{cedula}")]
-        public void Put(int cedula, [FromBody] Employee employee)
+        public void Put(int cedula, [FromBody] Client client)
         {
-            employee.cedula = cedula;
-            _CRUDContext.Employees.Update(employee);
+            client.cedula = cedula;
+            _CRUDContext.Clients.Update(client);
             _CRUDContext.SaveChanges();
         }
 
-        // DELETE api/Employees/5
+        // DELETE api/Clients/5
         [HttpDelete("{cedula}")]
         public void Delete(int cedula)
         {
-            var item = _CRUDContext.Employees.FirstOrDefault(x => x.cedula == cedula);
+            var item = _CRUDContext.Clients.FirstOrDefault(x => x.cedula == cedula);
             if (item != null)
             {
-                _CRUDContext.Employees.Remove(item);
+                _CRUDContext.Clients.Remove(item);
                 _CRUDContext.SaveChanges();
             }
         }

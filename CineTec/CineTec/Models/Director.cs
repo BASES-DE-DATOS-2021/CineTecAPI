@@ -3,14 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CineTec.Models
 {
-    public class Student
+    public class Director
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-
-        public int StudentId { get; set; }
-        public string Name { get; set; }
-        public string Roll { get; set; }
-
+        public int id { get; set; }
+        public string name { get; set; }
     }
 }

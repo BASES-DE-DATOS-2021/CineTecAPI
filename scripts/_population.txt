@@ -1,0 +1,93 @@
+-- Populacion de Sucursales
+INSERT INTO public."Branches"(
+	cinema_name, province, district, room_quantity)
+	VALUES ('Cinetec San Pedro', 'San Jose', 'San Pedro', '6');
+	
+INSERT INTO public."Branches"(
+	cinema_name, province, district, room_quantity)
+	VALUES ('Cinetec Escazu', 'San Jose', 'Escazu', '7');
+	
+INSERT INTO public."Branches"(
+	cinema_name, province, district, room_quantity)
+	VALUES ('Cinetec San Vito', 'Puntarenas', 'San Vito', '4');
+	
+INSERT INTO public."Branches"(
+	cinema_name, province, district, room_quantity)
+	VALUES ('Cinetec Limon', 'Limon', 'Roosevelt', '4');
+
+INSERT INTO public."Branches"(
+	cinema_name, province, district, room_quantity)
+	VALUES ('Cinetec Cartago', 'Cartago', 'Cartago', '6');
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+-- Populacion de Empleados
+INSERT INTO public."Employees"(
+	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, phone_number, username, password)
+	VALUES ('Cinetec San Pedro', 117920956, 'Michael', 'Shakime', 'Richards', 'Sparks', '10/21/2000', 22489340, 'Jeykime', 2100);
+
+INSERT INTO public."Employees"(
+	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, phone_number, username, password)
+	VALUES ('Cinetec San Vito', 34809322, 'Carlos', 'Adrian', 'Araya', 'Ramirez', '07/05/1999', 89573290, 'Heutlet', 1234);
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- Populacion de Clientes
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- Populacion de Rooms
+INSERT INTO public."Rooms"(
+	branch_name, row_quantity, column_quantity)
+	VALUES ('Cinetec San Pedro', 10, 10);
+	
+INSERT INTO public."Rooms"(
+	branch_name, row_quantity, column_quantity)
+	VALUES ('Cinetec Cartago', 5, 5);
+
+INSERT INTO public."Rooms"(
+	branch_name, row_quantity, column_quantity)
+	VALUES ('Cinetec San Vito', 2, 2);
+
+INSERT INTO public."Rooms"(
+	branch_name, row_quantity, column_quantity)
+	VALUES ('Cinetec Escazu', 4, 4);
+
+INSERT INTO public."Rooms"(
+	branch_name, row_quantity, column_quantity)
+	VALUES ('Cinetec Limon', 5, 5);
+	
+	
+------------------------------------------------------------------------------------------------------------------------------------
+-- Populacion de Seats
+INSERT INTO public."Seats"(
+	room_id, "number", status)
+	VALUES (0, 1, 'COVID');
+INSERT INTO public."Seats"(
+	room_id, "number", status)
+	VALUES (0, 2, 'EMPTY');
+INSERT INTO public."Seats"(
+	room_id, "number", status)
+	VALUES (0, 3, 'TAKEN');
+	
+INSERT INTO public."Seats"(
+	room_id, "number", status)
+	VALUES (1, 1, 'TAKEN');
+INSERT INTO public."Seats"(
+	room_id, "number", status)
+	VALUES (1, 2, 'EMPTY');
+INSERT INTO public."Seats"(
+	room_id, "number", status)
+	VALUES (1, 3, 'EMPTY');
+	
+INSERT INTO public."Seats"(
+	room_id, "number", status)
+	VALUES (2, 1, 'TAKEN');
+INSERT INTO public."Seats"(
+	room_id, "number", status)
+	VALUES (2, 2, 'COVID');
+INSERT INTO public."Seats"(
+	room_id, "number", status)
+	VALUES (2, 3, 'EMPTY');
+	
