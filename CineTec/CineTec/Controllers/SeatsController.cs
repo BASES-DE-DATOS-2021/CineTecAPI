@@ -28,12 +28,13 @@ namespace CineTec.Controllers
 
         // GET api/Seats/byId?room_id=a&number=b
         [HttpGet("byId")]
-        public Seat Get(int number, int room_id)
+        public Seat Get(int room_id, int number)
         {
             return _CRUDContext.Seats
                         .Where(f => f.number == number && f.room_id == room_id)
                         .FirstOrDefault();
         }
+
 
         // POST api/Seats
         [HttpPost]
@@ -47,19 +48,15 @@ namespace CineTec.Controllers
         [HttpPut("byId")]
         public void Put(int room_id, int number, [FromBody] Seat Seat)
         {
-            //var item = _CRUDContext.Seats
-            //        .Where(f => f.number == number && f.room_id == room_id)
-            //        .FirstOrDefault();
             Seat.room_id = room_id;
             Seat.number = number;
-            
             _CRUDContext.Seats.Update(Seat);
             _CRUDContext.SaveChanges();
         }
 
         // DELETE api/Seats/byId?room_id=a&number=b
         [HttpDelete("byId")]
-        public void Delete(int number, int room_id)
+        public void Delete(int room_id, int number)
         {
             var item = _CRUDContext.Seats
                         .Where(f => f.number == number && f.room_id == room_id)

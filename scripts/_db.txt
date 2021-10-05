@@ -57,7 +57,8 @@ CREATE TABLE "Seats"
 (
 	room_id 			INT NOT NULL,
     number 				INT NOT NULL,
-	status		 		VARCHAR(30) NOT NULL
+	status		 		VARCHAR(30) NOT NULL,
+	PRIMARY KEY(room_id, number)
 );
 
 CREATE TABLE "Bills"
@@ -113,7 +114,8 @@ CREATE TABLE "Classifications"
 CREATE TABLE "Acts"
 (
 	movie_id		INT NOT NULL,
-	actor_id		INT NOT NULL
+	actor_id		INT NOT NULL,
+	PRIMARY KEY(movie_id, actor_id)
 );
 
 

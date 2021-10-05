@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CineTec.Context;
 using CineTec.Models;
+
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CineTec.Controllers
@@ -38,6 +39,11 @@ namespace CineTec.Controllers
         {
             _CRUDContext.Rooms.Add(room);
             _CRUDContext.SaveChanges();
+
+            // Llena una sala con la cantidad de sillas que debe tener. Todas estan vacias.
+            SeatsController seatControl = new SeatsController(_CRUDContext);
+            for (int i = 1; i < room.capacity; i++)
+                seatControl.Post(new Seat(room.id, i, "EMPTY"));
         }
 
         // PUT api/Rooms/5
@@ -56,8 +62,15 @@ namespace CineTec.Controllers
             var item = _CRUDContext.Rooms.FirstOrDefault(x => x.id == id);
             if (item != null)
             {
+
+                // Elimina las sillas de una sala.
+                SeatsController seatControl = new SeatsController(_CRUDContext);
+                for (int i = 0; i < item.capacity; i++)
+                    seatControl.Delete(item.id, i+1);
+
                 _CRUDContext.Rooms.Remove(item);
                 _CRUDContext.SaveChanges();
+            
             }
         }
     }

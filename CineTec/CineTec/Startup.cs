@@ -22,6 +22,7 @@ namespace CineTec
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddControllers().AddControllersAsServices();
 
             // Instancia de clase PostgreSQLCOnfiguration.
             var connString = Configuration.GetConnectionString("PostgreSQLConnection");

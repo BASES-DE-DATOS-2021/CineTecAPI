@@ -69,25 +69,62 @@ INSERT INTO public."Seats"(
 	VALUES (0, 2, 'EMPTY');
 INSERT INTO public."Seats"(
 	room_id, "number", status)
-	VALUES (0, 3, 'TAKEN');
+	VALUES (0, 3, 'EMPTY');
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- Populacion de Classification
+
+INSERT INTO public."Classifications"(
+	code, details, age_rating)
+	VALUES ('G','General Audiences', -1);
+INSERT INTO public."Classifications"(
+	code, details, age_rating)
+	VALUES ('PG','Parental Guidance Suggested', 15);
+INSERT INTO public."Classifications"(
+	code, details, age_rating)
+	VALUES ('PG-13','Parents Strongly Cautioned', 13);
+INSERT INTO public."Classifications"(
+	code, details, age_rating)
+	VALUES ('R','Restricted', 17);
+INSERT INTO public."Classifications"(
+	code, details, age_rating)
+	VALUES ('NC-17','Adults Only', 18);
+INSERT INTO public."Classifications"(
+	code, details, age_rating)
+	VALUES ('T','Test', 123);
 	
-INSERT INTO public."Seats"(
-	room_id, "number", status)
-	VALUES (1, 1, 'TAKEN');
-INSERT INTO public."Seats"(
-	room_id, "number", status)
-	VALUES (1, 2, 'EMPTY');
-INSERT INTO public."Seats"(
-	room_id, "number", status)
-	VALUES (1, 3, 'EMPTY');
 	
-INSERT INTO public."Seats"(
-	room_id, "number", status)
-	VALUES (2, 1, 'TAKEN');
-INSERT INTO public."Seats"(
-	room_id, "number", status)
-	VALUES (2, 2, 'COVID');
-INSERT INTO public."Seats"(
-	room_id, "number", status)
-	VALUES (2, 3, 'EMPTY');
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- Populacion de Directores
+INSERT INTO public."Directors"(
+	name)
+	VALUES ('Pablo Neruda');
+INSERT INTO public."Directors"(
+	name)
+	VALUES ('Pablo Kokemper');
+INSERT INTO public."Directors"(
+	name)
+	VALUES ('Lucas Montoya');
+INSERT INTO public."Directors"(
+	name)
+	VALUES ('Adolf Hitler');
+	
+	
+------------------------------------------------------------------------------------------------------------------------------------
+-- Populacion de Movies
+INSERT INTO public."Movies"(
+	classification_id, director_id, image, original_name, name, length)
+	VALUES ('R', 1, 'purge.jpg', 'The Purge', 'La Purga', '2:05');
+INSERT INTO public."Movies"(
+	classification_id, director_id, image, original_name, name, length)
+	VALUES ('NC-17', 0, '007.jpg', '007', 'Sin tiempo para morir', '1:45');
+INSERT INTO public."Movies"(
+	classification_id, director_id, image, original_name, name, length)
+	VALUES ('G', 2, 'jungle.png', 'Jungle Cruise', 'El secreto de la jungla', '2:10');
+	
+------------------------------------------------------------------------------------------------------------------------------------
+-- Populacion de Projections
+
+
 	

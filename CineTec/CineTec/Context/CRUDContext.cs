@@ -24,5 +24,17 @@ namespace CineTec.Context
         public DbSet<Acts> ActsIn { get; set; }
         public DbSet<Actor> Actors { get; set; }
 
+
+        // we override the OnModelCreating method here.
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Seat>()
+                .HasKey(s => new { s.room_id, s.number });
+
+            modelBuilder.Entity<Acts>()
+                .HasKey(a => new { a.movie_id, a.actors_id });
+        }
+
     }
+
 }
