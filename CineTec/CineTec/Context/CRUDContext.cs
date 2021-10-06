@@ -32,7 +32,7 @@ namespace CineTec.Context
                 .HasKey(s => new { s.room_id, s.number });
 
             modelBuilder.Entity<Acts>()
-                .HasKey(a => new { a.movie_id, a.actors_id });
+                .HasKey(a => new { a.movie_id, a.actor_id });
         }
 
     }
