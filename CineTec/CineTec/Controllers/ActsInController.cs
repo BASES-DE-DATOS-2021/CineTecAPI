@@ -28,12 +28,12 @@ namespace CineTec.Controllers
             return _CRUDContext.ActsIn;
         }
 
-        // GET api/ActsIn/actsIn?movie_id=a&actors_id=b
+        // GET api/ActsIn/actsIn?movie_id=a&actor_id=b
         [HttpGet("actsIn")]
-        public Acts Get(int movie_id, int[] actor_id)
+        public Acts Get(int movie_id, int actor_id)
         {
             return _CRUDContext.ActsIn
-                    .Where(f => f.movie_id == movie_id && f.actors_id == actor_id)
+                    .Where(f => f.movie_id == movie_id && f.actor_id == actor_id)
                     .FirstOrDefault();
         }
 
@@ -45,22 +45,22 @@ namespace CineTec.Controllers
             _CRUDContext.SaveChanges();
         }
 
-        // PUT api/ActsIn/actsIn?movie_id=a&actors_id=b
-        [HttpPut("{actsIn}")]
-        public void Put(int movie_id, int[] actor_id, [FromBody] Acts acts)
+        // PUT api/ActsIn/actsIn?movie_id=a&actor_id=b
+        [HttpPut("actsIn")]
+        public void Put(int movie_id, int actor_id, [FromBody] Acts acts)
         {
             acts.movie_id = movie_id;
-            acts.actors_id = actor_id;
+            acts.actor_id = actor_id;
             _CRUDContext.ActsIn.Update(acts);
             _CRUDContext.SaveChanges();
         }
 
-        // DELETE api/ActsIn/actsIn?movie_id=a&actors_id=b
+        // DELETE api/ActsIn/actsIn?movie_id=a&actor_id=b
         [HttpDelete("actsIn")]
-        public void Delete(int movie_id, int[] actor_id)
+        public void Delete(int movie_id, int actor_id)
         {
             var item = _CRUDContext.ActsIn
-                        .Where(f => f.movie_id == movie_id && f.actors_id == actor_id)
+                        .Where(f => f.movie_id == movie_id && f.actor_id == actor_id)
                         .FirstOrDefault();
 
             if (item != null)

@@ -11,6 +11,6 @@ namespace CineTec.Models
         public int movie_id { get; set; }
 
         [ForeignKey("Actor")]
-        public int[] actors_id { get; set; }
+        public int actor_id { get; set; }
     }
 }
