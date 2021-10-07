@@ -40,13 +40,13 @@ namespace CineTec.Controllers
 
             //BranchesController branchControl = new BranchesController(_CRUDContext);
             //if (branchControl.EvalRooms(room.branch_name);
-            _CRUDContext.Branches.
+            //_CRUDContext.Branches.
             _CRUDContext.Rooms.Add(room);
             _CRUDContext.SaveChanges();
 
             // Llena una sala con la cantidad de sillas que debe tener. Todas estan vacias.
             SeatsController seatControl = new SeatsController(_CRUDContext);
-            for (int i = 1; i < room.capacity+1; i++)
+            for (int i = 1; i < room.capacity + 1; i++)
                 seatControl.Post(new Seat(room.id, i, "EMPTY"));
         }
 
@@ -59,40 +59,13 @@ namespace CineTec.Controllers
             _CRUDContext.SaveChanges();
         }
 
+
         // DELETE api/Rooms/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            var room = _CRUDContext.Rooms.FirstOrDefault(x => x.id == id);
-            if (room != null)
-            {
-                //// Elimina las sillas de una sala.
-                SeatsController seatControl = new SeatsController(_CRUDContext);
-                for (int i = 1; i < room.capacity + 1; i++)
-                    seatControl.Delete(room.id, i);
-
-                _CRUDContext.Rooms.Remove(room);
-                _CRUDContext.SaveChanges();
-            }
+            _CRUDContext.Delete_room_and_seats(id);
         }
 
-
-        //// DELETE ALL ROOMS FROM A BRANCH
-        //public void Delete_from_branch(string cinema_name)
-        //{
-        //    var query = from r in _CRUDContext.Rooms
-        //                where r.branch_name == cinema_name
-        //                select r;
-
-        //    if (query != null)
-        //    {
-        //        // Elimina cada sala donde el nombre de sucursal coincida.
-        //        foreach (Room room in query)
-        //        {
-        //            Delete(room.id);
-        //        }
-        //        _CRUDContext.SaveChanges();
-        //    }
-        //}
-    }
+    } 
 }

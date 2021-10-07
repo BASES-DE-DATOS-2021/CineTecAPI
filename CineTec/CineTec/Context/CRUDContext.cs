@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using CineTec.Models;
+using System.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace CineTec.Context
 {
@@ -37,7 +40,8 @@ namespace CineTec.Context
                 .HasKey(a => new { a.movie_id, a.actor_id });
         }
 
-        private bool EvalRooms(string cinema_name)
+        // 
+        public bool Evaluate_if_its_space_for_new_room_in_branch(string cinema_name)
         {
             var branch = Branches.SingleOrDefaultAsync(x => x.cinema_name == cinema_name);
             if (branch != null)
@@ -56,6 +60,53 @@ namespace CineTec.Context
             }
             return false;
         }
+
+
+        // Elimina las salas de una sucursal y luego elimina la sucursal misma.
+        public void Delete_cinema_and_rooms(string cinema_name)
+        {
+            var branch = Branches.FirstOrDefault(b => b.cinema_name == cinema_name);
+            if (branch != null)
+            {
+                var query = from b in Branches
+                        .Where(b => b.cinema_name == cinema_name)
+                            join room in Rooms
+                                on b.cinema_name equals room.branch_name
+                            join seat in Seats
+                                on room.id equals seat.room_id
+                            select new { room, seat };
+
+                var queryRoom = from t in query
+                                select t.room;
+
+                var querySeat = from t in query
+                                select t.seat;
+
+                Seat[] s = querySeat.ToArray();
+                Room[] r = queryRoom.ToArray();
+
+                Seats.RemoveRange(s);
+                SaveChanges();
+                Rooms.RemoveRange(r);
+                SaveChanges();
+                Branches.Remove(branch);
+                SaveChanges();
+            }
+        }
+
+        // Elimina las sillas de una sala y luego elimina la sala misma.
+        public void Delete_room_and_seats(int id)
+        {
+            var room = Rooms.FirstOrDefault(x => x.id == id);
+            if (room != null)
+            {
+                Seats.RemoveRange(Seats.Where(x => x.room_id == id));
+            }
+            Rooms.Remove(room);
+            SaveChanges();
+        }
+
+
 
     }
 

@@ -65,33 +65,13 @@ namespace CineTec.Controllers
             _CRUDContext.SaveChanges();
         }
 
-        
-
-
-
-
-
 
         // DELETE api/Branches/Cinectec Cartago
         [HttpDelete("{cinema_name}")]
         public void Delete(string cinema_name)
         {
-            var item = _CRUDContext.Branches.FirstOrDefault(x => x.cinema_name == cinema_name);
-            if (item != null)
-            {
-                //// Elimina las salas de una sucursal.
-                //RoomsController roomControl = new RoomsController(_CRUDContext);
-                //var rooms = _CRUDContext.Rooms
-                //    .Where(r => r.branch_name == cinema_name);
-                //_CRUDContext.SaveChanges();
-                //foreach (Room room in rooms) {
-                //    roomControl.Delete(room.id);
-                //}
-
-                _CRUDContext.Branches.Remove(item);
-                _CRUDContext.SaveChanges();
-
-            }
+            _CRUDContext.Delete_cinema_and_rooms(cinema_name);
         }
+
     }
 }
