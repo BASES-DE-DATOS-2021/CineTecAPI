@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using CineTec.Context;
 using CineTec.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -33,21 +35,31 @@ namespace CineTec.Controllers
             return _CRUDContext.Rooms.SingleOrDefault(x => x.id == id);
         }
 
+        // GET api/Rooms/all_seats?cinema_name=a&room_id=b
+        [HttpGet("all_seats")]
+        public IList<Seat> Get_all_seats(string cinema_name, int room_id)
+        {
+            return _CRUDContext.Get_all_seats_of_a_room(cinema_name, room_id);
+        }
+
+
         // POST api/Rooms
         [HttpPost]
         public void Post([FromBody] Room room)
         {
-
-            //BranchesController branchControl = new BranchesController(_CRUDContext);
-            //if (branchControl.EvalRooms(room.branch_name);
-            //_CRUDContext.Branches.
-            _CRUDContext.Rooms.Add(room);
-            _CRUDContext.SaveChanges();
-
-            // Llena una sala con la cantidad de sillas que debe tener. Todas estan vacias.
-            SeatsController seatControl = new SeatsController(_CRUDContext);
-            for (int i = 1; i < room.capacity + 1; i++)
-                seatControl.Post(new Seat(room.id, i, "EMPTY"));
+            try
+            {
+                if (_CRUDContext.Evaluate_if_its_space_for_new_room_in_a_branch(room.branch_name))
+                {
+                    _CRUDContext.Rooms.Add(room);
+                    _CRUDContext.SaveChanges();
+                    _CRUDContext.Add_room_seats(room.id, room.capacity);
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                Console.WriteLine(e.GetType()); // what is the real exception?
+            }
         }
 
         // PUT api/Rooms/5
@@ -66,6 +78,8 @@ namespace CineTec.Controllers
         {
             _CRUDContext.Delete_room_and_seats(id);
         }
+
+
 
     } 
 }

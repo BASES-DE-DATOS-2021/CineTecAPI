@@ -40,26 +40,60 @@ namespace CineTec.Context
                 .HasKey(a => new { a.movie_id, a.actor_id });
         }
 
-        // 
-        public bool Evaluate_if_its_space_for_new_room_in_branch(string cinema_name)
+        // Llena una sala con la cantidad de sillas que debe tener. Todas estan vacias.
+        public void Add_room_seats(int id, int capacity)
         {
-            var branch = Branches.SingleOrDefaultAsync(x => x.cinema_name == cinema_name);
+            for (int i = 1; i < capacity + 1; i++)
+            {
+                Seats.Add(new Seat(id, i, "EMPTY"));
+            }
+            SaveChanges();
+        }
+
+        // Funcion que verifica si existe espacio para crear una nueva sala dentro de una sucursal
+        // tomando en cuenta que no exceda la capacidad maxima de salas en la sucursal.
+        public bool Evaluate_if_its_space_for_new_room_in_a_branch(string cinema_name)
+        {
+            var branch = Branches.FirstOrDefault(x => x.cinema_name == cinema_name);
             if (branch != null)
             {
-                //var query = from b in Set<BlogWithMultiplePosts>()
-                //            where b.PostCount > 3
-                //            select new { b.Url, b.PostCount };
                 // Encontrar la cantidad de salas referentes a esta sucursal en el momento.
-                //var rooms = Rooms.Where(r => r.branch_name == cinema_name);
-
-                //// Evaluar si aun hay espacio para poder agregar salas en la sucursal.
-                //if (rooms != null)
-                //{
-                //    return rooms.Count() < branch.room_quantity;
-                //}
+                var query = from b in Branches.Where(b => b.cinema_name == cinema_name)
+                            join r in Rooms
+                                on b.cinema_name equals r.branch_name
+                            select new { b.cinema_name, r.id };
+                
+                // Evaluar si aun hay espacio para poder agregar salas en la sucursal.
+                if (query != null)
+                {
+                    int current_rooms_number = (from t in query select t.id).Count();
+                    return current_rooms_number < branch.room_quantity;
+                }
             }
             return false;
         }
+
+        public IList<Seat> Get_all_seats_of_a_room(string cinema_name, int id)
+        {
+            // Obtener todas las sillas de una sala que coincida con el id ingresado
+            // y a su vez que sea parte de la sucursal que coincide con el cinema_name ingresado.
+            var query = from b in Branches.Where(b => b.cinema_name == cinema_name)
+                        join room in Rooms.Where(r => r.id == id)
+                            on b.cinema_name equals room.branch_name
+                        join seat in Seats
+                            on room.id equals seat.room_id
+                        select new {seat};
+            var querySeat = from t in query
+                            select t.seat;
+            if (!querySeat.Any())
+            {
+                return null;
+            }
+            //Seat[] s = querySeat.ToArray();
+            IList<Seat> myList = querySeat.Cast<Seat>().ToList();
+            return myList;
+        }
+
 
 
         // Elimina las salas de una sucursal y luego elimina la sucursal misma.
