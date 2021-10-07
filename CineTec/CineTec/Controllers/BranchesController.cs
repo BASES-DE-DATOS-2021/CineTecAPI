@@ -65,23 +65,7 @@ namespace CineTec.Controllers
             _CRUDContext.SaveChanges();
         }
 
-        private bool EvalRooms(string cinema_name)
-        {
-            var branch = _CRUDContext.Branches.SingleOrDefault(x => x.cinema_name == cinema_name);
-            if (branch != null)
-            {
-                // Encontrar la cantidad de salas referentes a esta sucursal en el momento.
-                RoomsController roomControl = new RoomsController(_CRUDContext);
-                var rooms = _CRUDContext.Rooms
-                    .Where(r => r.branch_name == cinema_name);
-
-                // Evaluar si aun hay espacio para poder agregar salas en la sucursal.
-                if (rooms != null) {
-                    return rooms.Count() < branch.room_quantity;
-                } 
-            }
-            return false;
-        }
+        
 
 
 

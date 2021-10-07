@@ -40,7 +40,7 @@ namespace CineTec.Controllers
 
             //BranchesController branchControl = new BranchesController(_CRUDContext);
             //if (branchControl.EvalRooms(room.branch_name);
-
+            _CRUDContext.Branches.
             _CRUDContext.Rooms.Add(room);
             _CRUDContext.SaveChanges();
 

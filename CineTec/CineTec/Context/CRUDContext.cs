@@ -10,6 +10,8 @@ namespace CineTec.Context
         {
 
         }
+
+        // Entities
         public DbSet<Student> Students { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Client> Clients { get; set; }
@@ -33,6 +35,26 @@ namespace CineTec.Context
 
             modelBuilder.Entity<Acts>()
                 .HasKey(a => new { a.movie_id, a.actor_id });
+        }
+
+        private bool EvalRooms(string cinema_name)
+        {
+            var branch = Branches.SingleOrDefaultAsync(x => x.cinema_name == cinema_name);
+            if (branch != null)
+            {
+                //var query = from b in Set<BlogWithMultiplePosts>()
+                //            where b.PostCount > 3
+                //            select new { b.Url, b.PostCount };
+                // Encontrar la cantidad de salas referentes a esta sucursal en el momento.
+                //var rooms = Rooms.Where(r => r.branch_name == cinema_name);
+
+                //// Evaluar si aun hay espacio para poder agregar salas en la sucursal.
+                //if (rooms != null)
+                //{
+                //    return rooms.Count() < branch.room_quantity;
+                //}
+            }
+            return false;
         }
 
     }
