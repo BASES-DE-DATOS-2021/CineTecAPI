@@ -68,5 +68,24 @@ namespace CineTec.Controllers
                 _CRUDContext.SaveChanges();
             }
         }
+
+
+        //// DELETE ALL SEATS FROM A ROOM
+        //public void Delete_all_from_room(int id)
+        //{
+        //    var query = from s in _CRUDContext.Seats
+        //                where s.room_id == id
+        //                select s;
+
+        //    if (query != null)
+        //    {
+        //        // Elimina cada silla donde el id coincida con la sala.
+        //        foreach (Seat s in query)
+        //        {
+        //            Delete(s.room_id, s.number);
+        //        }
+        //        _CRUDContext.SaveChanges();
+        //    }
+        //}
     }
 }

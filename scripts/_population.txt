@@ -63,13 +63,13 @@ INSERT INTO public."Rooms"(
 -- Populacion de Seats
 INSERT INTO public."Seats"(
 	room_id, "number", status)
-	VALUES (0, 1, 'COVID');
+	VALUES (1, 1, 'COVID');
 INSERT INTO public."Seats"(
 	room_id, "number", status)
-	VALUES (0, 2, 'EMPTY');
+	VALUES (1, 2, 'EMPTY');
 INSERT INTO public."Seats"(
 	room_id, "number", status)
-	VALUES (0, 3, 'EMPTY');
+	VALUES (1, 3, 'EMPTY');
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- Populacion de Classification
@@ -118,10 +118,10 @@ INSERT INTO public."Movies"(
 	VALUES ('R', 1, 'purge.jpg', 'The Purge', 'La Purga', '2:05');
 INSERT INTO public."Movies"(
 	classification_id, director_id, image, original_name, name, length)
-	VALUES ('NC-17', 0, '007.jpg', '007', 'Sin tiempo para morir', '1:45');
+	VALUES ('NC-17', 2, '007.jpg', '007', 'Sin tiempo para morir', '1:45');
 INSERT INTO public."Movies"(
 	classification_id, director_id, image, original_name, name, length)
-	VALUES ('G', 2, 'jungle.png', 'Jungle Cruise', 'El secreto de la jungla', '2:10');
+	VALUES ('G', 3, 'jungle.png', 'Jungle Cruise', 'El secreto de la jungla', '2:10');
 	
 ------------------------------------------------------------------------------------------------------------------------------------
 -- Populacion de Projections
