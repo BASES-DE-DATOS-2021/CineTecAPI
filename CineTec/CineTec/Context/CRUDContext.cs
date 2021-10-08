@@ -50,6 +50,23 @@ namespace CineTec.Context
             SaveChanges();
         }
 
+        public IList<Room> Get_all_rooms_of_a_branch(string cinema_name)
+        {
+            // Obtener todas las salas de la sucursal que coincide con el cinema_name ingresado.
+            var query = from b in Branches.Where(b => b.cinema_name == cinema_name)
+                        join room in Rooms
+                            on b.cinema_name equals room.branch_name
+                        select new { room };
+            var queryRoom = from t in query
+                            select t.room;
+            if (!queryRoom.Any())
+            {
+                return null;
+            }
+            IList<Room> myList = queryRoom.Cast<Room>().ToList();
+            return myList;
+        }
+
 
         public IList<Seat> Get_all_seats_of_a_room(string cinema_name, int id)
         {
@@ -73,14 +90,14 @@ namespace CineTec.Context
         }
 
 
-
         // Elimina las salas de una sucursal y luego elimina la sucursal misma.
         public void Delete_cinema_and_rooms(string cinema_name)
         {
             var branch = Branches.FirstOrDefault(b => b.cinema_name == cinema_name);
             if (branch != null)
             {
-                var query = from b in Branches
+                // query para obtener las salas y sillas relacionadas a la sucursal
+                var queryRoomSeat = from b in Branches
                         .Where(b => b.cinema_name == cinema_name)
                             join room in Rooms
                                 on b.cinema_name equals room.branch_name
@@ -88,21 +105,45 @@ namespace CineTec.Context
                                 on room.id equals seat.room_id
                             select new { room, seat };
 
-                var queryRoom = from t in query
+                var queryRoom = from t in queryRoomSeat
                                 select t.room;
 
-                var querySeat = from t in query
+                var querySeat = from t in queryRoomSeat
                                 select t.seat;
 
-                Seat[] s = querySeat.ToArray();
-                Room[] r = queryRoom.ToArray();
+                // query para obtener los empleados relacionados a la sucursal
+                var queryEmployees = from b in Branches
+                        .Where(b => b.cinema_name == cinema_name)
+                            join emp in Employees
+                                on b.cinema_name equals emp.branch_id
+                            select new { emp };
 
-                Seats.RemoveRange(s);
-                SaveChanges();
-                Rooms.RemoveRange(r);
-                SaveChanges();
-                Branches.Remove(branch);
-                SaveChanges();
+                var queryEmp = from t in queryEmployees
+                               select t.emp;
+
+                //Casteos
+                Employee[] e = queryEmp.ToArray();
+                if (e.Length == 0)
+                {
+
+
+                    Seat[] s = querySeat.ToArray();
+                    Room[] r = queryRoom.ToArray();
+
+                    // Procede a borrar.
+                    Seats.RemoveRange(s);
+                    SaveChanges();
+
+                    Rooms.RemoveRange(r);
+                    SaveChanges();
+
+                    Branches.Remove(branch);
+                    SaveChanges();
+                }
+
+                ///////////// PONER UN AVISO AQUI DE QUE NO SE PUEDE BORRAR UNA SUCURSAL QUE TIENE EMPLEADOS
+                /// PRIMERO ES NECESARIO BORRAR LOS EMPLEADOS POR SI SOLOS.
+
             }
         }
 
