@@ -40,6 +40,14 @@ namespace CineTec.Context
                 .HasKey(a => new { a.movie_id, a.actor_id });
         }
 
+
+        /*
+         *              AUX
+         *              AUX
+         *              AUX
+         *              
+         */
+
         // Llena una sala con la cantidad de sillas que debe tener. Todas estan vacias.
         public void Add_room_seats(int id, int capacity)
         {
@@ -49,6 +57,22 @@ namespace CineTec.Context
             }
             SaveChanges();
         }
+
+
+        // Metodo que retorna las sillas modificadas de un cuarto con el estado dependiendo de
+        // la probabilidad recibida.
+        public void Set_room_seats_status_restriction(int pobably)
+        {
+
+        }
+
+
+        /*
+         *              GET
+         *              GET
+         *              GET
+         *              
+         */
 
         public IList<Room> Get_all_rooms_of_a_branch(string cinema_name)
         {
@@ -87,6 +111,145 @@ namespace CineTec.Context
             //Seat[] s = querySeat.ToArray();
             IList<Seat> myList = querySeat.Cast<Seat>().ToList();
             return myList;
+        }
+
+
+        /*
+         *              UPDATE
+         *              UPDATE
+         *              UPDATE
+         *              
+         */
+        public void Update_Room(int id, Room r)
+        {
+            var room = Rooms.FirstOrDefault(x => x.id == id);
+            if (room != null)
+            {
+                room.column_quantity = r.column_quantity;
+                room.row_quantity = r.row_quantity;
+                Rooms.Update(room);
+                SaveChanges();
+            }
+        }
+
+
+        public void Update_Movie_ByName(string original_name, Movie m)
+        {
+            var movie = Movies.FirstOrDefault(x => x.original_name == original_name);
+            if (movie != null)
+            {
+                movie.classification_id = m.classification_id;
+                movie.original_name = m.original_name;
+                movie.director_id = m.director_id;
+                movie.name = m.name;
+                movie.image = m.image;
+                movie.length = m.length;
+                Movies.Update(movie);
+                SaveChanges();
+            }
+        }
+
+
+        /*
+         *              DELETE
+         *              DELETE
+         *              DELETE
+         *              
+         */
+
+
+        // Eliminacion especial de clasificacion tomando en cuenta si hay alguna referencia.
+        public void Delete_classification(string code)
+        {
+            var item = Classifications.FirstOrDefault(x => x.code == code);
+            if (item != null)
+            {
+                // verificar si hay peliculas asociadas a esta clasificacion.
+                var movie = Movies.FirstOrDefault(m => m.classification_id == code);
+                if (movie == null)
+                {
+                    Classifications.Remove(item);
+                    SaveChanges();
+                }
+                else
+                {
+                    ///////////// PONER UN AVISO AQUI DE QUE NO SE PUEDE BORRAR UNA CLASIFICACION QUE TIENE PELICULAS RELACIONADAS.
+                }
+            }
+        }
+
+
+        // Eliminacion especial de director tomando en cuenta si hay alguna referencia.
+        public void Delete_director(int id)
+        {
+            var item = Directors.FirstOrDefault(x => x.id == id);
+            if (item != null)
+            {
+                // verificar si hay peliculas asociadas a este director.
+                var movie = Movies.FirstOrDefault(m => m.director_id == id);
+                if (movie == null)
+                {
+                    // ELIMINAR DIRECTOR
+                    Directors.Remove(item);
+                    SaveChanges();
+                }
+                else
+                {
+                    ///////////// PONER UN AVISO AQUI DE QUE NO SE PUEDE BORRAR UN DIRECTOR QUE TIENE PELICULAS RELACIONADAS.
+                }
+            }
+        }
+
+
+        // Eliminacion especial de director tomando en cuenta si hay alguna referencia.
+        public void Delete_actor(int id)
+        {
+            var item = Actors.FirstOrDefault(x => x.id == id);
+            if (item != null)
+            {
+                // verificar si hay peliculas asociadas a este director.
+                var acts = Acts.FirstOrDefault(m => m.actor_id == id);
+                if (acts == null)
+                {
+                    // ELIMINAR ACTOR
+                    Actors.Remove(item);
+                    SaveChanges();
+
+                    // ELIMINAR 
+
+                }
+                else
+                {
+                    ///////////// PONER UN AVISO AQUI DE QUE NO SE PUEDE BORRAR UN DIRECTOR QUE TIENE PELICULAS RELACIONADAS.
+                }
+            }
+        }
+
+
+
+
+        // Eliminacion especial de director tomando en cuenta si hay alguna referencia.
+        public void Delete_actor(int id)
+        {
+            var item = Actors.FirstOrDefault(x => x.id == id);
+            if (item != null)
+            {
+                // verificar si hay peliculas asociadas a este director.
+                var acts = Acts.FirstOrDefault(m => m.actor_id == id);
+                if (acts == null)
+                {
+                    // ELIMINAR ACTOR
+                    Actors.Remove(item);
+                    SaveChanges();
+
+                    // ELIMINAR 
+
+                }
+                else
+                {
+                    ///////////// PONER UN AVISO AQUI DE QUE NO SE PUEDE BORRAR UN DIRECTOR QUE TIENE PELICULAS RELACIONADAS.
+                }
+            }
         }
 
 
@@ -159,33 +322,9 @@ namespace CineTec.Context
             Rooms.Remove(room);
             SaveChanges();
         }
-        public void Update_Room(int id, Room r)
-        {
-            var room = Rooms.FirstOrDefault(x => x.id == id);
-            if (room != null)
-            {
-                room.column_quantity = r.column_quantity;
-                room.row_quantity = r.row_quantity;
-                Rooms.Update(room);
-                SaveChanges();
-            }
-        }
 
-        public void Update_Movie_ByName(string original_name, Movie m)
-        {
-            var movie = Movies.FirstOrDefault(x => x.original_name == original_name);
-            if (movie != null)
-            {
-                movie.classification_id = m.classification_id;
-                movie.original_name = m.original_name;
-                movie.director_id = m.director_id;
-                movie.name = m.name;
-                movie.image = m.image;
-                movie.length = m.length;
-                Movies.Update(movie);
-                SaveChanges();
-            }
-        }
+
+
 
 
 
