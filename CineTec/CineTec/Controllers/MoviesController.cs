@@ -59,7 +59,7 @@ namespace CineTec.Controllers
         }
 
         // PUT api/Movies/5
-        [HttpPut("by_name/{original_name}")]
+        [HttpPut("byName/{original_name}")]
         public void PutByName(string original_name, [FromBody] Movie movie)
         {
             _CRUDContext.Update_Movie_ByName(original_name, movie);
