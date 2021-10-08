@@ -49,7 +49,7 @@ namespace CineTec.Context
          */
 
         // Llena una sala con la cantidad de sillas que debe tener. Todas estan vacias.
-        public void Add_room_seats(int id, int capacity)
+        public void Add_seats_in_a_room(int id, int capacity)
         {
             for (int i = 1; i < capacity + 1; i++)
             {
@@ -164,13 +164,20 @@ namespace CineTec.Context
             var room = Rooms.FirstOrDefault(x => x.id == id);
             if (room != null)
             {
-                room.column_quantity = r.column_quantity;
-                room.row_quantity = r.row_quantity;
-                Rooms.Update(room);
-                SaveChanges();
+                if (room.column_quantity != r.column_quantity || room.row_quantity != r.row_quantity)
+                {
+                    room.column_quantity = r.column_quantity;
+                    room.row_quantity = r.row_quantity;
+                    Rooms.Update(room);
+                    SaveChanges();
+
+                    // ELIMINAR SILLAS Y RECREARLAS.
+                    Delete_seats_of_a_room(id);
+                    Add_seats_in_a_room(id, room.capacity);
+                }
+
             }
         }
-
 
         public void Update_Movie_ByName(string original_name, Movie m)
         {
@@ -349,10 +356,16 @@ namespace CineTec.Context
             var room = Rooms.FirstOrDefault(x => x.id == id);
             if (room != null)
             {
-                Seats.RemoveRange(Seats.Where(x => x.room_id == id));
-                SaveChanges();
+                Delete_seats_of_a_room(id);
             }
             Rooms.Remove(room);
+            SaveChanges();
+        }
+
+        // Elimina las sillas de una sala.
+        public void Delete_seats_of_a_room(int id)
+        {
+            Seats.RemoveRange(Seats.Where(x => x.room_id == id));
             SaveChanges();
         }
 

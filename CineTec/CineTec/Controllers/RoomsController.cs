@@ -51,7 +51,7 @@ namespace CineTec.Controllers
             {
                 _CRUDContext.Rooms.Add(room);
                 _CRUDContext.SaveChanges();
-                _CRUDContext.Add_room_seats(room.id, room.capacity);
+                _CRUDContext.Add_seats_in_a_room(room.id, room.capacity);
                 //_CRUDContext.Update_branch_rooms_quantity(room.branch_name);
             }
             catch (DbUpdateException e)
@@ -65,7 +65,6 @@ namespace CineTec.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] Room room)
         {
-
             _CRUDContext.Update_Room(id, room);
             // manejar excepcion
 
