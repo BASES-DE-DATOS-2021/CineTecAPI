@@ -61,7 +61,7 @@ namespace CineTec.Controllers
         }
 
         // DELETE api/Acts/actsIn?movie_id=a&actor_id=b
-        [HttpDelete("acts")]
+/*        [HttpDelete("acts")]
         public void Delete(int movie_id, int actor_id)
         {
             var item = _CRUDContext.Acts
@@ -73,6 +73,6 @@ namespace CineTec.Controllers
                 _CRUDContext.Acts.Remove(item);
                 _CRUDContext.SaveChanges();
             }
-        }
+        }*/
     }
 }
