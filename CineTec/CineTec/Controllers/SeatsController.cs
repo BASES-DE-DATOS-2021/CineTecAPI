@@ -37,12 +37,12 @@ namespace CineTec.Controllers
 
 
         // POST api/Seats
-        [HttpPost]
-        public void Post([FromBody] Seat Seat)
-        {
-            _CRUDContext.Seats.Add(Seat);
-            _CRUDContext.SaveChanges();
-        }
+        //[HttpPost]
+        //public void Post([FromBody] Seat Seat)
+        //{
+        //    _CRUDContext.Seats.Add(Seat);
+        //    _CRUDContext.SaveChanges();
+        //}
 
         // PUT api/Seats/byId?room_id=a&number=b
         [HttpPut("byId")]
@@ -55,19 +55,19 @@ namespace CineTec.Controllers
         }
 
         // DELETE api/Seats/byId?room_id=a&number=b
-        [HttpDelete("byId")]
-        public void Delete(int room_id, int number)
-        {
-            var item = _CRUDContext.Seats
-                        .Where(f => f.number == number && f.room_id == room_id)
-                        .FirstOrDefault();
+        //[HttpDelete("byId")]
+        //public void Delete(int room_id, int number)
+        //{
+        //    var item = _CRUDContext.Seats
+        //                .Where(f => f.number == number && f.room_id == room_id)
+        //                .FirstOrDefault();
 
-            if (item != null)
-            {
-                _CRUDContext.Seats.Remove(item);
-                _CRUDContext.SaveChanges();
-            }
-        }
+        //    if (item != null)
+        //    {
+        //        _CRUDContext.Seats.Remove(item);
+        //        _CRUDContext.SaveChanges();
+        //    }
+        //}
 
 
         //// DELETE ALL SEATS FROM A ROOM

@@ -23,6 +23,7 @@ namespace CineTec.Models
             this.status = status;
         }
 
+
     }
 
 }
