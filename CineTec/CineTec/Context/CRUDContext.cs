@@ -100,7 +100,8 @@ namespace CineTec.Context
             var branch = Branches.FirstOrDefault(b => b.cinema_name == cinema_name);
             if (branch != null)
             {
-                var query = from b in Branches
+                // query para obtener las salas y sillas relacionadas a la sucursal
+                var queryRoomSeat = from b in Branches
                         .Where(b => b.cinema_name == cinema_name)
                             join room in Rooms
                                 on b.cinema_name equals room.branch_name
@@ -108,19 +109,35 @@ namespace CineTec.Context
                                 on room.id equals seat.room_id
                             select new { room, seat };
 
-                var queryRoom = from t in query
+                var queryRoom = from t in queryRoomSeat
                                 select t.room;
 
-                var querySeat = from t in query
+                var querySeat = from t in queryRoomSeat
                                 select t.seat;
+
+                // query para obtener los empleados relacionados a la sucursal
+                var queryEmployees = from b in Branches
+                        .Where(b => b.cinema_name == cinema_name)
+                            join emp in Employees
+                                on b.cinema_name equals emp.branch_id
+                            select new { emp };
+
+                var queryEmp = from t in queryEmployees
+                               select t.emp;
 
                 Seat[] s = querySeat.ToArray();
                 Room[] r = queryRoom.ToArray();
+                Employee[] e = queryEmp.ToArray();
 
                 Seats.RemoveRange(s);
                 SaveChanges();
+
                 Rooms.RemoveRange(r);
                 SaveChanges();
+
+                Employees.RemoveRange(e);
+                SaveChanges();
+
                 Branches.Remove(branch);
                 SaveChanges();
             }
