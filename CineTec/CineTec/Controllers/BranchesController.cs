@@ -73,7 +73,22 @@ namespace CineTec.Controllers
         [HttpDelete("{cinema_name}")]
         public ActionResult Delete(string cinema_name)
         {
-            return BadRequest(_CRUDContext.Delete_cinema_and_rooms(cinema_name));
+            string resp = "";
+            int x = _CRUDContext.Delete_cinema_and_rooms(cinema_name);
+            switch (x)
+            {
+                case 0:
+                    resp = "No se puede eliminar una sucursal que tiene empleados relacionados.";
+                    break;
+
+                case -1:
+                    resp = "No se ha encontrado esta sucursal.";
+                    break;
+
+                default: // Se elimina correctamente.
+                    return Ok();
+            }
+            return BadRequest(resp);
         }
     }
 }

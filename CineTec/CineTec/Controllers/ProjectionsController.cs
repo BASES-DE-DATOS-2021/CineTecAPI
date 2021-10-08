@@ -35,19 +35,18 @@ namespace CineTec.Controllers
 
 
         // GET api/Projections/byMovieId/
-        [HttpGet("acts/byMovieId/{movie_id}")]
+        [HttpGet("byMovieId/{movie_id}")]
         public IEnumerable<Projection> Get_byMovieId(int movie_id)
         {
             return _CRUDContext.GetProjections_byMovieId(movie_id);
         }
 
         // GET api/Projections/byRoomId?room_id=a
-        [HttpGet("acts/byRoomId/{room_id}")]
+        [HttpGet("byRoomId/{room_id}")]
         public IEnumerable<Projection> Get_byRoomId(int room_id)
         {
             return _CRUDContext.GetProjections_byRoomId(room_id);
         }
-
 
         // POST api/Projections
         [HttpPost]
@@ -68,14 +67,24 @@ namespace CineTec.Controllers
 
         // DELETE api/Projections/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
-            var item = _CRUDContext.Projections.FirstOrDefault(x => x.id == id);
-            if (item != null)
+            string resp = "";
+            int x = _CRUDContext.Delete_projection(id);
+            switch (x)
             {
-                _CRUDContext.Projections.Remove(item);
-                _CRUDContext.SaveChanges();
+                case 0:
+                    resp = "No se puede eliminar una proyeccion que se encuentra asignada a una pelicula.";
+                    break;
+
+                case -1:
+                    resp = "No se ha encontrado esta proyeccion.";
+                    break;
+
+                default: // Se elimina correctamente.
+                    return Ok();
             }
+            return BadRequest(resp);
         }
     }
 }

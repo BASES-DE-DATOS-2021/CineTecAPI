@@ -34,33 +34,45 @@ namespace CineTec.Controllers
             return _CRUDContext.Actors.SingleOrDefault(x => x.id == id);
         }
 
-        // POST api/Actors
-/*        [HttpPost]
-        public void Post([FromBody] Actor actor)
-        {
-            _CRUDContext.Actors.Add(actor);
-            _CRUDContext.SaveChanges();
-        }*/
+        //// POST api/Actors
+        //[HttpPost]
+        //public void Post([FromBody] Actor actor)
+        //{
+        //    _CRUDContext.Actors.Add(actor);
+        //    _CRUDContext.SaveChanges();
+        //}
 
         // PUT api/Actors/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Actor actor)
+        public ActionResult Put(int id, [FromBody] Actor actor)
         {
             actor.id = id;
             _CRUDContext.Actors.Update(actor);
             _CRUDContext.SaveChanges();
+
+            return Ok();
         }
 
         // DELETE api/Actors/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
-            var item = _CRUDContext.Actors.FirstOrDefault(x => x.id == id);
-            if (item != null)
+            string resp = "";
+            int x = _CRUDContext.Delete_actor(id);
+            switch (x)
             {
-                _CRUDContext.Actors.Remove(item);
-                _CRUDContext.SaveChanges();
+                case 0:
+                    resp = "No se puede eliminar un actor que se encuentra asignado a una pelicula.";
+                    break;
+
+                case -1:
+                    resp = "No se ha encontrado este actor.";
+                    break;
+
+                default: // Se elimina correctamente.
+                    return Ok();
             }
+            return BadRequest(resp);
         }
     }
 }

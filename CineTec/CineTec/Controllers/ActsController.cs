@@ -29,14 +29,14 @@ namespace CineTec.Controllers
         }
 
         // GET api/Acts/byActorsId/
-        [HttpGet("acts/byMovieId/{movie_id}")]
+        [HttpGet("byMovieId/{movie_id}")]
         public IEnumerable<Acts> GetActs_byMovieId(int movie_id)
         {
             return _CRUDContext.GetActs_byMovieId(movie_id);
         }
 
         // GET api/Acts/actsIn?actor_id=a
-        [HttpGet("acts/byActorsId/{actor_id}")]
+        [HttpGet("byActorsId/{actor_id}")]
         public IEnumerable<Acts> GetActs_byActorsId(int actor_id)
         {
             return _CRUDContext.GetActs_byActorsId(actor_id);
@@ -44,20 +44,23 @@ namespace CineTec.Controllers
 
         // POST api/Acts/
         [HttpPost]
-        public void Post([FromBody] Acts Acts)
+        public ActionResult Post([FromBody] Acts Acts)
         {
             _CRUDContext.Acts.Add(Acts);
             _CRUDContext.SaveChanges();
+            return Ok();
         }
 
         // PUT api/Acts/actsIn?movie_id=a&actor_id=b
         [HttpPut("acts")]
-        public void Put(int movie_id, int actor_id, [FromBody] Acts acts)
+        public ActionResult Put(int movie_id, int actor_id, [FromBody] Acts acts)
         {
             acts.movie_id = movie_id;
             acts.actor_id = actor_id;
             _CRUDContext.Acts.Update(acts);
             _CRUDContext.SaveChanges();
+            return Ok();
+
         }
     }
 }

@@ -52,14 +52,24 @@ namespace CineTec.Controllers
 
         // DELETE api/Clients/5
         [HttpDelete("{cedula}")]
-        public void Delete(int cedula)
+        public ActionResult Delete(int cedula)
         {
-            var item = _CRUDContext.Clients.FirstOrDefault(x => x.cedula == cedula);
-            if (item != null)
+            string resp = "";
+            int x = _CRUDContext.Delete_client(cedula);
+            switch (x)
             {
-                _CRUDContext.Clients.Remove(item);
-                _CRUDContext.SaveChanges();
+                case 0:
+                    resp = "No se puede eliminar un cliente que se encuentra asignado a una factura.";
+                    break;
+
+                case -1:
+                    resp = "No se ha encontrado este cliente.";
+                    break;
+
+                default: // Se elimina correctamente.
+                    return Ok();
             }
+            return BadRequest(resp);
         }
     }
 }

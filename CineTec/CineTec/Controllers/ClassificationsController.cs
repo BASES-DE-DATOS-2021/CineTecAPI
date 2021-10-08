@@ -52,14 +52,24 @@ namespace CineTec.Controllers
 
         // DELETE api/Classifications/5
         [HttpDelete("{code}")]
-        public void Delete(string code)
+        public ActionResult Delete(string code)
         {
-            var item = _CRUDContext.Classifications.FirstOrDefault(x => x.code == code);
-            if (item != null)
+            string resp = "";
+            int x = _CRUDContext.Delete_classification(code);
+            switch (x)
             {
-                _CRUDContext.Classifications.Remove(item);
-                _CRUDContext.SaveChanges();
+                case 0:
+                    resp = "No se puede eliminar una clasificacion que se encuentra asignada a una pelicula.";
+                    break;
+
+                case -1:
+                    resp = "No se ha encontrado esta clasificacion.";
+                    break;
+
+                default: // Se elimina correctamente.
+                    return Ok();
             }
+            return BadRequest(resp);
         }
     }
 }

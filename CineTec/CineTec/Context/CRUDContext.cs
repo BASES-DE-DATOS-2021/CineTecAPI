@@ -66,14 +66,6 @@ namespace CineTec.Context
         }
 
 
-        // Metodo que retorna las sillas modificadas de un cuarto con el estado dependiendo de
-        // la probabilidad recibida.
-        public void Set_room_seats_status_restriction(int room_id, int prob)
-        {
-            Room r = GetRoom(room_id);
-        }
-
-
         /*
          *              GET
          *              GET
@@ -81,20 +73,32 @@ namespace CineTec.Context
          *              
          */
 
+        // Get de director por id.
+        public Director GetDirector(int id)
+        {
+            return Directors.SingleOrDefault(x => x.id == id);
+        }
 
+        // Get de director por nombre.
+        public Director GetDirector(string name)
+        {
+            return Directors.SingleOrDefault(x => x.name == name);
+        }
 
-        //
+        // Get de employee por cedula.
         public Employee GetEmployee(int cedula)
         {
             return Employees.Where(f => f.cedula == cedula).FirstOrDefault();
         }
 
+        // Get de room por id.
         public Room GetRoom(int room_id)
         {
             return Rooms.Where(f => f.id == room_id).FirstOrDefault();
 
         }
 
+        // Get de seat por room_id y numero de asiento.
         public Seat GetSeat(int room_id, int number)
         {
             return Seats.Where(f => f.number == number && f.room_id == room_id)
@@ -102,13 +106,13 @@ namespace CineTec.Context
         }
        
 
-        //
+        // Get de projecciones por id.
         public Projection GetProjection(int id)
         {
             return Projections.Where(f => f.id == id).FirstOrDefault();
         }
 
-        //
+        // 
         public IEnumerable<Projection> GetProjections_byRoomId(int room_id)
         {
             return Projections.Where(f => f.room_id == room_id);
@@ -158,6 +162,28 @@ namespace CineTec.Context
                     .Where(f => f.actor_id == actor_id);
         }
 
+
+        // Get de cliente por cedula.
+        public Client GetClient(int cedula)
+        {
+            return Clients.SingleOrDefault(x => x.cedula == cedula);
+        }
+
+        // Get de bill por id.
+        public Bill GetBill(int id)
+        {
+            return Bills.SingleOrDefault(x => x.id == id);
+        }
+
+        // Get de bills correspondientes a un cliente.
+        public IEnumerable<Bill> GetBills_byClientId(int cedula)
+        {
+            return Bills.Where(x => x.client_id == cedula);
+        }
+
+        /// METODOS MAS ESPECIFICOS.
+
+        // Funcion que retorna todas las salas de la sucursal que coincide con el cinema_name ingresado.
         public IList<Room> Get_all_rooms_of_a_branch(string cinema_name)
         {
             // Obtener todas las salas de la sucursal que coincide con el cinema_name ingresado.
@@ -171,7 +197,8 @@ namespace CineTec.Context
             return myList;
         }
 
-
+        // Funcion que retorna todas las sillas de una sala que coincida con el id ingresado y a su
+        // vez que sea parte de la sucursal que coincide con el cinema_name ingresado.
         public IList<Seat> Get_all_seats_of_a_room(string cinema_name, int id)
         {
             // Obtener todas las sillas de una sala que coincida con el id ingresado
@@ -189,12 +216,15 @@ namespace CineTec.Context
         }
 
 
+
+
         /*
          *              UPDATE
          *              UPDATE
          *              UPDATE
          *              
          */
+
         public void Update_Room(int id, Room r)
         {
             var room = Rooms.FirstOrDefault(x => x.id == id);
@@ -232,6 +262,17 @@ namespace CineTec.Context
         }
 
 
+        // Metodo que retorna las sillas modificadas de un cuarto con el estado dependiendo de
+        // la probabilidad recibida.
+        public void Update_room_seats_status_restriction(int room_id, int prob)
+        {
+            Room r = GetRoom(room_id);
+        }
+
+
+
+
+
         /*
          *              DELETE
          *              DELETE
@@ -240,97 +281,145 @@ namespace CineTec.Context
          */
 
 
-        // Eliminacion especial de clasificacion tomando en cuenta si hay alguna referencia.
-        public void Delete_classification(string code)
-        {
-            var item = Classifications.FirstOrDefault(x => x.code == code);
-            if (item != null)
-            {
-                // verificar si hay peliculas asociadas a esta clasificacion.
-                var movie = Movies.FirstOrDefault(m => m.classification_id == code);
-                if (movie == null)
-                {
-                    Classifications.Remove(item);
-                    SaveChanges();
-                }
-                else
-                {
-                    ///////////// PONER UN AVISO AQUI DE QUE NO SE PUEDE BORRAR UNA CLASIFICACION QUE TIENE PELICULAS RELACIONADAS.
-                }
-            }
-        }
+
+        /* notas:
+         * 
+         *  1 : ELIMINACION EXITOSA.
+         *  0 : NO SE PUEDE ELIMINAR POR RELACION.
+         * -1 : NO EXISTE.
+         */
 
 
         // Eliminacion especial de director tomando en cuenta si hay alguna referencia.
-        public void Delete_director(int id)
+        public int Delete_actor(int id)
         {
-            var item = Directors.FirstOrDefault(x => x.id == id);
-            if (item != null)
-            {
-                // verificar si hay peliculas asociadas a este director.
-                var movie = Movies.FirstOrDefault(m => m.director_id == id);
-                if (movie == null)
-                {
-                    // ELIMINAR DIRECTOR
-                    Directors.Remove(item);
-                    SaveChanges();
-                }
-                else
-                {
-                    ///////////// PONER UN AVISO AQUI DE QUE NO SE PUEDE BORRAR CON PELICULAS RELACIONADAS.
-                }
-            }
-        }
-
-
-        // Eliminacion especial de director tomando en cuenta si hay alguna referencia.
-        public void Delete_acts(int movie_id, int actor_id)
-        {
-            var item = GetActs(movie_id, actor_id);
-            if (item != null)
-            {
-                // verificar si hay peliculas asociadas a este acts.
-                var movie = Movies.FirstOrDefault(m => m.id == movie_id);
-                if (movie == null)
-                {
-                    // ELIMINAR ACTOR
-                    Acts.Remove(item);
-                    SaveChanges();
-                    // NOTA: Los no se borran, solo quedan en la tabla sin relacion alguna. 
-
-                }
-                else
-                {
-                    ///////////// PONER UN AVISO AQUI DE QUE NO SE PUEDE BORRAR CON PELICULAS RELACIONADAS.
-                }
-            }
-        }
-
-
-        // Eliminacion especial de director tomando en cuenta si hay alguna referencia.
-        public void Delete_actor(int id)
-        {
-            var item = Actors.FirstOrDefault(x => x.id == id);
-            if (item != null)
+            var actor = Actors.FirstOrDefault(x => x.id == id);
+            if (actor != null)
             {
                 // verificar si hay peliculas asociadas a este director.
                 var acts = Acts.FirstOrDefault(m => m.actor_id == id);
                 if (acts == null)
                 {
                     // ELIMINAR ACTOR
-                    Actors.Remove(item);
+                    Actors.Remove(actor);
                     SaveChanges();
+                    return 1;
                 }
-                else
-                {
-                    ///////////// PONER UN AVISO AQUI DE QUE NO SE PUEDE BORRAR CON PELICULAS RELACIONADAS.
-                }
+                return 0;
             }
+            return -1;
+        }
+
+        // Eliminacion especial de director tomando en cuenta si hay alguna referencia.
+        public int Delete_acts(int movie_id, int actor_id)
+        {
+            var acts = GetActs(movie_id, actor_id);
+            if (acts != null)
+            {
+                // verificar si hay peliculas asociadas a este acts.
+                var movie = Movies.FirstOrDefault(m => m.id == movie_id);
+                if (movie == null)
+                {
+                    // ELIMINAR ACTS
+                    Acts.Remove(acts);
+                    SaveChanges();
+                    // NOTA: Los no se borran, solo quedan en la tabla sin relacion alguna. 
+                    return 1;
+                }
+                return 0;
+            }
+            return -1;
+        }
+
+        // Eliminacion especial de cliente tomando en cuenta si hay alguna referencia.
+
+        public int Delete_client(int cedula)
+        {
+            var client = GetClient(cedula);
+            if (client != null)
+            {
+                // verificar si hay una factura asociada a este cliente.
+                var bill = GetBill(client.cedula);
+                if (bill == null)
+                {
+                    // ELIMINAR CLIENTE
+                    Clients.Remove(client);
+                    SaveChanges();
+                    return 1;
+                }
+                return 0;
+            }
+            return -1;
+        }
+
+        // Eliminacion especial de clasificacion tomando en cuenta si hay alguna referencia.
+        public int Delete_classification(string code)
+        {
+            var classif = Classifications.FirstOrDefault(x => x.code == code);
+            if (classif != null)
+            {
+                // verificar si hay peliculas asociadas a esta clasificacion.
+                var movie = Movies.FirstOrDefault(m => m.classification_id == code);
+                if (movie == null)
+                {
+                    // ELIMINAR CLASSIF
+                    Classifications.Remove(classif);
+                    SaveChanges();
+                    return 1;
+                }
+                return 0;
+            }
+            return -1;
         }
 
 
+        // Eliminacion especial de director tomando en cuenta si hay alguna referencia.
+        public int Delete_director(string name)
+        {
+            var director = GetDirector(name);
+            if (director != null)
+            {
+                // verificar si hay peliculas asociadas a este director.
+                var movie = Movies.FirstOrDefault(m => m.director_id == director.id);
+                if (movie == null)
+                {
+                    // ELIMINAR DIRECTOR
+                    Directors.Remove(director);
+                    SaveChanges();
+                    return 1;
+                }
+                return 0;
+            }
+            return -1;
+        }
+
+        // Eliminacion especial de projection tomando en cuenta si hay alguna referencia.
+        public int Delete_projection(int id)
+        {
+            var projection = GetProjection(id);
+            if (projection != null)
+            {
+                // verificar si hay una factura asociada a este cliente.
+                var bill = GetBill(projection.id);
+                if (bill == null)
+                {
+                    // ELIMINAR PROJECTION
+                    Projections.Remove(projection);
+                    SaveChanges();
+                    return 1;
+                }
+                return 0;
+            }
+            return -1;
+        }
+
+
+
+
+        /// METODOS MAS ESPECIFICOS.
+
         // Elimina las salas de una sucursal y luego elimina la sucursal misma.
-        public string Delete_cinema_and_rooms(string cinema_name)
+        public int Delete_cinema_and_rooms(string cinema_name)
         {
             var branch = Branches.FirstOrDefault(b => b.cinema_name == cinema_name);
             if (branch != null)
@@ -362,11 +451,11 @@ namespace CineTec.Context
 
                     Branches.Remove(branch);
                     SaveChanges();
-                    return "Se elimina correctamente.";
+                    return 1;
                 }
-                return "No se puede eliminar una sucursal que tiene empleados relacionados.";
+                return 0; 
             }
-            return "No existe esta sucursal.";
+            return -1; 
 
         }
 

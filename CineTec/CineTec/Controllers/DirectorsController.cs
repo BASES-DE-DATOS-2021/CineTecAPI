@@ -30,14 +30,14 @@ namespace CineTec.Controllers
         [HttpGet("{id}")]
         public Director Get(int id)
         {
-            return _CRUDContext.Directors.SingleOrDefault(x => x.id == id);
+            return _CRUDContext.GetDirector(id);
         }
 
         // GET api/Directors/byName/Pablo
         [HttpGet("byName/{name}")]
         public Director Get(string name)
         {
-            return _CRUDContext.Directors.SingleOrDefault(x => x.name == name);
+            return _CRUDContext.GetDirector(name);
         }
 
 
@@ -61,14 +61,25 @@ namespace CineTec.Controllers
 
         // DELETE api/Directors/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(string name)
         {
-            var item = _CRUDContext.Directors.FirstOrDefault(x => x.id == id);
-            if (item != null)
+            
+            string resp = "";
+            int x = _CRUDContext.Delete_director(name);
+            switch (x)
             {
-                _CRUDContext.Directors.Remove(item);
-                _CRUDContext.SaveChanges();
+                case 0:
+                    resp = "No se puede eliminar un director que se encuentra asignado a una pelicula.";
+                    break;
+
+                case -1:
+                    resp = "No se ha encontrado este director.";
+                    break;
+
+                default: // Se elimina correctamente.
+                    return Ok();
             }
+            return BadRequest(resp);
         }
     }
 }

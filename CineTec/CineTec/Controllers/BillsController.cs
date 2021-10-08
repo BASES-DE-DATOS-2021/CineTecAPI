@@ -33,33 +33,44 @@ namespace CineTec.Controllers
             return _CRUDContext.Bills.SingleOrDefault(x => x.id == id);
         }
 
+        // GET api/Bills/byClientId/
+        [HttpGet("byClientId/{cedula}")]
+        public IEnumerable<Bill> Get_byClientId(int cedula)
+        {
+            return _CRUDContext.GetBills_byClientId(cedula);
+        }
+
         // POST api/Bills
         [HttpPost]
-        public void Post([FromBody] Bill bill)
+        public ActionResult Post([FromBody] Bill bill)
         {
             _CRUDContext.Bills.Add(bill);
             _CRUDContext.SaveChanges();
+            return Ok();
         }
 
         // PUT api/Bills/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Bill bill)
+        public ActionResult Put(int id, [FromBody] Bill bill)
         {
             bill.id = id;
             _CRUDContext.Bills.Update(bill);
             _CRUDContext.SaveChanges();
+            return Ok();
         }
 
         // DELETE api/Bills/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
             var item = _CRUDContext.Bills.FirstOrDefault(x => x.id == id);
             if (item != null)
             {
                 _CRUDContext.Bills.Remove(item);
                 _CRUDContext.SaveChanges();
+                return Ok();
             }
+            return BadRequest("No se encuentra ninguna factura que coincida.");
         }
     }
 }
