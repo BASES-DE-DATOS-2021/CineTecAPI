@@ -148,7 +148,7 @@ namespace CineTec.Context
                 room.row_quantity = r.row_quantity;
             }
             Rooms.Update(room);
-            Update_branch_rooms_quantity(room.branch_name);
+            //Update_branch_rooms_quantity(room.branch_name);
             SaveChanges();
         }
 
