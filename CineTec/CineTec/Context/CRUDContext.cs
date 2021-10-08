@@ -74,8 +74,26 @@ namespace CineTec.Context
          *              
          */
 
-        //
 
+        //
+        public Projection GetProjection(int id)
+        {
+            return Projections.Where(f => f.id == id).FirstOrDefault();
+        }
+
+        //
+        public IEnumerable<Projection> GetProjections_byRoomId(int room_id)
+        {
+            return Projections.Where(f => f.room_id == room_id);
+        }
+
+        //
+        public IEnumerable<Projection> GetProjections_byMovieId(int movie_id)
+        {
+            return Projections.Where(f => f.movie_id == movie_id);
+        }
+
+        //
         public Acts GetActs(int movie_id, int actor_id)
         {
             return Acts.Where(f => f.movie_id == movie_id && f.actor_id == actor_id).FirstOrDefault();

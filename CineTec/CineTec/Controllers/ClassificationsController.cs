@@ -54,12 +54,7 @@ namespace CineTec.Controllers
         [HttpDelete("{code}")]
         public void Delete(string code)
         {
-            var item = _CRUDContext.Classifications.FirstOrDefault(x => x.code == code);
-            if (item != null)
-            {
-                _CRUDContext.Classifications.Remove(item);
-                _CRUDContext.SaveChanges();
-            }
+            _CRUDContext.Delete_classification(code);
         }
     }
 }

@@ -64,15 +64,7 @@ namespace CineTec.Controllers
         [HttpDelete("acts")]
         public void Delete(int movie_id, int actor_id)
         {
-            var item = _CRUDContext.Acts
-                        .Where(f => f.movie_id == movie_id && f.actor_id == actor_id)
-                        .FirstOrDefault();
-
-            if (item != null)
-            {
-                _CRUDContext.Acts.Remove(item);
-                _CRUDContext.SaveChanges();
-            }
+            _CRUDContext.Delete_acts(movie_id,actor_id);
         }
     }
 }

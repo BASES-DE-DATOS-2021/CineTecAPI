@@ -55,12 +55,7 @@ namespace CineTec.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            var item = _CRUDContext.Actors.FirstOrDefault(x => x.id == id);
-            if (item != null)
-            {
-                _CRUDContext.Actors.Remove(item);
-                _CRUDContext.SaveChanges();
-            }
+            _CRUDContext.Delete_actor(id);
         }
     }
 }
