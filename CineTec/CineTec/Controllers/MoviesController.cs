@@ -31,6 +31,14 @@ namespace CineTec.Controllers
         public Movie Get(int id)
         {
             return _CRUDContext.Movies.SingleOrDefault(x => x.id == id);
+
+        }
+
+        // GET api/Movies/byName/shuek
+        [HttpGet("byName/{original_name}")]
+        public Movie GetByName(string original_name)
+        {
+            return _CRUDContext.Movies.SingleOrDefault(x => x.original_name == original_name);
         }
 
         // POST api/Movies
@@ -50,11 +58,30 @@ namespace CineTec.Controllers
             _CRUDContext.SaveChanges();
         }
 
+        // PUT api/Movies/5
+        [HttpPut("by_name/{original_name}")]
+        public void PutByName(string original_name, [FromBody] Movie movie)
+        {
+            _CRUDContext.Update_Movie_ByName(original_name, movie);
+        }
+
         // DELETE api/Movies/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
             var item = _CRUDContext.Movies.FirstOrDefault(x => x.id == id);
+            if (item != null)
+            {
+                _CRUDContext.Movies.Remove(item);
+                _CRUDContext.SaveChanges();
+            }
+        }
+
+        // DELETE api/Movies/byName/Shuek
+        [HttpDelete("byName/{original_name}")]
+        public void DeleteByName(string original_name)
+        {
+            var item = _CRUDContext.Movies.FirstOrDefault(x => x.original_name == original_name);
             if (item != null)
             {
                 _CRUDContext.Movies.Remove(item);

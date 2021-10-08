@@ -12,11 +12,11 @@ namespace CineTec.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ActsInController : ControllerBase
+    public class ActsController : ControllerBase
     {
         private readonly CRUDContext _CRUDContext;
 
-        public ActsInController(CRUDContext CRUDContext)
+        public ActsController(CRUDContext CRUDContext)
         {
             _CRUDContext = CRUDContext;
         }
@@ -25,47 +25,47 @@ namespace CineTec.Controllers
         [HttpGet]
         public IEnumerable<Acts> Get()
         {
-            return _CRUDContext.ActsIn;
+            return _CRUDContext.Acts;
         }
 
         // GET api/ActsIn/actsIn?movie_id=a&actor_id=b
-        [HttpGet("actsIn")]
+        [HttpGet("acts")]
         public Acts Get(int movie_id, int actor_id)
         {
-            return _CRUDContext.ActsIn
+            return _CRUDContext.Acts
                     .Where(f => f.movie_id == movie_id && f.actor_id == actor_id)
                     .FirstOrDefault();
         }
 
-        // POST api/ActsIn/
+        // POST api/Acts/
         [HttpPost]
         public void Post([FromBody] Acts Acts)
         {
-            _CRUDContext.ActsIn.Add(Acts);
+            _CRUDContext.Acts.Add(Acts);
             _CRUDContext.SaveChanges();
         }
 
-        // PUT api/ActsIn/actsIn?movie_id=a&actor_id=b
-        [HttpPut("actsIn")]
+        // PUT api/Acts/actsIn?movie_id=a&actor_id=b
+        [HttpPut("acts")]
         public void Put(int movie_id, int actor_id, [FromBody] Acts acts)
         {
             acts.movie_id = movie_id;
             acts.actor_id = actor_id;
-            _CRUDContext.ActsIn.Update(acts);
+            _CRUDContext.Acts.Update(acts);
             _CRUDContext.SaveChanges();
         }
 
-        // DELETE api/ActsIn/actsIn?movie_id=a&actor_id=b
-        [HttpDelete("actsIn")]
+        // DELETE api/Acts/actsIn?movie_id=a&actor_id=b
+        [HttpDelete("acts")]
         public void Delete(int movie_id, int actor_id)
         {
-            var item = _CRUDContext.ActsIn
+            var item = _CRUDContext.Acts
                         .Where(f => f.movie_id == movie_id && f.actor_id == actor_id)
                         .FirstOrDefault();
 
             if (item != null)
             {
-                _CRUDContext.ActsIn.Remove(item);
+                _CRUDContext.Acts.Remove(item);
                 _CRUDContext.SaveChanges();
             }
         }

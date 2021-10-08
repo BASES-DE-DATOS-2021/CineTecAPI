@@ -26,7 +26,7 @@ namespace CineTec.Context
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Classification> Classifications { get; set; }
         public DbSet<Director> Directors { get; set; }
-        public DbSet<Acts> ActsIn { get; set; }
+        public DbSet<Acts> Acts { get; set; }
         public DbSet<Actor> Actors { get; set; }
 
 
@@ -38,26 +38,7 @@ namespace CineTec.Context
 
             modelBuilder.Entity<Acts>()
                 .HasKey(a => new { a.movie_id, a.actor_id });
-
-            modelBuilder.Entity<Branch>()
-                .Property(b => b.rooms_quantity)
-                .HasDefaultValue(0);
         }
-
-
-        // Llena una sala con la cantidad de sillas que debe tener. Todas estan vacias.
-        public void Update_branch_rooms_quantity(string branch_name)
-        {
-            var branch = Branches.FirstOrDefault(b => b.cinema_name == branch_name);
-            if (branch != null)
-            {
-                var count = (from r in Rooms.Where(r => r.branch_name == branch_name)
-                            select r).CountAsync();
-                branch.rooms_quantity = count.Result;
-                SaveChanges();
-            }
-        }
-
 
         // Llena una sala con la cantidad de sillas que debe tener. Todas estan vacias.
         public void Add_room_seats(int id, int capacity)
@@ -67,7 +48,6 @@ namespace CineTec.Context
                 Seats.Add(new Seat(id, i, "EMPTY"));
             }
             SaveChanges();
-
         }
 
 
@@ -133,9 +113,8 @@ namespace CineTec.Context
             if (room != null)
             {
                 Seats.RemoveRange(Seats.Where(x => x.room_id == id));
-                
+                SaveChanges();
             }
-            SaveChanges();
             Rooms.Remove(room);
             SaveChanges();
         }
@@ -146,10 +125,25 @@ namespace CineTec.Context
             {
                 room.column_quantity = r.column_quantity;
                 room.row_quantity = r.row_quantity;
+                Rooms.Update(room);
+                SaveChanges();
             }
-            Rooms.Update(room);
-            //Update_branch_rooms_quantity(room.branch_name);
-            SaveChanges();
+        }
+
+        public void Update_Movie_ByName(string original_name, Movie m)
+        {
+            var movie = Movies.FirstOrDefault(x => x.original_name == original_name);
+            if (movie != null)
+            {
+                movie.classification_id = m.classification_id;
+                movie.original_name = m.original_name;
+                movie.director_id = m.director_id;
+                movie.name = m.name;
+                movie.image = m.image;
+                movie.length = m.length;
+                Movies.Update(movie);
+                SaveChanges();
+            }
         }
 
 

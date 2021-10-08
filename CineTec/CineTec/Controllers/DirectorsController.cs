@@ -33,6 +33,14 @@ namespace CineTec.Controllers
             return _CRUDContext.Directors.SingleOrDefault(x => x.id == id);
         }
 
+        // GET api/Directors/byName/Pablo
+        [HttpGet("byName/{name}")]
+        public Director Get(string name)
+        {
+            return _CRUDContext.Directors.SingleOrDefault(x => x.name == name);
+        }
+
+
         // POST api/Directors
         [HttpPost]
         public void Post([FromBody] Director director)
