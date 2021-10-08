@@ -14,7 +14,7 @@ namespace CineTec.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
         public DateTime date { get; set; }
-        public string  time { get; set; }
+        public string time { get; set; }
 
 
 

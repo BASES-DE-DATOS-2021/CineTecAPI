@@ -66,9 +66,9 @@ namespace CineTec.Context
 
         // Metodo que retorna las sillas modificadas de un cuarto con el estado dependiendo de
         // la probabilidad recibida.
-        public void Set_room_seats_status_restriction(int pobably)
+        public void Set_room_seats_status_restriction(int room_id, int prob)
         {
-
+            Room r = GetRoom(room_id);
         }
 
 
@@ -85,6 +85,12 @@ namespace CineTec.Context
         public Employee GetEmployee(int cedula)
         {
             return Employees.Where(f => f.cedula == cedula).FirstOrDefault();
+        }
+
+        public Room GetRoom(int room_id)
+        {
+            return Rooms.Where(f => f.id == room_id).FirstOrDefault();
+
         }
 
         public Seat GetSeat(int room_id, int number)
@@ -111,6 +117,24 @@ namespace CineTec.Context
         {
             return Projections.Where(f => f.movie_id == movie_id);
         }
+
+        //
+        public IList<DateTime> GetProjections_dates_byBranch(string cinema_name)
+        {
+            var query = from b in Branches.Where(b => b.cinema_name == cinema_name)
+                        join r in Rooms
+                            on b.cinema_name equals r.branch_name
+                        join p in Projections
+                            on r.id equals p.room_id
+                        select p.date;
+
+            IList<DateTime> myList = query.Cast<DateTime>().ToList();
+            return myList;
+        }
+
+
+
+
 
         //
         public Acts GetActs(int movie_id, int actor_id)
@@ -141,10 +165,6 @@ namespace CineTec.Context
                         select new { room };
             var queryRoom = from t in query
                             select t.room;
-            if (!queryRoom.Any())
-            {
-                return null;
-            }
             IList<Room> myList = queryRoom.Cast<Room>().ToList();
             return myList;
         }
@@ -162,11 +182,6 @@ namespace CineTec.Context
                         select new { seat };
             var querySeat = from t in query
                             select t.seat;
-            if (!querySeat.Any())
-            {
-                return null;
-            }
-            //Seat[] s = querySeat.ToArray();
             IList<Seat> myList = querySeat.Cast<Seat>().ToList();
             return myList;
         }

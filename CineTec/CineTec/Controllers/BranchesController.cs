@@ -4,6 +4,7 @@ using System.Linq;
 using CineTec.Context;
 using CineTec.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -40,6 +41,13 @@ namespace CineTec.Controllers
         public IList<Room> Get_all_rooms(string cinema_name)
         {
             return _CRUDContext.Get_all_rooms_of_a_branch(cinema_name);
+        }
+
+        // GET api/Branches/all_projections_dates?cinema_name=a
+        [HttpGet("all_projections_dates")]
+        public IList<DateTime> Get_all_projections_dates_byBranch(string cinema_name)
+        {
+            return _CRUDContext.GetProjections_dates_byBranch(cinema_name);
         }
 
         // POST api/Branches

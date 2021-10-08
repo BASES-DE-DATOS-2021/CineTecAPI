@@ -35,7 +35,7 @@ namespace CineTec.Controllers
             return _CRUDContext.GetActs_byMovieId(movie_id);
         }
 
-        // GET api/Acts/actsIn?movie_id=a&actor_id=b
+        // GET api/Acts/actsIn?actor_id=a
         [HttpGet("acts/byActorsId/{actor_id}")]
         public IEnumerable<Acts> GetActs_byActorsId(int actor_id)
         {
@@ -59,20 +59,5 @@ namespace CineTec.Controllers
             _CRUDContext.Acts.Update(acts);
             _CRUDContext.SaveChanges();
         }
-
-        // DELETE api/Acts/actsIn?movie_id=a&actor_id=b
-/*        [HttpDelete("acts")]
-        public void Delete(int movie_id, int actor_id)
-        {
-            var item = _CRUDContext.Acts
-                        .Where(f => f.movie_id == movie_id && f.actor_id == actor_id)
-                        .FirstOrDefault();
-
-            if (item != null)
-            {
-                _CRUDContext.Acts.Remove(item);
-                _CRUDContext.SaveChanges();
-            }
-        }*/
     }
 }
