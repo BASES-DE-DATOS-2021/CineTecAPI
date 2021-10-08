@@ -38,7 +38,26 @@ namespace CineTec.Context
 
             modelBuilder.Entity<Acts>()
                 .HasKey(a => new { a.movie_id, a.actor_id });
+
+            modelBuilder.Entity<Branch>()
+                .Property(b => b.rooms_quantity)
+                .HasDefaultValue(0);
         }
+
+
+        // Llena una sala con la cantidad de sillas que debe tener. Todas estan vacias.
+        public void Update_branch_rooms_quantity(string branch_name)
+        {
+            var branch = Branches.FirstOrDefault(b => b.cinema_name == branch_name);
+            if (branch != null)
+            {
+                var count = (from r in Rooms.Where(r => r.branch_name == branch_name)
+                            select r).CountAsync();
+                branch.rooms_quantity = count.Result;
+                SaveChanges();
+            }
+        }
+
 
         // Llena una sala con la cantidad de sillas que debe tener. Todas estan vacias.
         public void Add_room_seats(int id, int capacity)
@@ -48,6 +67,7 @@ namespace CineTec.Context
                 Seats.Add(new Seat(id, i, "EMPTY"));
             }
             SaveChanges();
+
         }
 
 
@@ -113,8 +133,9 @@ namespace CineTec.Context
             if (room != null)
             {
                 Seats.RemoveRange(Seats.Where(x => x.room_id == id));
-                SaveChanges();
+                
             }
+            SaveChanges();
             Rooms.Remove(room);
             SaveChanges();
         }
@@ -127,6 +148,7 @@ namespace CineTec.Context
                 room.row_quantity = r.row_quantity;
             }
             Rooms.Update(room);
+            Update_branch_rooms_quantity(room.branch_name);
             SaveChanges();
         }
 

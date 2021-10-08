@@ -38,8 +38,9 @@ namespace CineTec.Controllers
         [HttpPost]
         public void Post([FromBody] Branch branch)
         {
-                _CRUDContext.Branches.Add(branch);
-                _CRUDContext.SaveChanges();
+            branch.rooms_quantity = 0; // Por si llega algun valor setearlo a 0.
+            _CRUDContext.Branches.Add(branch);
+            _CRUDContext.SaveChanges();
         }
 
         // PUT api/Branches/Cinectec Cartago
