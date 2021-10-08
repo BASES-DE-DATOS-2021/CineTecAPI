@@ -5,6 +5,17 @@ INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('san vit
 INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('limon', 'Limon', 'Roosevelt');
 INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('cartago', 'Cartago', 'Cartago');
 
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- Populacion de Rooms
+INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('oxigeno', 10, 10);
+INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('cartago', 5, 5);
+INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('san vito', 2, 2);
+INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('escazu', 4, 4);
+INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('limon', 5, 5);
+INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('limon', 12, 12);
+
+
 ------------------------------------------------------------------------------------------------------------------------------------
 
 -- Populacion de Empleados
@@ -22,13 +33,6 @@ INSERT INTO public."Employees"(
 
 
 
-------------------------------------------------------------------------------------------------------------------------------------
--- Populacion de Rooms
-INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('oxigeno', 10, 10);
-INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('cartago', 5, 5);
-INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('san vito', 2, 2);
-INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('escazu', 4, 4);
-INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('limon', 5, 5);
 	
 	
 ------------------------------------------------------------------------------------------------------------------------------------
