@@ -63,10 +63,9 @@ namespace CineTec.Controllers
 
         // DELETE api/Branches/Cinectec Cartago
         [HttpDelete("{cinema_name}")]
-        public void Delete(string cinema_name)
+        public ActionResult Delete(string cinema_name)
         {
-            _CRUDContext.Delete_cinema_and_rooms(cinema_name);
+            return BadRequest(_CRUDContext.Delete_cinema_and_rooms(cinema_name));
         }
-
     }
 }

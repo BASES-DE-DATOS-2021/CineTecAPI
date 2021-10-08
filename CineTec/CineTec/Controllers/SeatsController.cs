@@ -30,9 +30,7 @@ namespace CineTec.Controllers
         [HttpGet("byId")]
         public Seat Get(int room_id, int number)
         {
-            return _CRUDContext.Seats
-                        .Where(f => f.number == number && f.room_id == room_id)
-                        .FirstOrDefault();
+            return _CRUDContext.GetSeat(room_id, number);
         }
 
 
@@ -48,44 +46,10 @@ namespace CineTec.Controllers
         [HttpPut("byId")]
         public void Put(int room_id, int number, [FromBody] Seat Seat)
         {
-            Seat.room_id = room_id;
-            Seat.number = number;
-            _CRUDContext.Seats.Update(Seat);
+            Seat s = _CRUDContext.GetSeat(room_id, number);
+            s.status = Seat.status;
+            _CRUDContext.Seats.Update(s);
             _CRUDContext.SaveChanges();
         }
-
-        // DELETE api/Seats/byId?room_id=a&number=b
-        //[HttpDelete("byId")]
-        //public void Delete(int room_id, int number)
-        //{
-        //    var item = _CRUDContext.Seats
-        //                .Where(f => f.number == number && f.room_id == room_id)
-        //                .FirstOrDefault();
-
-        //    if (item != null)
-        //    {
-        //        _CRUDContext.Seats.Remove(item);
-        //        _CRUDContext.SaveChanges();
-        //    }
-        //}
-
-
-        //// DELETE ALL SEATS FROM A ROOM
-        //public void Delete_all_from_room(int id)
-        //{
-        //    var query = from s in _CRUDContext.Seats
-        //                where s.room_id == id
-        //                select s;
-
-        //    if (query != null)
-        //    {
-        //        // Elimina cada silla donde el id coincida con la sala.
-        //        foreach (Seat s in query)
-        //        {
-        //            Delete(s.room_id, s.number);
-        //        }
-        //        _CRUDContext.SaveChanges();
-        //    }
-        //}
     }
 }

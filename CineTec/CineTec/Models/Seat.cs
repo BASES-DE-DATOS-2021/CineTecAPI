@@ -16,12 +16,18 @@ namespace CineTec.Models
         public int number { get; set; }
         public string status { get; set; }
 
-        public Seat(int room_id, int number, string status)
-        {
-            this.room_id = room_id;
-            this.number = number;
-            this.status = status;
-        }
+
+        //public Seat(string status)
+        //{
+        //    this.status = status;
+        //}
+
+        //public Seat(int room_id, int number, string status)
+        //{
+        //    this.room_id = room_id;
+        //    this.number = number;
+        //    this.status = status;
+        //}
 
 
     }

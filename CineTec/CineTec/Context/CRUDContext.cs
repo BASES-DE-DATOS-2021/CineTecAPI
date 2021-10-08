@@ -53,7 +53,12 @@ namespace CineTec.Context
         {
             for (int i = 1; i < capacity + 1; i++)
             {
-                Seats.Add(new Seat(id, i, "EMPTY"));
+                Seat s = new Seat();
+                s.room_id = id;
+                s.number = i;
+                s.status = "EMPTY";
+                Seats.Add(s);
+               
             }
             SaveChanges();
         }
@@ -82,6 +87,12 @@ namespace CineTec.Context
             return Employees.Where(f => f.cedula == cedula).FirstOrDefault();
         }
 
+        public Seat GetSeat(int room_id, int number)
+        {
+            return Seats.Where(f => f.number == number && f.room_id == room_id)
+                        .FirstOrDefault();
+        }
+       
 
         //
         public Projection GetProjection(int id)
@@ -302,7 +313,7 @@ namespace CineTec.Context
 
 
         // Elimina las salas de una sucursal y luego elimina la sucursal misma.
-        public void Delete_cinema_and_rooms(string cinema_name)
+        public string Delete_cinema_and_rooms(string cinema_name)
         {
             var branch = Branches.FirstOrDefault(b => b.cinema_name == cinema_name);
             if (branch != null)
@@ -334,15 +345,12 @@ namespace CineTec.Context
 
                     Branches.Remove(branch);
                     SaveChanges();
+                    return "Se elimina correctamente.";
                 }
-                else
-                {
-                    ///////////// PONER UN AVISO AQUI DE QUE NO SE PUEDE BORRAR UNA SUCURSAL QUE TIENE EMPLEADOS
-                    /// PRIMERO ES NECESARIO BORRAR LOS EMPLEADOS POR SI SOLOS.
-                }
-
-
+                return "No se puede eliminar una sucursal que tiene empleados relacionados.";
             }
+            return "No existe esta sucursal.";
+
         }
 
         // Elimina las sillas de una sala y luego elimina la sala misma.
