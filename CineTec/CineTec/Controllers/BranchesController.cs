@@ -34,6 +34,14 @@ namespace CineTec.Controllers
             return _CRUDContext.Branches.SingleOrDefault(x => x.cinema_name == cinema_name);
         }
 
+
+        // GET api/Branches/all_rooms?cinema_name=a
+        [HttpGet("all_rooms")]
+        public IList<Room> Get_all_rooms(string cinema_name)
+        {
+            return _CRUDContext.Get_all_rooms_of_a_branch(cinema_name);
+        }
+
         // POST api/Branches
         [HttpPost]
         public void Post([FromBody] Branch branch)
