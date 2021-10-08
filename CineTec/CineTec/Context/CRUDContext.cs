@@ -38,6 +38,8 @@ namespace CineTec.Context
 
             modelBuilder.Entity<Acts>()
                 .HasKey(a => new { a.movie_id, a.actor_id });
+
+
         }
 
 
@@ -119,16 +121,16 @@ namespace CineTec.Context
         }
 
         //
-        public IList<DateTime> GetProjections_dates_byBranch(string cinema_name)
+        public IList<string> GetProjections_dates_byBranch(string cinema_name)
         {
             var query = from b in Branches.Where(b => b.cinema_name == cinema_name)
                         join r in Rooms
                             on b.cinema_name equals r.branch_name
                         join p in Projections
                             on r.id equals p.room_id
-                        select p.date;
+                        select p.FormattedDate;
 
-            IList<DateTime> myList = query.Cast<DateTime>().ToList();
+            IList<string> myList = query.Cast<string>().ToList();
             return myList;
         }
 

@@ -45,7 +45,7 @@ namespace CineTec.Controllers
 
         // GET api/Branches/all_projections_dates?cinema_name=a
         [HttpGet("all_projections_dates")]
-        public IList<DateTime> Get_all_projections_dates_byBranch(string cinema_name)
+        public IList<string> Get_all_projections_dates_byBranch(string cinema_name)
         {
             return _CRUDContext.GetProjections_dates_byBranch(cinema_name);
         }

@@ -13,8 +13,21 @@ namespace CineTec.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
+        [Column(TypeName = "Date")]
         public DateTime date { get; set; }
         public string time { get; set; }
+
+
+        public string FormattedDate
+        {
+            get
+            {
+                return string.Format("{0:dd/MM/yy}", date);
+            }
+        }
 
 
 
