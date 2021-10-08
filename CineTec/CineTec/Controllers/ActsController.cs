@@ -32,16 +32,14 @@ namespace CineTec.Controllers
         [HttpGet("acts/byMovieId/{movie_id}")]
         public IEnumerable<Acts> GetActs_byMovieId(int movie_id)
         {
-            return _CRUDContext.Acts
-                    .Where(f => f.movie_id == movie_id);
+            return _CRUDContext.GetActs_byMovieId(movie_id);
         }
 
         // GET api/Acts/actsIn?movie_id=a&actor_id=b
         [HttpGet("acts/byActorsId/{actor_id}")]
         public IEnumerable<Acts> GetActs_byActorsId(int actor_id)
         {
-            return _CRUDContext.Acts
-                    .Where(f => f.actor_id == actor_id);
+            return _CRUDContext.GetActs_byActorsId(actor_id);
         }
 
         // POST api/Acts/

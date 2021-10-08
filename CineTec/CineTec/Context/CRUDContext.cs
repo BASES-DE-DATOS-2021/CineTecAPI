@@ -74,6 +74,27 @@ namespace CineTec.Context
          *              
          */
 
+        //
+
+        public Acts GetActs(int movie_id, int actor_id)
+        {
+            return Acts.Where(f => f.movie_id == movie_id && f.actor_id == actor_id).FirstOrDefault();
+        }
+
+        //
+        public IEnumerable<Acts> GetActs_byMovieId(int movie_id)
+        {
+            return Acts
+                    .Where(f => f.movie_id == movie_id);
+        }
+
+        //
+        public IEnumerable<Acts> GetActs_byActorsId(int actor_id)
+        {
+            return Acts
+                    .Where(f => f.actor_id == actor_id);
+        }
+
         public IList<Room> Get_all_rooms_of_a_branch(string cinema_name)
         {
             // Obtener todas las salas de la sucursal que coincide con el cinema_name ingresado.
@@ -195,7 +216,31 @@ namespace CineTec.Context
                 }
                 else
                 {
-                    ///////////// PONER UN AVISO AQUI DE QUE NO SE PUEDE BORRAR UN DIRECTOR QUE TIENE PELICULAS RELACIONADAS.
+                    ///////////// PONER UN AVISO AQUI DE QUE NO SE PUEDE BORRAR CON PELICULAS RELACIONADAS.
+                }
+            }
+        }
+
+
+        // Eliminacion especial de director tomando en cuenta si hay alguna referencia.
+        public void Delete_acts(int movie_id, int actor_id)
+        {
+            var item = GetActs(movie_id, actor_id);
+            if (item != null)
+            {
+                // verificar si hay peliculas asociadas a este acts.
+                var movie = Movies.FirstOrDefault(m => m.id == movie_id);
+                if (movie == null)
+                {
+                    // ELIMINAR ACTOR
+                    Acts.Remove(item);
+                    SaveChanges();
+                    // NOTA: Los no se borran, solo quedan en la tabla sin relacion alguna. 
+
+                }
+                else
+                {
+                    ///////////// PONER UN AVISO AQUI DE QUE NO SE PUEDE BORRAR CON PELICULAS RELACIONADAS.
                 }
             }
         }
@@ -214,40 +259,10 @@ namespace CineTec.Context
                     // ELIMINAR ACTOR
                     Actors.Remove(item);
                     SaveChanges();
-
-                    // ELIMINAR 
-
                 }
                 else
                 {
-                    ///////////// PONER UN AVISO AQUI DE QUE NO SE PUEDE BORRAR UN DIRECTOR QUE TIENE PELICULAS RELACIONADAS.
-                }
-            }
-        }
-
-
-
-
-        // Eliminacion especial de director tomando en cuenta si hay alguna referencia.
-        public void Delete_actor(int id)
-        {
-            var item = Actors.FirstOrDefault(x => x.id == id);
-            if (item != null)
-            {
-                // verificar si hay peliculas asociadas a este director.
-                var acts = Acts.FirstOrDefault(m => m.actor_id == id);
-                if (acts == null)
-                {
-                    // ELIMINAR ACTOR
-                    Actors.Remove(item);
-                    SaveChanges();
-
-                    // ELIMINAR 
-
-                }
-                else
-                {
-                    ///////////// PONER UN AVISO AQUI DE QUE NO SE PUEDE BORRAR UN DIRECTOR QUE TIENE PELICULAS RELACIONADAS.
+                    ///////////// PONER UN AVISO AQUI DE QUE NO SE PUEDE BORRAR CON PELICULAS RELACIONADAS.
                 }
             }
         }
