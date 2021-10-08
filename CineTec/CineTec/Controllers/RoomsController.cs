@@ -49,18 +49,16 @@ namespace CineTec.Controllers
         {
             try
             {
-                if (_CRUDContext.Evaluate_if_its_space_for_new_room_in_a_branch(room.branch_name))
-                {
-                    _CRUDContext.Rooms.Add(room);
-                    _CRUDContext.SaveChanges();
-                    _CRUDContext.Add_room_seats(room.id, room.capacity);
-                }
+                _CRUDContext.Rooms.Add(room);
+                _CRUDContext.SaveChanges();
+                _CRUDContext.Add_room_seats(room.id, room.capacity);
             }
             catch (DbUpdateException e)
             {
                 Console.WriteLine(e.GetType()); // what is the real exception?
             }
         }
+
 
         // PUT api/Rooms/5
         [HttpPut("{id}")]

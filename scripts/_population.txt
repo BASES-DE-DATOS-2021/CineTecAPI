@@ -1,34 +1,20 @@
 -- Populacion de Sucursales
-INSERT INTO public."Branches"(
-	cinema_name, province, district, room_quantity)
-	VALUES ('Cinetec San Pedro', 'San Jose', 'San Pedro', '6');
-	
-INSERT INTO public."Branches"(
-	cinema_name, province, district, room_quantity)
-	VALUES ('Cinetec Escazu', 'San Jose', 'Escazu', '7');
-	
-INSERT INTO public."Branches"(
-	cinema_name, province, district, room_quantity)
-	VALUES ('Cinetec San Vito', 'Puntarenas', 'San Vito', '4');
-	
-INSERT INTO public."Branches"(
-	cinema_name, province, district, room_quantity)
-	VALUES ('Cinetec Limon', 'Limon', 'Roosevelt', '4');
-
-INSERT INTO public."Branches"(
-	cinema_name, province, district, room_quantity)
-	VALUES ('Cinetec Cartago', 'Cartago', 'Cartago', '6');
+INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('oxigeno', 'San Jose', 'San Pedro');
+INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('escazu', 'San Jose', 'Escazu');
+INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('san vito', 'Puntarenas', 'San Vito');
+INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('limon', 'Limon', 'Roosevelt');
+INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('cartago', 'Cartago', 'Cartago');
 
 ------------------------------------------------------------------------------------------------------------------------------------
 
 -- Populacion de Empleados
 INSERT INTO public."Employees"(
 	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, phone_number, username, password)
-	VALUES ('Cinetec San Pedro', 117920956, 'Michael', 'Shakime', 'Richards', 'Sparks', '10/21/2000', 22489340, 'Jeykime', 2100);
+	VALUES ('oxigeno', 117920956, 'Michael', 'Shakime', 'Richards', 'Sparks', '10/21/2000', 22489340, 'Jeykime', 2100);
 
 INSERT INTO public."Employees"(
 	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, phone_number, username, password)
-	VALUES ('Cinetec San Vito', 34809322, 'Carlos', 'Adrian', 'Araya', 'Ramirez', '07/05/1999', 89573290, 'Heutlet', 1234);
+	VALUES ('san vito', 34809322, 'Carlos', 'Adrian', 'Araya', 'Ramirez', '07/05/1999', 89573290, 'Heutlet', 1234);
 
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -38,25 +24,11 @@ INSERT INTO public."Employees"(
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- Populacion de Rooms
-INSERT INTO public."Rooms"(
-	branch_name, row_quantity, column_quantity)
-	VALUES ('Cinetec San Pedro', 10, 10);
-	
-INSERT INTO public."Rooms"(
-	branch_name, row_quantity, column_quantity)
-	VALUES ('Cinetec Cartago', 5, 5);
-
-INSERT INTO public."Rooms"(
-	branch_name, row_quantity, column_quantity)
-	VALUES ('Cinetec San Vito', 2, 2);
-
-INSERT INTO public."Rooms"(
-	branch_name, row_quantity, column_quantity)
-	VALUES ('Cinetec Escazu', 4, 4);
-
-INSERT INTO public."Rooms"(
-	branch_name, row_quantity, column_quantity)
-	VALUES ('Cinetec Limon', 5, 5);
+INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('oxigeno', 10, 10);
+INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('cartago', 5, 5);
+INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('san vito', 2, 2);
+INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('escazu', 4, 4);
+INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('limon', 5, 5);
 	
 	
 ------------------------------------------------------------------------------------------------------------------------------------

@@ -30,7 +30,7 @@ namespace CineTec.Context
         public DbSet<Actor> Actors { get; set; }
 
 
-        // we override the OnModelCreating method here.
+        // Overide del OnModelCreating para utilizar dos atributos como llave compuesta.
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Seat>()
@@ -50,28 +50,6 @@ namespace CineTec.Context
             SaveChanges();
         }
 
-        // Funcion que verifica si existe espacio para crear una nueva sala dentro de una sucursal
-        // tomando en cuenta que no exceda la capacidad maxima de salas en la sucursal.
-        public bool Evaluate_if_its_space_for_new_room_in_a_branch(string cinema_name)
-        {
-            var branch = Branches.FirstOrDefault(x => x.cinema_name == cinema_name);
-            if (branch != null)
-            {
-                // Encontrar la cantidad de salas referentes a esta sucursal en el momento.
-                var query = from b in Branches.Where(b => b.cinema_name == cinema_name)
-                            join r in Rooms
-                                on b.cinema_name equals r.branch_name
-                            select new { b.cinema_name, r.id };
-                
-                // Evaluar si aun hay espacio para poder agregar salas en la sucursal.
-                if (query != null)
-                {
-                    int current_rooms_number = (from t in query select t.id).Count();
-                    return current_rooms_number < branch.room_quantity;
-                }
-            }
-            return false;
-        }
 
         public IList<Seat> Get_all_seats_of_a_room(string cinema_name, int id)
         {
@@ -141,6 +119,41 @@ namespace CineTec.Context
         }
 
 
+
+
+
+
+
+
+
+
+
+
+
+        // COMENTADA POR SI SE NECESITA ALGUN JOIN PARECIDO.
+
+        //// Funcion que verifica si existe espacio para crear una nueva sala dentro de una sucursal
+        //// tomando en cuenta que no exceda la capacidad maxima de salas en la sucursal.
+        //public bool Evaluate_if_its_space_for_new_room_in_a_branch(string cinema_name)
+        //{
+        //    var branch = Branches.FirstOrDefault(x => x.cinema_name == cinema_name);
+        //    if (branch != null)
+        //    {
+        //        // Encontrar la cantidad de salas referentes a esta sucursal en el momento.
+        //        var query = from b in Branches.Where(b => b.cinema_name == cinema_name)
+        //                    join r in Rooms
+        //                        on b.cinema_name equals r.branch_name
+        //                    select new { b.cinema_name, r.id };
+
+        //        // Evaluar si aun hay espacio para poder agregar salas en la sucursal.
+        //        if (query != null)
+        //        {
+        //            int current_rooms_number = (from t in query select t.id).Count();
+        //            return current_rooms_number < branch.room_quantity;
+        //        }
+        //    }
+        //    return false;
+        //}
 
     }
 

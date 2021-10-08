@@ -38,7 +38,6 @@ CREATE TABLE "Branches"
     cinema_name VARCHAR(30) NOT NULL,
     province VARCHAR(30) NOT NULL,
     district VARCHAR(30) NOT NULL,
-    room_quantity INT NOT NULL,
     PRIMARY KEY(cinema_name)
 );
 
@@ -181,15 +180,13 @@ ADD CONSTRAINT ACTS_ACTOR_FK FOREIGN KEY(actor_id)
 REFERENCES "Actors"(id);
 
 
-
+---- FUNCIONES DE LOS ATRIBUTOS DERIVADOS.
 -- Funcion para obtener la edad.
 CREATE OR REPLACE FUNCTION get_age( birthday DATE )
 RETURNS INT
 AS $CODE$
 BEGIN
-    RETURN extract( year FROM CURRENT_DATE )
-           - extract( year FROM birthday )
-           + 1;
+	RETURN (CURRENT_DATE - birthday)/365.25;
 END
 $CODE$
 LANGUAGE plpgsql IMMUTABLE;
@@ -205,12 +202,52 @@ $CODE$
 LANGUAGE plpgsql IMMUTABLE;
 
 
+-- Funcion para obtener la cantidad de salas referentes a una sucursal.
+CREATE OR REPLACE FUNCTION get_room_quantity( cinema VARCHAR(30) )
+RETURNS bigint
+AS $CODE$
+--       SELECT count(*)
+--       FROM   "Rooms"
+--       WHERE  branch_name = cinema;
+	  SELECT COUNT(*)
+	  	FROM "Branches" as B, "Rooms" as R
+		WHERE B.cinema_name = 'Oxigen' AND B.cinema_name = R.branch_name;
+    $CODE$
+LANGUAGE sql IMMUTABLE;
+
+
+---- ATRIBUTOS DERIVADOS
 ALTER TABLE "Employees"
-ADD COLUMN age INT GENERATED ALWAYS AS (get_age(birth_date)) STORED;
+ADD COLUMN age INT NOT NULL GENERATED ALWAYS AS (get_age(birth_date)) STORED;
 
 ALTER TABLE "Clients"
-ADD COLUMN age INT GENERATED ALWAYS AS (get_age(birth_date)) STORED;
+ADD COLUMN age INT NOT NULL GENERATED ALWAYS AS (get_age(birth_date)) STORED;
+
+ALTER TABLE "Branches"
+ADD COLUMN room_quantity bigint NOT NULL GENERATED ALWAYS AS (get_room_quantity(cinema_name)) STORED;
 
 ALTER TABLE "Rooms"
-ADD COLUMN capacity INT GENERATED ALWAYS AS (get_capacity(row_quantity, column_quantity)) STORED;
+ADD COLUMN capacity INT NOT NULL GENERATED ALWAYS AS (get_capacity(row_quantity, column_quantity)) STORED;
+
+
+
+		
+--       SELECT count(*)
+--       FROM   "Rooms"
+--       WHERE  branch_name = 'Oxigen';
+
+--       SELECT count(*)
+-- 	  	FROM "Rooms" as R
+-- 	  	WHERE R.branch_name = 'Cinetec Limon';
+		
+-- SELECT "Branches".*, (
+-- 	SELECT COUNT(*) 
+-- 	FROM "Rooms" as R 
+-- 	WHERE R.branch_name = "Branches".cinema_name) 
+-- 	AS room_quantity FROM "Branches"
+
+
+-- SELECT COUNT(*)
+-- 	FROM "Branches" as B, "Rooms" as R
+-- 	WHERE B.cinema_name = 'Cinetec Cartago' AND B.cinema_name = R.branch_name
 

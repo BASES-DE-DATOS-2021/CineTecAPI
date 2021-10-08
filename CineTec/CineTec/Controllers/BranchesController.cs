@@ -38,22 +38,8 @@ namespace CineTec.Controllers
         [HttpPost]
         public void Post([FromBody] Branch branch)
         {
-            //try
-            //{
                 _CRUDContext.Branches.Add(branch);
                 _CRUDContext.SaveChanges();
-            //}
-            //catch (DbUpdateException e)
-            //{
-            //    ////This either returns a error string, or null if it can’t handle that error
-            //    //var error = CheckHandleError(e);
-            //    //if (error != null)
-            //    //{
-            //    //    return error; //return the error string
-            //    //}
-            //    //throw; //couldn’t handle that error, so rethrow
-            //}
-
         }
 
         // PUT api/Branches/Cinectec Cartago
