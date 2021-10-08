@@ -35,12 +35,12 @@ namespace CineTec.Controllers
         }
 
         // POST api/Actors
-        [HttpPost]
+/*        [HttpPost]
         public void Post([FromBody] Actor actor)
         {
             _CRUDContext.Actors.Add(actor);
             _CRUDContext.SaveChanges();
-        }
+        }*/
 
         // PUT api/Actors/5
         [HttpPut("{id}")]

@@ -21,20 +21,27 @@ namespace CineTec.Controllers
             _CRUDContext = CRUDContext;
         }
 
-        // GET: api/ActsIn
+        // GET: api/Acts
         [HttpGet]
         public IEnumerable<Acts> Get()
         {
             return _CRUDContext.Acts;
         }
 
-        // GET api/ActsIn/actsIn?movie_id=a&actor_id=b
-        [HttpGet("acts")]
-        public Acts Get(int movie_id, int actor_id)
+        // GET api/Acts/byActorsId/
+        [HttpGet("acts/byMovieId/{movie_id}")]
+        public IEnumerable<Acts> GetActs_byMovieId(int movie_id)
         {
             return _CRUDContext.Acts
-                    .Where(f => f.movie_id == movie_id && f.actor_id == actor_id)
-                    .FirstOrDefault();
+                    .Where(f => f.movie_id == movie_id);
+        }
+
+        // GET api/Acts/actsIn?movie_id=a&actor_id=b
+        [HttpGet("acts/byActorsId/{actor_id}")]
+        public IEnumerable<Acts> GetActs_byActorsId(int actor_id)
+        {
+            return _CRUDContext.Acts
+                    .Where(f => f.actor_id == actor_id);
         }
 
         // POST api/Acts/

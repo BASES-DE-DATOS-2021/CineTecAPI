@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System;
 
 namespace CineTec.Models
 {
@@ -12,7 +13,7 @@ namespace CineTec.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
-        public string date { get; set; }
+        public DateTime date { get; set; }
         public string  time { get; set; }
 
 
