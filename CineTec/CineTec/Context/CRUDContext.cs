@@ -74,8 +74,26 @@ namespace CineTec.Context
          *              
          */
 
-        //
 
+        //
+        public Projection GetProjection(int id)
+        {
+            return Projections.Where(f => f.id == id).FirstOrDefault();
+        }
+
+        //
+        public IEnumerable<Projection> GetProjections_byRoomId(int room_id)
+        {
+            return Projections.Where(f => f.room_id == room_id);
+        }
+
+        //
+        public IEnumerable<Projection> GetProjections_byMovieId(int movie_id)
+        {
+            return Projections.Where(f => f.movie_id == movie_id);
+        }
+
+        //
         public Acts GetActs(int movie_id, int actor_id)
         {
             return Acts.Where(f => f.movie_id == movie_id && f.actor_id == actor_id).FirstOrDefault();
@@ -122,7 +140,7 @@ namespace CineTec.Context
                             on b.cinema_name equals room.branch_name
                         join seat in Seats
                             on room.id equals seat.room_id
-                        select new {seat};
+                        select new { seat };
             var querySeat = from t in query
                             select t.seat;
             if (!querySeat.Any())
@@ -277,11 +295,11 @@ namespace CineTec.Context
                 // query para obtener las salas y sillas relacionadas a la sucursal
                 var queryRoomSeat = from b in Branches
                         .Where(b => b.cinema_name == cinema_name)
-                            join room in Rooms
-                                on b.cinema_name equals room.branch_name
-                            join seat in Seats
-                                on room.id equals seat.room_id
-                            select new { room, seat };
+                                    join room in Rooms
+                                        on b.cinema_name equals room.branch_name
+                                    join seat in Seats
+                                        on room.id equals seat.room_id
+                                    select new { room, seat };
 
                 var queryRoom = from t in queryRoomSeat
                                 select t.room;
@@ -292,9 +310,9 @@ namespace CineTec.Context
                 // query para obtener los empleados relacionados a la sucursal
                 var queryEmployees = from b in Branches
                         .Where(b => b.cinema_name == cinema_name)
-                            join emp in Employees
-                                on b.cinema_name equals emp.branch_id
-                            select new { emp };
+                                     join emp in Employees
+                                         on b.cinema_name equals emp.branch_id
+                                     select new { emp };
 
                 var queryEmp = from t in queryEmployees
                                select t.emp;
