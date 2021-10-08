@@ -64,9 +64,10 @@ namespace CineTec.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] Room room)
         {
-            room.id = id;
-            _CRUDContext.Rooms.Update(room);
-            _CRUDContext.SaveChanges();
+
+            _CRUDContext.Update_Room(id, room);
+            // manejar excepcion
+
         }
 
 

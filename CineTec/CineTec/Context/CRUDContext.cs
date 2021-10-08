@@ -113,11 +113,22 @@ namespace CineTec.Context
             if (room != null)
             {
                 Seats.RemoveRange(Seats.Where(x => x.room_id == id));
+                SaveChanges();
             }
             Rooms.Remove(room);
             SaveChanges();
         }
-
+        public void Update_Room(int id, Room r)
+        {
+            var room = Rooms.FirstOrDefault(x => x.id == id);
+            if (room != null)
+            {
+                room.column_quantity = r.column_quantity;
+                room.row_quantity = r.row_quantity;
+            }
+            Rooms.Update(room);
+            SaveChanges();
+        }
 
 
 
