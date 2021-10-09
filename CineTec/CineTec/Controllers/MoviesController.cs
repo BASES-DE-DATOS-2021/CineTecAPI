@@ -27,6 +27,11 @@ namespace CineTec.Controllers
         [HttpGet("{id}")]
         public Movie Get(int id) => _CRUDContext.GetMovie(id);
 
+        // GET api/Movies/5
+        [HttpGet("special/{name}")]
+        public object Get_Select(string name) => _CRUDContext.GetMovie_select(name);
+
+
         // GET api/Movies/byName/Shrek
         [HttpGet("byName/{name}")]
         public Movie GetByName(string name) => _CRUDContext.GetMovie(name);

@@ -97,8 +97,15 @@ INSERT INTO public."Times"(projection_id, schedule) VALUES (2, '14:05');
 INSERT INTO public."Times"(projection_id, schedule) VALUES (2, '21:10');
 
 ------------------------------------------------------------------------------------------------------------------------------------
-
+-- ACTORS
 INSERT INTO public."Actors"( name) VALUES ('Manuel Turizo');
 INSERT INTO public."Actors"( name) VALUES ('Will Smith');
 INSERT INTO public."Actors"( name) VALUES ('Kevin Hart');
 INSERT INTO public."Actors"( name) VALUES ('Harry Styles');
+
+-- ACTS IN
+INSERT INTO public."Acts"( movie_id, actor_id) VALUES (1, 2);
+INSERT INTO public."Acts"( movie_id, actor_id) VALUES (1, 3);
+INSERT INTO public."Acts"( movie_id, actor_id) VALUES (1, 4);
+INSERT INTO public."Acts"( movie_id, actor_id) VALUES (2, 1);
+INSERT INTO public."Acts"( movie_id, actor_id) VALUES (3, 2);

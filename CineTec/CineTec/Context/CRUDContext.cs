@@ -80,7 +80,19 @@ namespace CineTec.Context
 
         // GET ACTOR BY ID
         public Actor GetActor(int id) => Actors.SingleOrDefault(x => x.id == id);
-        
+
+        // GET ACTORS BY MOVIE_ID
+        public List<string> getActors(int movie_id)
+        {
+            var query = from a in Acts.Where(x => x.movie_id == movie_id)
+                        join p in Actors
+                            on a.actor_id equals p.id
+                        select p.name;
+            var actors = query.ToList();
+            return actors;
+        }
+
+
         // POST
         public int Post_actor(Actor actor)
         {
@@ -140,8 +152,9 @@ namespace CineTec.Context
         // GET ACTS BY ACTOR_ID
         public IEnumerable<Acts> GetActs_byActorsId(int actor_id) => Acts.Where(f => f.actor_id == actor_id);
 
-        // POST AN ACTS
-        public int Post_acts(int movie_id, int actor_id)
+
+            // POST AN ACTS
+            public int Post_acts(int movie_id, int actor_id)
         {
             // Verificar la existencia.
             Acts existing = GetActs(movie_id, actor_id);
@@ -582,8 +595,40 @@ namespace CineTec.Context
         // GET MOVIE BY NAME
         public Movie GetMovie(string name) => Movies.SingleOrDefault(x => x.original_name == name || x.name == name);
 
+        // GET MOVIE MODIFIED
+        public object GetMovie_select(string name)
+        {
+            Movie mo = Movies.SingleOrDefault(x => x.original_name == name || x.name == name);
+            if (mo == null) return Enumerable.Empty<string>();
+
+            var query = (from m in Movies.Where(x => x.original_name == name || x.name == name)
+                         join d in Directors on m.director_id equals d.id
+                         join c in Classifications on m.classification_id equals c.code
+                         //join a in Acts on m.id equals a.movie_id
+                         //join p in Actors on a.actor_id equals p.id
+                         select new 
+                         {
+                             original_name = m.original_name,
+                             name = m.name,
+                             length = m.length,
+                             image = m.image,
+                             code = c.code,
+                             age_rating = c.age_rating,
+                             details = c.details,
+                             director = d.name,
+                             actors = (from a in Acts.Where(x => x.movie_id == m.id)
+                                        join p in Actors on a.actor_id equals p.id
+                                        select p.name).ToList()
+                         }).ToList();
+            return query;
+        }
+
+
+
         // GET MOVIE BY ID
-        public Movie GetMovie(int id) => Movies.SingleOrDefault(x => x.id == id);
+            public Movie GetMovie(int id) => Movies.SingleOrDefault(x => x.id == id);
+
+
 
         // POST A MOVIE
         //public int Post_movie(string dirName, string actName, Movie movie)
