@@ -22,57 +22,40 @@ namespace CineTec.Controllers
 
         // GET: api/Actors
         [HttpGet]
-        public IEnumerable<Actor> Get()
-        {
-            return _CRUDContext.Actors;
-        }
+        public IEnumerable<Actor> Get() => _CRUDContext.Actors;
 
         // GET api/Actors/5
-        [HttpGet("{id}")]
-        public Actor Get(int id)
+        [HttpGet("byId/{id}")]
+        public Actor Get_byId(int id) => _CRUDContext.GetActor(id);
+
+        // GET api/Actors/Kevin Hart
+        [HttpGet("byName/{name}")]
+        public Actor Get_byName(string name) => _CRUDContext.GetActor(name);
+
+        // PUT api/Actors/Kevin Hart
+        [HttpPut("{name}")]
+        public ActionResult Put(string name, [FromBody] Actor actor)
         {
-            return _CRUDContext.Actors.SingleOrDefault(x => x.id == id);
-        }
-
-        //// POST api/Actors
-        //[HttpPost]
-        //public void Post([FromBody] Actor actor)
-        //{
-        //    _CRUDContext.Actors.Add(actor);
-        //    _CRUDContext.SaveChanges();
-        //}
-
-        // PUT api/Actors/5
-        [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] Actor actor)
-        {
-            actor.id = id;
-            _CRUDContext.Actors.Update(actor);
-            _CRUDContext.SaveChanges();
-
-            return Ok();
-        }
-
-        // DELETE api/Actors/5
-        [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
-        {
-            string resp = "";
-            int x = _CRUDContext.Delete_actor(id);
-            switch (x)
+            int x = _CRUDContext.Put_actor(actor, name);
+            return x switch
             {
-                case 0:
-                    resp = "No se puede eliminar un actor que se encuentra asignado a una pelicula.";
-                    break;
+                0 => BadRequest("El nombre al que desea actualizar ya se encuentra en uso. Por favor ingrese otro."),
+                -1 => BadRequest("No se ha encontrado un actor con este nombre."),
+                _ => Ok(),
+            };
+        }
 
-                case -1:
-                    resp = "No se ha encontrado este actor.";
-                    break;
-
-                default: // Se elimina correctamente.
-                    return Ok();
-            }
-            return BadRequest(resp);
+        // DELETE api/Actors/Kevin Hart
+        [HttpDelete("{name}")]
+        public ActionResult Delete(string name)
+        {
+            int x = _CRUDContext.Delete_actor(name);
+            return x switch
+            {
+                0 => BadRequest("No se puede eliminar un actor que se encuentra asignado a una pelicula."),
+                -1 => BadRequest("No se ha encontrado un actor con ese nombre."),
+                _ => Ok(),// Se elimina correctamente.
+            };
         }
     }
 }

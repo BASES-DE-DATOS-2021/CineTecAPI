@@ -21,70 +21,58 @@ namespace CineTec.Controllers
 
         // GET: api/Projections
         [HttpGet]
-        public IEnumerable<Projection> Get()
-        {
-            return _CRUDContext.Projections;
-        }
+        public IEnumerable<Projection> Get() => _CRUDContext.Projections;
+        
 
         // GET api/Projections/5
         [HttpGet("{id}")]
-        public Projection Get(int id)
-        {
-            return _CRUDContext.GetProjection(id);
-        }
+        public Projection Get(int id) => _CRUDContext.GetProjection(id);
 
 
         // GET api/Projections/byMovieId/
         [HttpGet("byMovieId/{movie_id}")]
-        public IEnumerable<Projection> Get_byMovieId(int movie_id)
-        {
-            return _CRUDContext.GetProjections_byMovieId(movie_id);
-        }
+        public IEnumerable<Projection> Get_byMovieId(int movie_id) => _CRUDContext.GetProjections_byMovieId(movie_id);
 
         // GET api/Projections/byRoomId?room_id=a
         [HttpGet("byRoomId/{room_id}")]
-        public IEnumerable<Projection> Get_byRoomId(int room_id)
-        {
-            return _CRUDContext.GetProjections_byRoomId(room_id);
-        }
+        public IEnumerable<Projection> Get_byRoomId(int room_id) => _CRUDContext.GetProjections_byRoomId(room_id);
+        
 
         // POST api/Projections
         [HttpPost]
-        public void Post([FromBody] Projection Projection)
+        public IActionResult Post([FromBody] Projection projection)
         {
-            _CRUDContext.Projections.Add(Projection);
-            _CRUDContext.SaveChanges();
+            int x = _CRUDContext.Post_projection(projection);
+            if (x == 0)
+                return BadRequest("Ya existe una proyeccion de la pelicula en esta sala a la misma hora.");
+            return Ok();
         }
 
         // PUT api/Projections/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Projection projection)
+        public IActionResult Put(int id, [FromBody] Projection projection)
         {
             projection.id = id;
-            _CRUDContext.Projections.Update(projection);
-            _CRUDContext.SaveChanges();
+            int x = _CRUDContext.Put_projection(projection);
+            return x switch
+            {
+                0 => BadRequest(" Ya existe una proyeccion a esta hora de la misma pelicula en la misma sala."),
+                -1 => BadRequest("No se ha encontrado una proyeccion existente."),
+                _ => Ok(),
+            };
         }
 
         // DELETE api/Projections/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            string resp = "";
             int x = _CRUDContext.Delete_projection(id);
-            switch (x)
+            return x switch
             {
-                case 0:
-                    resp = "No se puede eliminar una proyeccion que se encuentra asignada a una pelicula.";
-                    break;
-
-                case -1:
-                    resp = "No se ha encontrado esta proyeccion.";
-                    break;
-
-                default: // Se elimina correctamente.
-                    return Ok();
-            }
-            return BadRequest(resp);
+                0 => BadRequest("No se puede eliminar una proyeccion que se encuentra asignada a una pelicula."),
+                -1 => BadRequest("No se ha encontrado esta proyeccion."),
+                _ => Ok(),// Se elimina correctamente.
+            };
         }
     }
 }

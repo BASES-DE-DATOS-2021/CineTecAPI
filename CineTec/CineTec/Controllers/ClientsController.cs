@@ -21,55 +21,51 @@ namespace CineTec.Controllers
 
         // GET: api/Clients
         [HttpGet]
-        public IEnumerable<Client> Get()
-        {
-            return _CRUDContext.Clients;
-        }
+        public IEnumerable<Client> Get() => _CRUDContext.Clients;
 
         // GET api/Clients/5
         [HttpGet("{cedula}")]
-        public Client Get(int cedula)
-        {
-            return _CRUDContext.Clients.SingleOrDefault(x => x.cedula == cedula);
-        }
+        public Client Get(int cedula) => _CRUDContext.Clients.SingleOrDefault(x => x.cedula == cedula);
 
         // POST api/Clients
         [HttpPost]
-        public void Post([FromBody] Client client)
+        public IActionResult Post([FromBody] Client client)
         {
-            _CRUDContext.Clients.Add(client);
-            _CRUDContext.SaveChanges();
+            int x = _CRUDContext.Post_client(client);
+            if (x == 0)
+            {
+                return BadRequest("Ya existe un cliente asociado a esta cedula.");
+            }
+            else if (x == 2)
+            {
+                return BadRequest("Este nombre de usuario ya se encuentra en uso.");
+            }
+            return Ok();
         }
 
         // PUT api/Clients/5
         [HttpPut("{cedula}")]
-        public void Put(int cedula, [FromBody] Client client)
+        public IActionResult Put(int cedula, [FromBody] Client client)
         {
             client.cedula = cedula;
-            _CRUDContext.Clients.Update(client);
-            _CRUDContext.SaveChanges();
+            int x = _CRUDContext.Put_client(client);
+
+            if (x == -1)
+                return BadRequest("No se ha encontrado ninguna sucursal con este nombre.");
+            return Ok();
         }
 
         // DELETE api/Clients/5
         [HttpDelete("{cedula}")]
         public ActionResult Delete(int cedula)
         {
-            string resp = "";
             int x = _CRUDContext.Delete_client(cedula);
-            switch (x)
+            return x switch
             {
-                case 0:
-                    resp = "No se puede eliminar un cliente que se encuentra asignado a una factura.";
-                    break;
-
-                case -1:
-                    resp = "No se ha encontrado este cliente.";
-                    break;
-
-                default: // Se elimina correctamente.
-                    return Ok();
-            }
-            return BadRequest(resp);
+                0 => BadRequest("No se puede eliminar un cliente que tiene facturas asignadas."),
+                -1 => BadRequest("No se ha encontrado este cliente."),
+                _ => Ok(), // Se elimina correctamente.
+            };
         }
     }
 }

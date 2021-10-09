@@ -23,72 +23,69 @@ namespace CineTec.Controllers
 
         // GET: api/Branches
         [HttpGet]
-        public IEnumerable<Branch> Get()
-        {
-            return _CRUDContext.Branches;
-        }
+        public IEnumerable<Branch> Get() => _CRUDContext.Branches;
+
 
         // GET api/Branches/Cinectec Cartago
         [HttpGet("{cinema_name}")]
-        public Branch Get(string cinema_name)
-        {
-            return _CRUDContext.Branches.SingleOrDefault(x => x.cinema_name == cinema_name);
-        }
+        public Branch Get(string cinema_name) => _CRUDContext.GetBranch(cinema_name);
+
 
 
         // GET api/Branches/all_rooms?cinema_name=a
         [HttpGet("all_rooms")]
-        public IList<Room> Get_all_rooms(string cinema_name)
-        {
-            return _CRUDContext.Get_all_rooms_of_a_branch(cinema_name);
-        }
+        public IList<Room> Get_all_rooms(string cinema_name) => _CRUDContext.Get_all_rooms_of_a_branch(cinema_name);
+
 
         // GET api/Branches/all_projections_dates?cinema_name=a
         [HttpGet("all_projections_dates")]
-        public IList<string> Get_all_projections_dates_byBranch(string cinema_name)
-        {
-            return _CRUDContext.GetProjections_dates_byBranch(cinema_name);
-        }
+        public IList<string> Get_all_projections_dates_byBranch(string cinema_name) => _CRUDContext.GetProjections_dates_byBranch(cinema_name);
+
 
         // POST api/Branches
         [HttpPost]
-        public void Post([FromBody] Branch branch)
+        public IActionResult Post([FromBody] Branch branch)
         {
-            branch.rooms_quantity = 0; // Por si llega algun valor setearlo a 0.
-            _CRUDContext.Branches.Add(branch);
-            _CRUDContext.SaveChanges();
+            int x = _CRUDContext.Post_branch(branch);
+            if (x == 0)
+                return BadRequest("Ya existe una sucursal con este nombre");
+            return Ok();
         }
 
         // PUT api/Branches/Cinectec Cartago
         [HttpPut("{cinema_name}")]
-        public void Put(string cinema_name, [FromBody] Branch branch)
+        public IActionResult Put(string cinema_name, [FromBody] Branch branch)
         {
             branch.cinema_name = cinema_name;
-            _CRUDContext.Branches.Update(branch);
-            _CRUDContext.SaveChanges();
-        }
+            int x = _CRUDContext.Put_branch(branch);
 
+            if (x == -1)
+                return BadRequest("No se ha encontrado ninguna sucursal con este nombre.");
+            return Ok();
+        }
 
         // DELETE api/Branches/Cinectec Cartago
         [HttpDelete("{cinema_name}")]
         public ActionResult Delete(string cinema_name)
         {
-            string resp = "";
-            int x = _CRUDContext.Delete_cinema_and_rooms(cinema_name);
-            switch (x)
+            int x = _CRUDContext.Delete_branch(cinema_name);
+            return x switch
             {
-                case 0:
-                    resp = "No se puede eliminar una sucursal que tiene empleados relacionados.";
-                    break;
-
-                case -1:
-                    resp = "No se ha encontrado esta sucursal.";
-                    break;
-
-                default: // Se elimina correctamente.
-                    return Ok();
-            }
-            return BadRequest(resp);
+                2 => BadRequest("No se puede eliminar una sucursal que tiene empleados relacionados."),
+                3 => BadRequest("Existen salas dentro de esta sucursal."),
+                -1 => BadRequest("No se ha encontrado esta sucursal."),
+                _ => Ok(), // Se elimina correctamente.
+            };
         }
+
+        //// DELETE api/Branches/Cinectec Cartago
+        //[HttpDelete("with_rooms/{cinema_name}")]
+        //public ActionResult Delete_branch_with_rooms(string cinema_name)
+        //{
+        //    _CRUDContext.Delete_branch_with_rooms(cinema_name);
+        //    return Ok();
+        //}
+
+
     }
 }

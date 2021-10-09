@@ -30,52 +30,42 @@ namespace CineTec.Controllers
 
         // GET api/Rooms/5
         [HttpGet("{id}")]
-        public Room Get(int id)
-        {
-            return _CRUDContext.Rooms.SingleOrDefault(x => x.id == id);
-        }
-
+        public Room Get(int id) => _CRUDContext.Rooms.SingleOrDefault(x => x.id == id);
+        
         // GET api/Rooms/all_seats?cinema_name=a&room_id=b
         [HttpGet("all_seats")]
-        public IList<Seat> Get_all_seats(string cinema_name, int room_id)
-        {
-            return _CRUDContext.Get_all_seats_of_a_room(cinema_name, room_id);
-        }
-
+        public IList<Seat> Get_all_seats(string cinema_name, int room_id) => _CRUDContext.Get_all_seats_of_a_room(cinema_name, room_id);
 
         // POST api/Rooms
         [HttpPost]
-        public void Post([FromBody] Room room)
+        public IActionResult Post([FromBody] Room room)
         {
-            try
-            {
-                _CRUDContext.Rooms.Add(room);
-                _CRUDContext.SaveChanges();
-                _CRUDContext.Add_seats_in_a_room(room.id, room.capacity);
-                //_CRUDContext.Update_branch_rooms_quantity(room.branch_name);
-            }
-            catch (DbUpdateException e)
-            {
-                Console.WriteLine(e.GetType()); // what is the real exception?
-            }
+            _CRUDContext.Post_room(room);
+            return Ok();
         }
-
 
         // PUT api/Rooms/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Room room)
+        public IActionResult Put(int id, [FromBody] Room room)
         {
-            _CRUDContext.Update_Room(id, room);
-            // manejar excepcion
-
+            int x = _CRUDContext.Put_room(id, room);
+            if (x == -1)
+                return BadRequest("No ha encontrado una sala con ese id");
+            return Ok();
         }
 
 
         // DELETE api/Rooms/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
-            _CRUDContext.Delete_room_and_seats(id);
+            int x = _CRUDContext.Delete_room_and_seats(id);
+            return x switch
+            {
+                2 => BadRequest("No se puede eliminar una sala que tiene projecciones relacionadas."),
+                -1 => BadRequest("No se ha encontrado esta sala."),
+                _ => Ok(), // Se elimina correctamente.
+            };
         }
 
 

@@ -21,55 +21,49 @@ namespace CineTec.Controllers
 
         // GET: api/Classifications
         [HttpGet]
-        public IEnumerable<Classification> Get()
-        {
-            return _CRUDContext.Classifications;
-        }
+        public IEnumerable<Classification> Get() => _CRUDContext.Classifications;
 
         // GET api/Classifications/5
         [HttpGet("{code}")]
-        public Classification Get(string code)
-        {
-            return _CRUDContext.Classifications.SingleOrDefault(x => x.code == code);
-        }
+        public Classification Get(string code) => _CRUDContext.Classifications.SingleOrDefault(x => x.code == code);
 
         // POST api/Classifications
         [HttpPost]
-        public void Post([FromBody] Classification Classification)
+        public IActionResult Post([FromBody] Classification classification)
         {
-            _CRUDContext.Classifications.Add(Classification);
-            _CRUDContext.SaveChanges();
+            int x = _CRUDContext.Post_classification(classification);
+            return x switch
+            {
+                0 => BadRequest("Este codigo ya se encuentra en uso. Por favor ingrese otro."),
+                _ => Ok(),
+            };
         }
 
         // PUT api/Classifications/R
         [HttpPut("{code}")]
-        public void Put(string code, [FromBody] Classification Classification)
+        public IActionResult Put(string code, [FromBody] Classification classification)
         {
-            Classification.code = code;
-            _CRUDContext.Classifications.Update(Classification);
-            _CRUDContext.SaveChanges();
+            classification.code = code;
+            int x = _CRUDContext.Put_classification(classification);
+            return x switch
+            {
+                0 => BadRequest("El rango de edad ingresado ya se encuentra en uso. Por favor ingrese otro."),
+                -1 => BadRequest("No se ha encontrado una clasificacion con este codigo."),
+                _ => Ok(),
+            };
         }
 
         // DELETE api/Classifications/5
         [HttpDelete("{code}")]
         public ActionResult Delete(string code)
         {
-            string resp = "";
             int x = _CRUDContext.Delete_classification(code);
-            switch (x)
+            return x switch
             {
-                case 0:
-                    resp = "No se puede eliminar una clasificacion que se encuentra asignada a una pelicula.";
-                    break;
-
-                case -1:
-                    resp = "No se ha encontrado esta clasificacion.";
-                    break;
-
-                default: // Se elimina correctamente.
-                    return Ok();
-            }
-            return BadRequest(resp);
+                0 => BadRequest("No se puede eliminar una clasificacion que se encuentra asignada a una pelicula."),
+                -1 => BadRequest("No se ha encontrado esta clasificacion."),
+                _ => Ok(), // Se elimina correctamente.
+            };
         }
     }
 }

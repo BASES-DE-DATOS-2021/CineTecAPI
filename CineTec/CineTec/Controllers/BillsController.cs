@@ -13,7 +13,6 @@ namespace CineTec.Controllers
     public class BillsController : ControllerBase
     {
         private readonly CRUDContext _CRUDContext;
-
         public BillsController(CRUDContext CRUDContext)
         {
             _CRUDContext = CRUDContext;
@@ -21,43 +20,33 @@ namespace CineTec.Controllers
 
         // GET: api/Bills
         [HttpGet]
-        public IEnumerable<Bill> Get()
-        {
-            return _CRUDContext.Bills;
-        }
+        public IEnumerable<Bill> Get() => _CRUDContext.Bills;
 
         // GET api/Bills/5
         [HttpGet("{id}")]
-        public Bill Get(int id)
-        {
-            return _CRUDContext.Bills.SingleOrDefault(x => x.id == id);
-        }
+        public Bill Get(int id) => _CRUDContext.Bills.SingleOrDefault(x => x.id == id);
 
         // GET api/Bills/byClientId/
-        [HttpGet("byClientId/{cedula}")]
-        public IEnumerable<Bill> Get_byClientId(int cedula)
-        {
-            return _CRUDContext.GetBills_byClientId(cedula);
-        }
+        [HttpGet("byCedula/{cedula}")]
+        public IEnumerable<Bill> Get_byClientId(int cedula) => _CRUDContext.GetBills_byClientId(cedula);
 
         // POST api/Bills
         [HttpPost]
         public ActionResult Post([FromBody] Bill bill)
         {
-            _CRUDContext.Bills.Add(bill);
-            _CRUDContext.SaveChanges();
+            _CRUDContext.Post_bill(bill);                           
             return Ok();
         }
 
-        // PUT api/Bills/5
-        [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] Bill bill)
-        {
-            bill.id = id;
-            _CRUDContext.Bills.Update(bill);
-            _CRUDContext.SaveChanges();
-            return Ok();
-        }
+        //// PUT api/Bills/5
+        //[HttpPut("{id}")]
+        //public ActionResult Put(int id, [FromBody] Bill bill)
+        //{
+        //    bill.id = id;
+        //    _CRUDContext.Bills.Update(bill);
+        //    _CRUDContext.SaveChanges();
+        //    return Ok();
+        //}
 
         // DELETE api/Bills/5
         [HttpDelete("{id}")]

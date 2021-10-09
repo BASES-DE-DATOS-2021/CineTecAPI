@@ -7,9 +7,11 @@ namespace CineTec.Models
     {
         [Key]
         public string cinema_name { get; set; }
+
+        [Required]
         public string province { get; set; }
+
         public string district { get; set; }
-        public int rooms_quantity { get; set; }
 
     }
 }

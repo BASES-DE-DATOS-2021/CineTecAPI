@@ -9,12 +9,20 @@ namespace CineTec.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
 
+        [Required]
         public string classification_id { get; set; }
+
+        [Required]
         public int director_id { get; set; }
 
+        [Required]
         public string image { get; set; }
+
+        [Required]
         public string original_name { get; set; }
         public string name { get; set; }
+
+        [Required]
         public string length { get; set; }
 
 

@@ -8,6 +8,8 @@ namespace CineTec.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
+
+        [Required]
         public string name { get; set; }
     }
 }

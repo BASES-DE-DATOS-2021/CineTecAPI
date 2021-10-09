@@ -1,111 +1,104 @@
--- Populacion de Sucursales
-INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('oxigeno', 'San Jose', 'San Pedro');
-INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('escazu', 'San Jose', 'Escazu');
-INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('san vito', 'Puntarenas', 'San Vito');
-INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('limon', 'Limon', 'Roosevelt');
-INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('cartago', 'Cartago', 'Cartago');
+------------------------------------------------------------------------------------------------------------------------------------
+									
+									-- SCRIPT DE POPULACION --
+					
+------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
 
+-- Populacion de Sucursales
+INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('Oxigeno', 'San Jose', 'San Pedro');
+INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('Escazu', 'San Jose', 'Escazu');
+INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('San Vito', 'Puntarenas', 'San Vito');
+INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('Limon', 'Limon', 'Roosevelt');
+INSERT INTO public."Branches"( cinema_name, province, district) VALUES ('Cartago', 'Cartago', 'Cartago');
 
 ------------------------------------------------------------------------------------------------------------------------------------
--- -- Populacion de Rooms
-INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('oxigeno', 10, 10);
--- INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('cartago', 5, 5);
--- INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('san vito', 2, 2);
--- INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('escazu', 4, 4);
--- INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('limon', 5, 5);
--- INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('limon', 12, 12);
+
+-- Populacion de Rooms
+INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('Oxigeno', 10, 10);
+INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('Cartago', 5, 5);
+INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('San Vito', 2, 2);
+INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('Escazu', 4, 4);
+INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('Limon', 5, 5);
+INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES ('Limon', 12, 12);
+
 ------------------------------------------------------------------------------------------------------------------------------------
 
 -- Populacion de Empleados
 INSERT INTO public."Employees"(
 	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, phone_number, username, password)
-	VALUES ('oxigeno', 117920956, 'Michael', 'Shakime', 'Richards', 'Sparks', '10/21/2000', 22489340, 'Jeykime', 2100);
+	VALUES ('Oxigeno', 117920956, 'Michael', 'Shakime', 'Richards', 'Sparks', '10/21/2000', 22489340, 'Jeykime', 2100);
 
 INSERT INTO public."Employees"(
 	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, phone_number, username, password)
-	VALUES ('san vito', 34809322, 'Carlos', 'Adrian', 'Araya', 'Ramirez', '07/05/1999', 89573290, 'Heutlet', 1234);
+	VALUES ('San Vito', 34809322, 'Carlos', 'Adrian', 'Araya', 'Ramirez', '07/05/1999', 89573290, 'Heutlett', 1234);
 
 INSERT INTO public."Employees"(
 	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, phone_number, username, password)
-	VALUES ('san vito', 34543562, 'Jean', 'Pool', 'Tubito', 'Baez', '12/31/1999', 42948924, 'Tubito', 9988);
+	VALUES ('San Vito', 34543562, 'Jean', 'Pool', 'Tubito', 'Baez', '12/31/1999', 42948924, 'Tubito', 9988);
 	
 ------------------------------------------------------------------------------------------------------------------------------------
--- Populacion de Clientes
 
-
-
-	
-	
-------------------------------------------------------------------------------------------------------------------------------------
--- -- Populacion de Seats
--- INSERT INTO public."Seats"(
--- 	room_id, "number", status)
--- 	VALUES (1, 1, 'COVID');
--- INSERT INTO public."Seats"(
--- 	room_id, "number", status)
--- 	VALUES (1, 2, 'EMPTY');
--- INSERT INTO public."Seats"(
--- 	room_id, "number", status)
--- 	VALUES (1, 3, 'EMPTY');
+-- Populacion de Clients
+INSERT INTO public."Clients"(
+	cedula, first_name, middle_name, first_surname, second_surname, birth_date, phone_number, username, password)
+	VALUES (117920956, 'Michael', 'Shakime', 'Richards', 'Sparks', '10/21/2000', 22489340, 'Jeykime', 2100);
 
 ------------------------------------------------------------------------------------------------------------------------------------
+
+-- Populacion de Bills
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+-- Populacion de Seats
+INSERT INTO public."Seats"( room_id, "number", status) VALUES (1, 1, 'COVID');
+INSERT INTO public."Seats"( room_id, "number", status) VALUES (1, 2, 'EMPTY');
+INSERT INTO public."Seats"( room_id, "number", status) VALUES (1, 3, 'EMPTY');
+
+------------------------------------------------------------------------------------------------------------------------------------
+
 -- Populacion de Classification
-
-INSERT INTO public."Classifications"(
-	code, details, age_rating)
-	VALUES ('G','General Audiences', -1);
-INSERT INTO public."Classifications"(
-	code, details, age_rating)
-	VALUES ('PG','Parental Guidance Suggested', 15);
-INSERT INTO public."Classifications"(
-	code, details, age_rating)
-	VALUES ('PG-13','Parents Strongly Cautioned', 13);
-INSERT INTO public."Classifications"(
-	code, details, age_rating)
-	VALUES ('R','Restricted', 17);
-INSERT INTO public."Classifications"(
-	code, details, age_rating)
-	VALUES ('NC-17','Adults Only', 18);
-INSERT INTO public."Classifications"(
-	code, details, age_rating)
-	VALUES ('T','Test', 123);
-	
-	
+INSERT INTO public."Classifications"( code, details, age_rating) VALUES ('G','General Audiences', -1);
+INSERT INTO public."Classifications"( code, details, age_rating) VALUES ('PG','Parental Guidance Suggested', 15);
+INSERT INTO public."Classifications"( code, details, age_rating) VALUES ('PG-13','Parents Strongly Cautioned', 13);
+INSERT INTO public."Classifications"( code, details, age_rating) VALUES ('R','Restricted', 17);
+INSERT INTO public."Classifications"( code, details, age_rating) VALUES ('NC-17','Adults Only', 18);
+INSERT INTO public."Classifications"( code, details, age_rating) VALUES ('T','Test', 123);
 
 ------------------------------------------------------------------------------------------------------------------------------------
+
 -- Populacion de Directores
-INSERT INTO public."Directors"(
-	name)
-	VALUES ('Pablo Neruda');
-INSERT INTO public."Directors"(
-	name)
-	VALUES ('Pablo Kokemper');
-INSERT INTO public."Directors"(
-	name)
-	VALUES ('Lucas Montoya');
-INSERT INTO public."Directors"(
-	name)
-	VALUES ('Adolf Hitler');
-	
+INSERT INTO public."Directors"( name) VALUES ('Pablo Neruda');
+INSERT INTO public."Directors"( name) VALUES ('Pablo Kokemper');
+INSERT INTO public."Directors"( name) VALUES ('Lucas Montoya');
+INSERT INTO public."Directors"( name) VALUES ('Adolf Hitler');
 	
 ------------------------------------------------------------------------------------------------------------------------------------
+
 -- Populacion de Movies
-INSERT INTO public."Movies"(
-	classification_id, director_id, image, original_name, name, length)
-	VALUES ('R', 1, 'purge.jpg', 'The Purge', 'La Purga', '2:05');
-INSERT INTO public."Movies"(
-	classification_id, director_id, image, original_name, name, length)
-	VALUES ('NC-17', 2, '007.jpg', '007', 'Sin tiempo para morir', '1:45');
-INSERT INTO public."Movies"(
-	classification_id, director_id, image, original_name, name, length)
-	VALUES ('G', 3, 'jungle.png', 'Jungle Cruise', 'El secreto de la jungla', '2:10');
+INSERT INTO public."Movies"( classification_id, director_id, original_name, name, length, image) VALUES ('R', 1, 'The Purge', 'La Purga', '2:05',  'purge.jpg');
+INSERT INTO public."Movies"( classification_id, director_id, original_name, name, length, image) VALUES ('NC-17', 2, '007', 'Sin tiempo para morir', '1:45', '007.jpg');
+INSERT INTO public."Movies"( classification_id, director_id, original_name, name, length, image) VALUES ('G', 3, 'Jungle Cruise', 'El secreto de la jungla', '2:10', 'jungle.png');
 	
 ------------------------------------------------------------------------------------------------------------------------------------
--- Populacion de Projections
-INSERT INTO public."Projections"(
-	room_id, movie_id, date, "time")
-	VALUES (1, 4, '02/02/2000', '02:04');
-INSERT INTO public."Projections"(
-	room_id, movie_id, date, "time")
-	VALUES (2, 5, '02/03/2000', '12:33');
-	
+
+-- Populacion de Projections and Times
+INSERT INTO public."Projections"( room_id, movie_id, date) VALUES (1, 3, '02/02/2021');
+INSERT INTO public."Times"(projection_id, schedule) VALUES (1, '12:00');
+INSERT INTO public."Times"(projection_id, schedule) VALUES (1, '15:30');
+INSERT INTO public."Times"(projection_id, schedule) VALUES (1, '19:05');
+INSERT INTO public."Times"(projection_id, schedule) VALUES (1, '20:55');
+
+INSERT INTO public."Projections"( room_id, movie_id, date) VALUES (2, 2, '02/03/2021');
+INSERT INTO public."Times"(projection_id, schedule) VALUES (2, '9:15');
+INSERT INTO public."Times"(projection_id, schedule) VALUES (2, '13:25');
+INSERT INTO public."Times"(projection_id, schedule) VALUES (2, '14:05');
+INSERT INTO public."Times"(projection_id, schedule) VALUES (2, '21:10');
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO public."Actors"( name) VALUES ('Manuel Turizo');
+INSERT INTO public."Actors"( name) VALUES ('Will Smith');
+INSERT INTO public."Actors"( name) VALUES ('Kevin Hart');
+INSERT INTO public."Actors"( name) VALUES ('Harry Styles');

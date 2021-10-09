@@ -21,45 +21,50 @@ namespace CineTec.Controllers
 
         // GET: api/Employees
         [HttpGet]
-        public IEnumerable<Employee> Get()
-        {
-            return _CRUDContext.Employees;
-        }
+        public IEnumerable<Employee> Get() => _CRUDContext.Employees;
+
 
         // GET api/Employees/5
         [HttpGet("{cedula}")]
-        public Employee Get(int cedula)
-        {
-            return _CRUDContext.Employees.SingleOrDefault(x => x.cedula == cedula);
-        }
+        public Employee Get(int cedula) => _CRUDContext.GetEmployee(cedula);
+        
 
         // POST api/Employees
         [HttpPost]
-        public void Post([FromBody] Employee employee)
+        public IActionResult Post([FromBody] Employee employee)
         {
-            _CRUDContext.Employees.Add(employee);
-            _CRUDContext.SaveChanges();
+            int x = _CRUDContext.Post_employee(employee);
+            if (x == 0)
+            {
+                return BadRequest("Ya existe un empleado asociado a esta cedula.");
+            }
+            else if (x == 2)
+            {
+                return BadRequest("Este nombre de usuario ya se encuentra en uso.");
+            }
+            return Ok();
         }
 
         // PUT api/Employees/5
         [HttpPut("{cedula}")]
-        public void Put(int cedula, [FromBody] Employee employee)
+        public IActionResult Put(int cedula, [FromBody] Employee employee)
         {
-            employee.cedula = cedula;
-            _CRUDContext.Employees.Update(employee);
-            _CRUDContext.SaveChanges();
+            int x = _CRUDContext.Put_employee(employee, cedula);
+
+            if (x == -1)
+                return BadRequest("No se ha encontrado ningun empleado asociado a esta cedula.");
+            return Ok();
         }
 
         // DELETE api/Employees/5
         [HttpDelete("{cedula}")]
-        public void Delete(int cedula)
+        public IActionResult Delete(int cedula)
         {
-            var item = _CRUDContext.Employees.FirstOrDefault(x => x.cedula == cedula);
-            if (item != null)
-            {
-                _CRUDContext.Employees.Remove(item);
-                _CRUDContext.SaveChanges();
-            }
+            int x = _CRUDContext.Delete_employee(cedula);
+
+            if (x == -1)
+                return BadRequest("No existe el cliente con esta cedula.");
+            return Ok();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CineTec.Context;
 using CineTec.Models;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,65 +22,40 @@ namespace CineTec.Controllers
 
         // GET: api/Directors
         [HttpGet]
-        public IEnumerable<Director> Get()
-        {
-            return _CRUDContext.Directors;
-        }
+        public IEnumerable<Director> Get() => _CRUDContext.Directors;
 
         // GET api/Directors/5
-        [HttpGet("{id}")]
-        public Director Get(int id)
-        {
-            return _CRUDContext.GetDirector(id);
-        }
+        [HttpGet("byId/{id}")]
+        public Director Get_byId(int id) => _CRUDContext.GetDirector(id);
 
-        // GET api/Directors/byName/Pablo
+        // GET api/Directors/Kevin Hart
         [HttpGet("byName/{name}")]
-        public Director Get(string name)
+        public Director Get_byName(string name) => _CRUDContext.GetDirector(name);
+
+        // PUT api/Directors/Kevin Hart
+        [HttpPut("{name}")]
+        public ActionResult Put(string name, [FromBody] Director director)
         {
-            return _CRUDContext.GetDirector(name);
+            int x = _CRUDContext.Put_director(director, name);
+            return x switch
+            {
+                0 => BadRequest("El nombre al que desea actualizar ya se encuentra en uso. Por favor ingrese otro."),
+                -1 => BadRequest("No se ha encontrado un director con este nombre."),
+                _ => Ok(),
+            };
         }
 
-
-        // POST api/Directors
-        [HttpPost]
-        public void Post([FromBody] Director director)
-        {
-            _CRUDContext.Directors.Add(director);
-            _CRUDContext.SaveChanges();
-        }
-
-        // PUT api/Directors/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Director director)
-        {
-            director.id = id;
-            _CRUDContext.Directors.Update(director);
-            _CRUDContext.SaveChanges();
-        }
-
-
-        // DELETE api/Directors/5
-        [HttpDelete("{id}")]
+        // DELETE api/Directors/Kevin Hart
+        [HttpDelete("{name}")]
         public ActionResult Delete(string name)
         {
-            
-            string resp = "";
             int x = _CRUDContext.Delete_director(name);
-            switch (x)
+            return x switch
             {
-                case 0:
-                    resp = "No se puede eliminar un director que se encuentra asignado a una pelicula.";
-                    break;
-
-                case -1:
-                    resp = "No se ha encontrado este director.";
-                    break;
-
-                default: // Se elimina correctamente.
-                    return Ok();
-            }
-            return BadRequest(resp);
+                0 => BadRequest("No se puede eliminar un director que se encuentra asignado a una pelicula."),
+                -1 => BadRequest("No se ha encontrado este director."),
+                _ => Ok(),// Se elimina correctamente.
+            };
         }
     }
 }
