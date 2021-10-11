@@ -25,7 +25,7 @@ namespace CineTec
             services.AddControllers().AddControllersAsServices();
 
             // Instancia de clase PostgreSQLCOnfiguration.
-            var connString = Configuration.GetConnectionString("PostgreSQLConnectionShakime");
+            var connString = Configuration.GetConnectionString("PostgreSQLConnectionAdrian");
             services.AddDbContext<CRUDContext>(options => options.UseNpgsql(connString));
 
             //Register Swagger

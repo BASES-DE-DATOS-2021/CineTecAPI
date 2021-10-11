@@ -330,8 +330,10 @@ namespace CineTec.Context
             Branch existing = GetBranch(branch.cinema_name);
             if (existing == null)
                 return -1; // No existe.
+            existing.district = branch.district;
+            existing.province = branch.province;
 
-            Branches.Update(branch);
+            Branches.Update(existing);
             SaveChanges();
             return 1; // Se logra agregar.
         }
