@@ -7,13 +7,10 @@ namespace CineTec.JSON_Models
 {
     public class ProjectionJSON
     {
-        //public string movie { get; set; }
+        public string movie { get; set; }
 
-        public DateTime date { get; set; }
+        public string date { get; set; }
 
-        //public List<string> schedule { get; set; }
-
-        public int movie_id { get; set; }
-
+        public List<string> schedule { get; set; }
     }
 }

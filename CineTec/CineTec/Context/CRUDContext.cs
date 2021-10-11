@@ -45,7 +45,7 @@ namespace CineTec.Context
                 .HasKey(a => new { a.movie_id, a.actor_id });
 
             modelBuilder.Entity<ProjectionJSON>()
-                .HasKey(a => new { a.movie_id, a.date});
+                .HasKey(a => new { a.movie, a.date});
 
             // ACTOR SOLO PUEDE TENER UN NOMBRE UNICO EN TODA LA TABLA.
             modelBuilder.Entity<Actor>()
@@ -893,36 +893,26 @@ namespace CineTec.Context
 
 
         // GET ALL PROJECTIONS BY ID SPECIAL OUTPUT
-        public Object GetProjections_select()
+        public Object GetProjections_in_branch_select(string cinema_name, DateTime date)
         {
 
-            var sinRep = (from pro in Projections
-                            select new  {
-                                movie_id = pro.movie_id,
+            var sinRep = (from b in Branches.Where(b => b.cinema_name == cinema_name)
+                          join r in Rooms on b.cinema_name equals r.branch_name
+                          join pro in Projections on r.id equals pro.room_id
+                          where pro.date == date
+
+                          select new  {
+                                movie = (from m in Movies
+                                            where m.id == pro.movie_id
+                                            select m.original_name).FirstOrDefault(),
                                 date = pro.date
                             }).Distinct().ToList();
 
-            //var projects = (from p in Projections select p).ToArray();
-            //List<int> ids = new List<int>();
+            var query = (from b in Branches.Where(b => b.cinema_name == cinema_name)
+                         join r in Rooms on b.cinema_name equals r.branch_name
+                         join p in Projections on r.id equals p.room_id
+                         where p.date == date
 
-            //for (int i = 0; i < horarios.Count(); i++)
-            //{
-            //    for (int j = 0; j < projects.Length; j++)
-            //    {
-            //        var p = projects[j];
-            //        var h = horarios[i];
-            //        if (p.movie_id.Equals(h.movie_id) && p.date.Equals(h.date))
-            //        {
-
-            //            ids.Add(p.id);
-            //            h = null;
-            //            continue;
-            //        }
-            //    }
-            //}
-
-
-            var query = (from p in Projections
                          select new ProjectionJSON
                          {
                              //id = p.id,
@@ -934,41 +924,31 @@ namespace CineTec.Context
                              schedule = (from t in Projections.Where(f => f.date == p.date)
                                          select t.schedule).ToList()
                          }).ToList();
-            return removeDuplicates(sinRep, query);
 
-        }
-
-        private List<ProjectionJSON> removeDuplicates(object sinRep, List<ProjectionJSON> query)
-        {
-            var q;
-            for (int i = 0; i < query.Count(); i++)
-            {
-
+            List<ProjectionJSON> lista = new List<ProjectionJSON>();
+            for(int i = 0; i < sinRep.Count(); i++) {
+                var x= sinRep.ElementAt(i);
+                lista.Add(query.Where(f => f.movie == x.movie && f.date == string.Format("{0:MM/dd/yy}", x.date)).FirstOrDefault());
             }
-
-
-                return null;
+            return lista;
         }
 
 
         // GET PROJECTION BY ID SPECIAL OUTPUT
-        //public Object GetProjection_select(int movie_id)
-        //{
-
-        //    var times = (from t in Projections.Where(f => f.id == id && f.date == x.date)
-        //                            select t.schedule).ToList();
-
-        //    var query = from p in Projections.Where(f => f.movie_id == movie_id)
-        //                select new
-        //                {
-        //                    id = p.id,
-        //                    //movie = GetMovieName(movie_id),
-        //                    room = p.room_id,
-        //                    date = p.FormattedDate,
-        //                    schedule = times                
-        //                };
-        //    return query;
-        //}
+        public Object GetProjection_select(int movie_id)
+        {
+            var query = from p in Projections.Where(f => f.movie_id == movie_id)
+                        select new
+                        {
+                            id = p.id,
+                            //movie = GetMovieName(movie_id),
+                            room = p.room_id,
+                            date = p.FormattedDate,
+                            schedule = (from t in Projections.Where(f => f.date == p.date)
+                                        select t.schedule).ToList()
+                        };
+            return query;
+        }
 
 
 
