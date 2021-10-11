@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using EntityFramework.Exceptions.Common;
 using Npgsql;
+using CineTec.JSON_Models;
 
 namespace CineTec.Context
 {
@@ -30,7 +31,9 @@ namespace CineTec.Context
         public DbSet<Director> Directors { get; set; }
         public DbSet<Acts> Acts { get; set; }
         public DbSet<Actor> Actors { get; set; }
-        public DbSet<Times> Times { get; set; }
+
+        public DbSet<ProjectionJSON> ProjectionJSONs { get; set; }
+
 
         // Overide del OnModelCreating para utilizar dos atributos como llave compuesta.
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -40,10 +43,9 @@ namespace CineTec.Context
 
             modelBuilder.Entity<Acts>()
                 .HasKey(a => new { a.movie_id, a.actor_id });
-            
-            modelBuilder.Entity<Times>()
-                .HasKey(t => new { t.projection_id, t.id});
 
+            modelBuilder.Entity<ProjectionJSON>()
+                .HasKey(a => new { a.movie_id, a.date});
 
             // ACTOR SOLO PUEDE TENER UN NOMBRE UNICO EN TODA LA TABLA.
             modelBuilder.Entity<Actor>()
@@ -59,6 +61,8 @@ namespace CineTec.Context
             modelBuilder.Entity<Classification>()
                 .HasIndex(c => c.age_rating)
                 .IsUnique(true);
+
+
         }
 
 
@@ -69,6 +73,24 @@ namespace CineTec.Context
          *  0 : NO SE PUEDE ELIMINAR POR RELACION.
          * -1 : NO EXISTE.
          */
+
+        /*
+         *  LOGINS
+         */
+
+        public Employee Login_admin(string username, string password)
+        {
+            Employee admin = Employees.Where(x => x.username == username && x.password == password).FirstOrDefault();
+            if (admin == null) return null;
+            return admin;
+        }
+
+        public Client Login_client(string username, string password)
+        {
+            Client user = Clients.Where(x => x.username == username && x.password == password).FirstOrDefault();
+            if (user == null) return null;
+            return user;
+        }
 
 
         /*
@@ -81,13 +103,24 @@ namespace CineTec.Context
         // GET ACTOR BY ID
         public Actor GetActor(int id) => Actors.SingleOrDefault(x => x.id == id);
 
-        // GET ACTORS BY MOVIE_ID
-        public List<string> getActors(int movie_id)
+        // GET ACTORS NAMES BY MOVIE_ID
+        public List<string> GetActors_names(int movie_id)
         {
             var query = from a in Acts.Where(x => x.movie_id == movie_id)
                         join p in Actors
                             on a.actor_id equals p.id
                         select p.name;
+            var actors = query.ToList();
+            return actors;
+        }
+
+        // GET ACTORS IDS BY MOVIE_ID
+        public List<int> GetActors_ids(int movie_id)
+        {
+            var query = from a in Acts.Where(x => x.movie_id == movie_id)
+                        join p in Actors
+                            on a.actor_id equals p.id
+                        select p.id;
             var actors = query.ToList();
             return actors;
         }
@@ -99,7 +132,7 @@ namespace CineTec.Context
             // Verificar la existencia.
             Actor existing = GetActor(actor.name);
             if (existing != null)
-                return 0; // Ya existe
+                return 0; //Ya existe
 
             Actors.Add(actor);
             SaveChanges();
@@ -107,24 +140,29 @@ namespace CineTec.Context
         }
 
         // PUT
-        public int Put_actor(Actor actor, string current_name)
+        public string Put_actor(Actor actor, string current_name)
         {
             // Verificar la existencia.
             Actor existing = GetActor(current_name);
             if (existing == null)
-                return -1; // No existe
+                return "No se ha encontrado un actor con este nombre."; // No existe
+            // Verificar existencia de un actor con el nombre.
+            Actor put_name = GetActor(actor.name);
+            if (put_name != null)
+                return "El nombre al que desea actualizar ya se encuentra en uso. Por favor ingrese otro.";
+
             existing.name = actor.name;
             Actors.Update(existing);
             SaveChanges();
-            return 1; // Se logra agregar.
+            return "";
         }
 
         // DELETE especial de director tomando en cuenta si hay alguna referencia.
-        public int Delete_actor(string name)
+        public string Delete_actor(string name)
         {
             var actor = GetActor(name);
             if (actor == null)
-                return -1; // No existe.
+                return "No se ha encontrado un actor con ese nombre."; // No existe.
 
             // verificar si hay peliculas asociadas a este director.
             var acts = Acts.FirstOrDefault(m => m.actor_id == actor.id);
@@ -133,9 +171,9 @@ namespace CineTec.Context
                 // ELIMINAR ACTOR
                 Actors.Remove(actor);
                 SaveChanges();
-                return 1; // Se borra correctamente.
+                return ""; // Se borra correctamente.
             }
-            return 0; // Presenta relacion con peliculas.
+            return "No se puede eliminar un actor que se encuentra asignado a una pelicula."; // Presenta relacion con peliculas.
         }
 
 
@@ -153,8 +191,8 @@ namespace CineTec.Context
         public IEnumerable<Acts> GetActs_byActorsId(int actor_id) => Acts.Where(f => f.actor_id == actor_id);
 
 
-            // POST AN ACTS
-            public int Post_acts(int movie_id, int actor_id)
+        // POST AN ACTS
+        public int Post_acts(int movie_id, int actor_id)
         {
             // Verificar la existencia.
             Acts existing = GetActs(movie_id, actor_id);
@@ -174,7 +212,7 @@ namespace CineTec.Context
         // PUT -> no hay.
 
         // DELETE especial de acts tomando en cuenta si hay alguna referencia.
-        public void Delete_acts_background(int movie_id, int actor_id)
+        private void Delete_acts_background(int movie_id, int actor_id)
         {
             var acts = GetActs(movie_id, actor_id);
             if (acts != null)
@@ -221,24 +259,57 @@ namespace CineTec.Context
          *      BRANCH
          */
 
+        // GET BRANCHES BY NAME
+        public Object GetBranches()
+        {
+            var b = from r in Branches
+                    select new
+                    {
+                        cinema_name = r.cinema_name,
+                        district = r.district,
+                        province = r.province,
+                        rooms_quantity = Rooms.Count(t => t.branch_name == r.cinema_name)
+                    };
+            return b;
+        }
+
         // GET BRANCH BY NAME
         public Branch GetBranch(string cinema_name) => Branches.FirstOrDefault(x => x.cinema_name == cinema_name);
 
+
+        // GET BRANCH BY NAME SELECT
+        public Object GetBranch_select(string cinema_name)
+        {
+            var b = from r in Branches
+                    where r.cinema_name == cinema_name
+                    select new
+                    {
+                        cinema_name = r.cinema_name,
+                        district = r.district,
+                        province = r.province,
+                        rooms_quantity = Rooms.Count(t => t.branch_name == cinema_name)
+                    };
+            return b;
+        }
         // GET ALL ROOMS OF A BRANCH
         // Funcion que retorna todas las salas de la sucursal que coincide con el cinema_name ingresado.
-        public IList<Room> Get_all_rooms_of_a_branch(string cinema_name)
+        public Object Get_all_rooms_of_a_branch(string cinema_name)
         {
             // Obtener todas las salas de la sucursal que coincide con el cinema_name ingresado.
-            var query = from b in Branches.Where(b => b.cinema_name == cinema_name)
-                        join room in Rooms
-                            on b.cinema_name equals room.branch_name
-                        select new { room };
-            var queryRoom = from t in query
-                            select t.room;
-            IList<Room> myList = queryRoom.Cast<Room>().ToList();
-            return myList;
+            var q = (from r in Rooms.Where(r => r.branch_name == cinema_name)
+                     select new
+                     {
+                         branch_name = r.branch_name,
+                         column_quantity = r.column_quantity,
+                         row_quantity = r.row_quantity,
+                         capacity = r.column_quantity * r.row_quantity,
+                         free_spaces = (from seat in Seats.Where(s => s.room_id == r.id)                                       //join s in Seats on room.branch_name equals s.room_id
+                                        where seat.status == "EMPTY"
+                                        select seat).Count()
+                     });
+            return q;
         }
-        
+
         // POST BRANCH
         public int Post_branch(Branch branch)
         {
@@ -278,38 +349,6 @@ namespace CineTec.Context
             }
         }
 
-
-        ////DELETE especifico de sucursal
-        //// Elimina las salas de una sucursal y luego elimina la sucursal misma.
-        //public int Delete_branch_with_rooms(string cinema_name)
-        //{
-        //    var branch = GetBranch(cinema_name);
-
-        //    // query para obtener las salas y sillas relacionadas a la sucursal
-        //    var queryRoomSeat = from b in Branches.Where(b => b.cinema_name == cinema_name)
-        //                        join room in Rooms
-        //                            on b.cinema_name equals room.branch_name
-        //                        join seat in Seats
-        //                            on room.id equals seat.room_id
-        //                        select new { room, seat };
-
-        //    var queryRoom = from t in queryRoomSeat select t.room;
-        //    var querySeat = from t in queryRoomSeat select t.seat;
-        //    Seat[] s = querySeat.ToArray();
-        //    Room[] r = queryRoom.ToArray();
-
-        //    // Procede a borrar las sillas, luego las salas y por ultimo las sucursales.
-        //    Seats.RemoveRange(s);
-        //    SaveChanges();
-
-        //    Rooms.RemoveRange(r);
-        //    SaveChanges();
-
-        //    Branches.Remove(branch);
-        //    SaveChanges();
-        //    return 1;
-        //}
-
         // AUXILIARES
         public bool Exist_branch(string cinema_name) => (GetBranch(cinema_name) != null);
         public bool Branch_has_relation_with_room(string cinema_name)
@@ -331,8 +370,6 @@ namespace CineTec.Context
             bool b = y.Length > 0;
             return b;
         }
-
-
 
 
         /*
@@ -397,15 +434,48 @@ namespace CineTec.Context
         }
 
 
-
-
         /*
          *      CLIENT
          */
 
+        // GET CLIENTS WITH DERIVATED AGE
+        public object GetClients_select()
+        {
+            var e = from r in Clients
+                    select new
+                    {
+                        first_name = r.first_name,
+                        middle_name = r.middle_name,
+                        first_surname = r.first_surname,
+                        second_surname = r.second_surname,
+                        birth_date = r.FormattedBirth_date,
+                        age = DateTime.Now.Year - r.birth_date.Year - 1,
+                        username = r.username,
+                        password = r.password,
+                    };
+            return e;
+        }
+
         // GET CLIENT BY CEDULA.
         public Client GetClient(int cedula) => Clients.SingleOrDefault(x => x.cedula == cedula);
 
+        // GET CLIENT WITH DERIVATED AGE
+        public object GetClient_select(int cedula)
+        {
+            var e = from r in Clients.Where(f => f.cedula == cedula)
+                    select new
+                    {
+                        first_name = r.first_name,
+                        middle_name = r.middle_name,
+                        first_surname = r.first_surname,
+                        second_surname = r.second_surname,
+                        birth_date = r.FormattedBirth_date,
+                        age = DateTime.Now.Year - r.birth_date.Year - 1,
+                        username = r.username,
+                        password = r.password,
+                    };
+            return e;
+        }
 
         // IS_USERNAME_FREE?
         public bool Is_client_username_free(string username) => (Employees.Where(f => f.username == username).FirstOrDefault() == null);
@@ -511,16 +581,16 @@ namespace CineTec.Context
             var director = GetDirector(name);
             if (director == null)
                 return -1; // No existe
-         
+
             // verificar si hay peliculas asociadas a este director.
             var movie = Movies.FirstOrDefault(m => m.director_id == director.id);
             if (movie != null)
                 return 0; // Existe una refeencia a pelicula.
-                
+
             // ELIMINAR DIRECTOR
             Directors.Remove(director);
             SaveChanges();
-            return 1;   
+            return 1;
         }
 
 
@@ -529,13 +599,50 @@ namespace CineTec.Context
         /*
          *      EMPLOYEE
          */
+        // GET EMPLOYEES WITH DERIVATED AGE
+        public object GetEmployees_select()
+        {
+            var e = from r in Employees
+                    select new
+                    {
+                        first_name = r.first_name,
+                        middle_name = r.middle_name,
+                        first_surname = r.first_surname,
+                        second_surname = r.second_surname,
+                        birth_date = r.FormattedBirth_date,
+                        age = DateTime.Now.Year - r.birth_date.Year - 1,
+                        username = r.username,
+                        password = r.password,
+                        branch_id = r.branch_id
+                    };
+            return e;
+        }
 
         // GET EMPLOYEE BY CEDULA
         public Employee GetEmployee(int cedula) => Employees.Where(f => f.cedula == cedula).FirstOrDefault();
 
+        // GET EMPLOYEE WITH DERIVATED AGE
+        public object GetEmployee_select(int cedula)
+        {
+            var e = from r in Employees.Where(f => f.cedula == cedula)
+                    select new
+                    {
+                        first_name = r.first_name,
+                        middle_name = r.middle_name,
+                        first_surname = r.first_surname,
+                        second_surname = r.second_surname,
+                        birth_date = r.FormattedBirth_date,
+                        age = DateTime.Now.Year - r.birth_date.Year - 1,
+                        username = r.username,
+                        password = r.password,
+                        branch_id = r.branch_id
+                    };
+            return e;
+        }
+
         // IS_USERNAME_FREE?
         public bool Is_employee_username_free(string username) => (Employees.Where(f => f.username == username).FirstOrDefault() == null);
-        
+
         // POST A EMPLOYEE
         public int Post_employee(Employee employee)
         {
@@ -604,9 +711,7 @@ namespace CineTec.Context
             var query = (from m in Movies.Where(x => x.original_name == name || x.name == name)
                          join d in Directors on m.director_id equals d.id
                          join c in Classifications on m.classification_id equals c.code
-                         //join a in Acts on m.id equals a.movie_id
-                         //join p in Actors on a.actor_id equals p.id
-                         select new 
+                         select new
                          {
                              original_name = m.original_name,
                              name = m.name,
@@ -617,80 +722,163 @@ namespace CineTec.Context
                              details = c.details,
                              director = d.name,
                              actors = (from a in Acts.Where(x => x.movie_id == m.id)
-                                        join p in Actors on a.actor_id equals p.id
-                                        select p.name).ToList()
+                                       join p in Actors on a.actor_id equals p.id
+                                       select p.name).ToList()
                          }).ToList();
             return query;
         }
 
+        // GET MOVIE NAME BY ID
+        public string GetMovieName(int id) => Movies.SingleOrDefault(x => x.id == id).original_name;
 
 
         // GET MOVIE BY ID
-            public Movie GetMovie(int id) => Movies.SingleOrDefault(x => x.id == id);
+        public Movie GetMovie(int id) => Movies.SingleOrDefault(x => x.id == id);
 
 
 
         // POST A MOVIE
-        //public int Post_movie(string dirName, string actName, Movie movie)
-        //{
-        //    // Verificar la existencia.
-        //    Movie existing = GetMovie(movie.original_name);
-        //    if (existing != null)
-        //        return 0; // Ya existe.
-
-        //    int create = Post_director(movie.director_id)
-        //    if (Post_director(movie.director_id) != 1)
-        //        return -1;
-
-        //    Movies.Add(movie);
-        //    SaveChanges();
-        //    return 1; // Se logra agregar.
-        //}
-
-        // PUT
-        public int Put_movie(string name, Movie m)
+        public string Post_movie(MovieCreation movie_stats)
         {
-            var movie = GetMovie(name);
-            if (movie == null)
-                return -1; // No existe.
-            if (GetClassification(m.classification_id) == null)
-                return 2; // Classificacion no existe.
-            else if (GetDirector(m.director_id) == null)
-                return 3; // Director no existe.
+            // VERIFICAR CLASIFICACION.
+            if (!Check_movie_classification(movie_stats.classification_id)) return "No existe esta clasificacion";
 
-            /////
-            // FALTA REALIZAR EL ACTS
-            /////
-           
-            movie.classification_id = m.classification_id;
-            movie.original_name = m.original_name;
-            movie.director_id = m.director_id;
-            movie.name = m.name;
-            movie.image = m.image;
-            movie.length = m.length;
-            Movies.Update(movie);
+            // OBTENER ID DIRECTOR.
+            int director_id = Get_movie_director_id(movie_stats.director);
+
+            // OBTENER ID ACTORES.
+            int[] actors_ids = Get_movie_actors_id(movie_stats.actors);
+
+            // CREAR PELICULA.
+            Movie movie = new Movie
+            {
+                original_name = movie_stats.original_name,
+                name = movie_stats.name,
+                classification_id = movie_stats.classification_id,
+                length = movie_stats.length,
+                image = movie_stats.image,
+                director_id = director_id
+            };
+            Movies.Add(movie);
             SaveChanges();
-            return 1; // Se logra agregar.
+            // GetMOVIE ID
+            int movie_id = GetMovie(movie_stats.original_name).id;
+
+            // AGREGAR RELACION CON ACTORES en ACTS.
+            foreach (int id in actors_ids)
+            {
+                Post_acts(movie_id, id);
+            }
+            return "";
         }
 
+        private bool Check_movie_classification(string code) => (GetClassification(code) != null);
+
+        private int Get_movie_director_id(string director_name)
+        {
+            var dir = GetDirector(director_name);
+            // Si existe el director entonces perfecto.
+            if (dir != null) return dir.id;
+            // Si no existe crear un director con ese nombre.
+            Director d = new Director { name = director_name };
+            Directors.Add(d);
+            SaveChanges();
+            return d.id;
+        }
+
+        private int[] Get_movie_actors_id(string[] actors_names)
+        {
+            int[] ids = new int[actors_names.Length];
+            for (int i = 0; i < ids.Length; i++)
+            {
+                var actor = GetActor(actors_names[i]);
+
+                // Si existe el actor entonces perfecto.
+                if (actor != null)
+                {
+                    ids[i] = actor.id;
+                }
+                // Si no existe crear un director con ese nombre.
+                else
+                {
+                    Actor a = new Actor { name = actors_names[i] };
+                    Actors.Add(a);
+                    SaveChanges();
+
+                    ids[i] = GetActor(a.name).id;
+                }
+            }
+            return ids;
+        }
+
+        // PUT
+        public string Put_movie(int id, MovieCreation movie_stats)
+        {
+            // VERIFICAR CLASIFICACION.
+            if (!Check_movie_classification(movie_stats.classification_id)) return "No existe esta clasificacion";
+
+            // OBTENER ID DIRECTOR.
+            int director_id = Get_movie_director_id(movie_stats.director);
+
+            // OBTENER ID ACTORES.
+            int[] actors_ids = Get_movie_actors_id(movie_stats.actors);
+
+            // GET MOVIE
+            Movie movie = GetMovie(id);
+
+
+            // ELIMINAR RELACION ANTERIOR CON ACTORES.
+            List<int> current_actors_ids = GetActors_ids(id);
+            foreach (int actor_id in current_actors_ids)
+            {
+                Delete_acts_background(id, actor_id);
+            }
+            SaveChanges();
+
+            movie.classification_id = movie_stats.classification_id;
+            movie.original_name = movie_stats.name;
+            movie.director_id = director_id;
+            movie.name = movie_stats.name;
+            movie.image = movie_stats.image;
+            movie.length = movie_stats.length;
+            Movies.Update(movie);
+            SaveChanges();
+
+            // AGREGAR RELACION CON ACTORES en ACTS.
+            foreach (int actor_id in actors_ids)
+            {
+                Post_acts(id, actor_id);
+            }
+            return "";
+        }
+
+
         // DELETE especial de projection tomando en cuenta si hay alguna referencia.
-        public int Delete_movie(string name)
+        public string Delete_movie(string name)
         {
             var movie = GetMovie(name);
             if (movie == null)
-                return -1; // No existe.
+                return "No existe esta pelicula.";
 
             // No se puede eliminar si existen proyecciones.        
             // verificar si hay una proyeccion asociada a este cliente.
             var pr = GetProjections_byMovieId(movie.id);
-            if (pr == null)
+            if (pr.Count() == 0)
             {
-                // ELIMINAR PROJECTION
+                // ELIMINAR RELACION ANTERIOR CON ACTORES.
+                List<int> current_actors_ids = GetActors_ids(movie.id);
+                foreach (int actor_id in current_actors_ids)
+                {
+                    Delete_acts_background(movie.id, actor_id);
+                }
+                SaveChanges();
+
+                // ELIMINAR PELICULA
                 Movies.Remove(movie);
                 SaveChanges();
-                return 1; // Se elimina correctamente
+                return ""; // Se logra agregar.
             }
-            return 0; // Tiene proyecciones asociadas.
+            return "No se puede eliminar esta pelicula, tiene proyecciones asociadas.";
         }
 
 
@@ -703,9 +891,90 @@ namespace CineTec.Context
         // GET PROJECTION BY ID
         public Projection GetProjection(int id) => Projections.Where(f => f.id == id).FirstOrDefault();
 
+
+        // GET ALL PROJECTIONS BY ID SPECIAL OUTPUT
+        public Object GetProjections_select()
+        {
+
+            var sinRep = (from pro in Projections
+                            select new  {
+                                movie_id = pro.movie_id,
+                                date = pro.date
+                            }).Distinct().ToList();
+
+            //var projects = (from p in Projections select p).ToArray();
+            //List<int> ids = new List<int>();
+
+            //for (int i = 0; i < horarios.Count(); i++)
+            //{
+            //    for (int j = 0; j < projects.Length; j++)
+            //    {
+            //        var p = projects[j];
+            //        var h = horarios[i];
+            //        if (p.movie_id.Equals(h.movie_id) && p.date.Equals(h.date))
+            //        {
+
+            //            ids.Add(p.id);
+            //            h = null;
+            //            continue;
+            //        }
+            //    }
+            //}
+
+
+            var query = (from p in Projections
+                         select new ProjectionJSON
+                         {
+                             //id = p.id,
+                             movie = (from m in Movies
+                                      where m.id == p.movie_id
+                                      select m.original_name).FirstOrDefault(),
+                             //room = p.room_id,
+                             date = p.FormattedDate,
+                             schedule = (from t in Projections.Where(f => f.date == p.date)
+                                         select t.schedule).ToList()
+                         }).ToList();
+            return removeDuplicates(sinRep, query);
+
+        }
+
+        private List<ProjectionJSON> removeDuplicates(object sinRep, List<ProjectionJSON> query)
+        {
+            var q;
+            for (int i = 0; i < query.Count(); i++)
+            {
+
+            }
+
+
+                return null;
+        }
+
+
+        // GET PROJECTION BY ID SPECIAL OUTPUT
+        //public Object GetProjection_select(int movie_id)
+        //{
+
+        //    var times = (from t in Projections.Where(f => f.id == id && f.date == x.date)
+        //                            select t.schedule).ToList();
+
+        //    var query = from p in Projections.Where(f => f.movie_id == movie_id)
+        //                select new
+        //                {
+        //                    id = p.id,
+        //                    //movie = GetMovieName(movie_id),
+        //                    room = p.room_id,
+        //                    date = p.FormattedDate,
+        //                    schedule = times                
+        //                };
+        //    return query;
+        //}
+
+
+
         // GET PROJECTION BY ROOM_ID, MOVIE_ID, DATE
-        public IEnumerable<Projection> GetProjection_byRoom_Movie_Date(int room_id, int movie_id, DateTime date)
-            => Projections.Where(f => f.room_id == room_id && f.movie_id == movie_id && f.date == date);
+        public Projection GetProjection_byRoom_Movie_Date(int room_id, DateTime date, string schedule)
+            => Projections.Where(f => f.room_id == room_id && f.date == date && f.schedule == schedule).FirstOrDefault();
 
         // GET PROJECTION BY ROOM_ID
         public IEnumerable<Projection> GetProjections_byRoomId(int room_id) => Projections.Where(f => f.room_id == room_id);
@@ -728,56 +997,54 @@ namespace CineTec.Context
         }
 
         // POST A PROJECTION
-        public int Post_projection(Projection p)
+        public string Post_projection(Projection p)
         {
             // Verificar la existencia de otra proyeccion igual.
-            IEnumerable<Projection> myList = GetProjection_byRoom_Movie_Date(p.room_id, p.movie_id, p.date);
+            Projection myList = GetProjection_byRoom_Movie_Date(p.room_id, p.date, p.schedule);
 
-            if (myList.Any())
-                return 0; // Ya existe una proyeccion a esta hora de la misma pelicula en la misma sala.
+            if (myList != null)
+                return "Esa sala ya se encuentra asignada a otra proyeccion durante el horario ingresado.";
 
+            
             Projections.Add(p);
             SaveChanges();
-            return 1; // Se logra agregar.
+            return ""; // Se logra agregar.
         }
 
         // PUT PROJECTION
-        public int Put_projection(Projection p)
+        public string Put_projection(Projection p)
         {
             // Verificar la existencia.
             Projection existing = GetProjection(p.id);
             if (existing == null)
-                return -1; // No existe.
+                return "No se ha encontrado ninguna proyeccion que coincida con el ID ingresado.";
 
             // Verificar la existencia de otra proyeccion igual.
-            IEnumerable<Projection> myList = GetProjection_byRoom_Movie_Date(p.room_id, p.movie_id, p.date);
+            Projection myList = GetProjection_byRoom_Movie_Date(p.room_id, p.date, p.schedule);
 
-            if (myList.Any())
-                return 0; // Ya existe una proyeccion a esta hora de la misma pelicula en la misma sala.
-
-            Projections.Update(p);
+            if (myList != null)
+                return "Esa sala ya se encuentra asignada a otra proyeccion durante el horario ingresado.";
+            existing.movie_id = p.movie_id;
+            existing.room_id = p.room_id;
+            existing.schedule = p.schedule;
+            Projections.Update(existing);
             SaveChanges();
-            return 1; // Se logra actualizar.
+            return ""; // Se logra actualizar.
         }
 
 
         // DELETE especial de projection
         // Tomando en cuenta si hay alguna referencia.
-        public int Delete_projection(int id)
+        public string Delete_projection(int id)
         {
             var projection = GetProjection(id);
             if (projection == null)
-                return -1; // No exite.
-            
-            // verificar si hay una factura asociada a este cliente.
-            var bill = GetBill(projection.id);
-            if (bill != null)
-                return 0; // Tiene facturas asociadas.
+                return "No existe ninguna proyeccion que coincida con el ID ingresado."; // No exite.
             
             // ELIMINAR PROJECTION
             Projections.Remove(projection);
             SaveChanges();
-            return 1; // Se elimina correctamente.
+            return ""; // Se elimina correctamente.
         }
 
 
@@ -924,58 +1191,9 @@ namespace CineTec.Context
             Seats.RemoveRange(Seats.Where(x => x.room_id == id));
             SaveChanges();
         }
-
-
-
-
-
-
-        /*
-         *      TIMES
-         */
-
-        // GET TIMES BY KEY (MOVIE_ID, ACTOR_ID)
-        public Times GetTimes(int projection_id, int id) => Times.Where(f => f.projection_id == projection_id && f.id == id).FirstOrDefault();
-
-        // GET TIMES BY PROJECTION_ID
-        public IEnumerable<Times> GetTimes_byProjectionId(int projection_id) => Times.Where(f => f.projection_id == projection_id);
-
-        // GET TIMES BY ID
-        public Times GetTimes_byId(int id) => Times.Where(f => f.id == id).FirstOrDefault();
-
-        // POST TIMES
-        public int Post_times(int projection_id, int id)
-        {
-            // Verificar la existencia.
-            Times existing = GetTimes(projection_id, id);
-            if (existing != null)
-                return 0; // ya existe.
-
-            Times a = new Times
-            {
-                projection_id = projection_id,
-                id = id
-            };
-            Times.Add(a);
-            SaveChanges();
-            return 1; // Se logra agregar.
-        }
-
-        // PUT -> no hay.
-
-        // DELETE especial de times.
-        public void Delete_times_background(int projection_id, int id)
-        {
-            var times = GetTimes(projection_id, id);
-            if (times != null)
-            {
-                // ELIMINAR TIMES
-                Times.Remove(times);
-                SaveChanges();
- 
-            }
-        }
-
     }
 
+    internal class PInform
+    {
+    }
 }

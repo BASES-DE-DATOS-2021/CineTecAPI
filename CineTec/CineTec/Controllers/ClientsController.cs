@@ -21,11 +21,21 @@ namespace CineTec.Controllers
 
         // GET: api/Clients
         [HttpGet]
-        public IEnumerable<Client> Get() => _CRUDContext.Clients;
+        public object Get() => _CRUDContext.GetClients_select();
 
         // GET api/Clients/5
         [HttpGet("{cedula}")]
-        public Client Get(int cedula) => _CRUDContext.Clients.SingleOrDefault(x => x.cedula == cedula);
+        public object Get(int cedula) => _CRUDContext.GetClient_select(cedula);
+
+        // GET api/Clients/logIn?username=a&password=b
+        [HttpGet("logIn")]
+        public object Login(string username, string password)
+        {
+            var v = _CRUDContext.Login_client(username, password);
+            if (v == null) return BadRequest("Nombre de usuario o contraseña incorrectos.");
+            return v;
+        }
+
 
         // POST api/Clients
         [HttpPost]

@@ -23,18 +23,18 @@ namespace CineTec.Controllers
 
         // GET: api/Branches
         [HttpGet]
-        public IEnumerable<Branch> Get() => _CRUDContext.Branches;
+        public Object Get() => _CRUDContext.GetBranches();
 
 
         // GET api/Branches/Cinectec Cartago
         [HttpGet("{cinema_name}")]
-        public Branch Get(string cinema_name) => _CRUDContext.GetBranch(cinema_name);
+        public Object Get(string cinema_name) => _CRUDContext.GetBranch_select(cinema_name);
 
 
 
         // GET api/Branches/all_rooms?cinema_name=a
         [HttpGet("all_rooms")]
-        public IList<Room> Get_all_rooms(string cinema_name) => _CRUDContext.Get_all_rooms_of_a_branch(cinema_name);
+        public Object Get_all_rooms(string cinema_name) => _CRUDContext.Get_all_rooms_of_a_branch(cinema_name);
 
 
         // GET api/Branches/all_projections_dates?cinema_name=a

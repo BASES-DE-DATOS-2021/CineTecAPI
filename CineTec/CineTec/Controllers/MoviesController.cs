@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CineTec.Context;
 using CineTec.Models;
+using CineTec.JSON_Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -36,49 +37,33 @@ namespace CineTec.Controllers
         [HttpGet("byName/{name}")]
         public Movie GetByName(string name) => _CRUDContext.GetMovie(name);
 
-        //// POST api/Movies
-        //[HttpPost]
-        //public IActionResult Post([FromBody] Movie movie)
-        //{
-        //    int x = _CRUDContext.Post_movie(movie);
-        //    return x switch
-        //    {
-        //        0 => BadRequest("Esta pelicula ya se encuentra registrada."),
-        //        _ => Ok(),
-        //    };
-        //}
+        // POST api/Movies
+        [HttpPost]
+        public IActionResult Post([FromBody] MovieCreation movie_stats)
+        {
+            string x = _CRUDContext.Post_movie(movie_stats);
+            if (x == "") return Ok();
+            return BadRequest(x);
+        }
 
-        //// PUT api/Movies/5
-        //[HttpPut("{id}")]
-        //public IActionResult Put(string name, [FromBody] Movie movie)
-        //{
-        //    movie.original_name = name;
-        //    int x = _CRUDContext.Put_movie(movie);
-        //    return x switch
-        //    {
-        //        0 => BadRequest("Esta pelicula ya se encuentra registrada."),
-        //        -1 => BadRequest("No se ha encontrado una pelicula con este nombre."),
-        //        _ => Ok(),
-        //    };
-        //}
+        // PUT api/Movies/5
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] MovieCreation movie_stats)
+        {
+           
+            string x = _CRUDContext.Put_movie(id, movie_stats);
+            if (x == "") return Ok();
+            return BadRequest(x);
+        }
 
-        //// PUT api/Movies/5
-        //[HttpPut("byName/{name}")]
-        //public void PutByName(string name, [FromBody] Movie movie)
-        //{
-        //    _CRUDContext.Put_Movie(name, movie);
-        //}
 
-        //// DELETE api/Movies/byName/Shuek
-        //[HttpDelete("byName/{original_name}")]
-        //public void DeleteByName(string original_name)
-        //{
-        //    var item = _CRUDContext.Movies.FirstOrDefault(x => x.original_name == original_name);
-        //    if (item != null)
-        //    {
-        //        _CRUDContext.Movies.Remove(item);
-        //        _CRUDContext.SaveChanges();
-        //    }
-        //}
+        // DELETE api/Movies/byName/Shuek
+        [HttpDelete("byName/{name}")]
+        public IActionResult DeleteByName(string name)
+        {
+            string x = _CRUDContext.Delete_movie(name);
+            if (x == "") return Ok();
+            return BadRequest(x);
+        }
     }
 }

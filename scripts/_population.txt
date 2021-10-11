@@ -84,17 +84,14 @@ INSERT INTO public."Movies"( classification_id, director_id, original_name, name
 ------------------------------------------------------------------------------------------------------------------------------------
 
 -- Populacion de Projections and Times
-INSERT INTO public."Projections"( room_id, movie_id, date) VALUES (1, 3, '02/02/2021');
-INSERT INTO public."Times"(projection_id, schedule) VALUES (1, '12:00');
-INSERT INTO public."Times"(projection_id, schedule) VALUES (1, '15:30');
-INSERT INTO public."Times"(projection_id, schedule) VALUES (1, '19:05');
-INSERT INTO public."Times"(projection_id, schedule) VALUES (1, '20:55');
-
-INSERT INTO public."Projections"( room_id, movie_id, date) VALUES (2, 2, '02/03/2021');
-INSERT INTO public."Times"(projection_id, schedule) VALUES (2, '9:15');
-INSERT INTO public."Times"(projection_id, schedule) VALUES (2, '13:25');
-INSERT INTO public."Times"(projection_id, schedule) VALUES (2, '14:05');
-INSERT INTO public."Times"(projection_id, schedule) VALUES (2, '21:10');
+INSERT INTO public."Projections"( room_id, movie_id, date, schedule) VALUES (1, 3, '02/02/2021','12:00');
+INSERT INTO public."Projections"( room_id, movie_id, date, schedule) VALUES (1, 3, '02/02/2021','15:30');
+INSERT INTO public."Projections"( room_id, movie_id, date, schedule) VALUES (1, 3, '02/02/2021','19:05');
+INSERT INTO public."Projections"( room_id, movie_id, date, schedule) VALUES (1, 3, '02/02/2021','20:55');
+INSERT INTO public."Projections"( room_id, movie_id, date, schedule) VALUES (2, 2, '02/03/2021','09:15');
+INSERT INTO public."Projections"( room_id, movie_id, date, schedule) VALUES (2, 2, '02/03/2021','13:25');
+INSERT INTO public."Projections"( room_id, movie_id, date, schedule) VALUES (2, 2, '02/03/2021','14:05');
+INSERT INTO public."Projections"( room_id, movie_id, date, schedule) VALUES (2, 2, '02/03/2021','21:10');
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- ACTORS

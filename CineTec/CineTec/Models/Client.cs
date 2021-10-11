@@ -28,6 +28,14 @@ namespace CineTec.Models
 
         [Required]
         public string password { get; set; }
+
+        public string FormattedBirth_date
+        {
+            get
+            {
+                return string.Format("{0:dd/MM/yy}", birth_date);
+            }
+        }
     }
 }
  

@@ -36,26 +36,18 @@ namespace CineTec.Controllers
         [HttpPut("{name}")]
         public ActionResult Put(string name, [FromBody] Actor actor)
         {
-            int x = _CRUDContext.Put_actor(actor, name);
-            return x switch
-            {
-                0 => BadRequest("El nombre al que desea actualizar ya se encuentra en uso. Por favor ingrese otro."),
-                -1 => BadRequest("No se ha encontrado un actor con este nombre."),
-                _ => Ok(),
-            };
+            var x = _CRUDContext.Put_actor(actor, name);
+            if (x == "") return Ok();
+            return BadRequest(x);
         }
 
         // DELETE api/Actors/Kevin Hart
         [HttpDelete("{name}")]
         public ActionResult Delete(string name)
         {
-            int x = _CRUDContext.Delete_actor(name);
-            return x switch
-            {
-                0 => BadRequest("No se puede eliminar un actor que se encuentra asignado a una pelicula."),
-                -1 => BadRequest("No se ha encontrado un actor con ese nombre."),
-                _ => Ok(),// Se elimina correctamente.
-            };
+            var x = _CRUDContext.Delete_actor(name);
+            if (x == "") return Ok();
+            return BadRequest(x);
         }
     }
 }

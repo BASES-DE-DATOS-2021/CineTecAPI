@@ -5,6 +5,7 @@ using CineTec.Context;
 using CineTec.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Data.Entity.Validation;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -40,6 +41,13 @@ namespace CineTec.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Room room)
         {
+
+            if (!(6 <= room.row_quantity && room.row_quantity <= 10))
+                return BadRequest("El valor de filas debe ser entre 6 y 10.");
+
+            if (!(20 <= room.column_quantity && room.column_quantity <= 25))
+                return BadRequest("El valor de columnas debe ser entre 20 y 25.");
+
             _CRUDContext.Post_room(room);
             return Ok();
         }
