@@ -20,13 +20,6 @@ namespace CineTec.Controllers
             _CRUDContext = CRUDContext;
         }
 
-        // GET: api/Projections/forBranch?room_id=a
-        [HttpGet("forBranch")]
-        public Object Get(string cinema_name, DateTime date)
-        {
-            return _CRUDContext.GetProjections_in_branch_select(cinema_name, date);
-        }
-
 
         // GET api/Projections/5
         [HttpGet("{movie_id}")]
