@@ -21,9 +21,9 @@ namespace CineTec.Controllers
         }
 
 
-        // GET api/Projections/5
-        [HttpGet("{movie_id}")]
-        public Object Get(int movie_id) => _CRUDContext.GetProjection_select(movie_id);
+        //// GET api/Projections/5
+        //[HttpGet("{movie_id}")]
+        //public Object Get(int movie_id) => _CRUDContext.GetProjection_select(movie_id);
 
 
         // GET api/Projections/byMovieId/
