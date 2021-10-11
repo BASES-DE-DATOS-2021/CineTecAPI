@@ -444,6 +444,7 @@ namespace CineTec.Context
             var e = from r in Clients
                     select new
                     {
+                        cedula = r.cedula,
                         first_name = r.first_name,
                         middle_name = r.middle_name,
                         first_surname = r.first_surname,
@@ -465,6 +466,7 @@ namespace CineTec.Context
             var e = from r in Clients.Where(f => f.cedula == cedula)
                     select new
                     {
+                        cedula = r.cedula,
                         first_name = r.first_name,
                         middle_name = r.middle_name,
                         first_surname = r.first_surname,
@@ -605,6 +607,7 @@ namespace CineTec.Context
             var e = from r in Employees
                     select new
                     {
+                        cedula = r.cedula,
                         first_name = r.first_name,
                         middle_name = r.middle_name,
                         first_surname = r.first_surname,
@@ -627,6 +630,7 @@ namespace CineTec.Context
             var e = from r in Employees.Where(f => f.cedula == cedula)
                     select new
                     {
+                        cedula = r.cedula,
                         first_name = r.first_name,
                         middle_name = r.middle_name,
                         first_surname = r.first_surname,
@@ -965,15 +969,23 @@ namespace CineTec.Context
         // GET PROJECTIONS DATES BY BRANCH_NAME
         public IList<string> GetProjections_dates_byBranch(string cinema_name)
         {
-            var query = from b in Branches.Where(b => b.cinema_name == cinema_name)
+            List<string> query = (from b in Branches.Where(b => b.cinema_name == cinema_name)
                         join r in Rooms
                             on b.cinema_name equals r.branch_name
                         join p in Projections
                             on r.id equals p.room_id
-                        select p.FormattedDate;
+                        select p.FormattedDate).ToList();
 
-            IList<string> myList = query.Cast<string>().ToList();
-            return myList;
+            List<string> ouput = new List<string>();
+            // Remove duplicates
+            foreach(string s in query)
+            {
+                if (ouput.Contains(s))
+                    continue;
+                else
+                    ouput.Add(s);
+            }
+            return ouput;
         }
 
         // POST A PROJECTION

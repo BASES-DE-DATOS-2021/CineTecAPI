@@ -37,10 +37,19 @@ namespace CineTec.Controllers
         public Object Get_all_rooms(string cinema_name) => _CRUDContext.Get_all_rooms_of_a_branch(cinema_name);
 
 
-        //// GET api/Branches/all_projections_dates?cinema_name=a
-        //[HttpGet("all_projections_dates")]
-        //public IList<string> Get_all_projections_dates_byBranch(string cinema_name) => _CRUDContext.GetProjections_dates_byBranch(cinema_name);
 
+        // GET: api/Branches/forBranch?room_id=a
+        [HttpGet("forBranch")]
+        public Object Get(string cinema_name, DateTime date)
+        {
+            return _CRUDContext.GetBranches_Movie_Projection_select(cinema_name, date);
+        }
+
+
+
+        // GET api/Branches/all_projections_dates?cinema_name=a
+        [HttpGet("all_projections_dates")]
+        public List<string> Get_all_projections_dates_byBranch(string cinema_name) => _CRUDContext.GetProjections_dates_byBranch(cinema_name);
 
         // POST api/Branches
         [HttpPost]

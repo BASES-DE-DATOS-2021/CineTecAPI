@@ -13,11 +13,9 @@ namespace CineTec.Models
         public int id { get; set; }
 
         [Required]
-        [Range(6, 10)]
         public int row_quantity { get; set; }
 
         [Required]
-        [Range(20, 25)]
         public int column_quantity { get; set; }
 
     }
