@@ -1060,8 +1060,48 @@ namespace CineTec.Context
          *      ROOM
          */
 
+        // GET ROOMS BY ID SPECIAL
+        public Object GetRooms_special()
+        {
+            // Obtener todas las salas de la sucursal que coincide con el cinema_name ingresado.
+            var q = (from r in Rooms
+                     join s in Seats on r.id equals s.room_id
+                     select new
+                     {
+                         //branch_name = r.branch_name,
+                         id = r.id,
+                         //column_quantity = r.column_quantity,
+                         //row_quantity = r.row_quantity,
+                         capacity = r.column_quantity * r.row_quantity,
+                         free_spaces = (from seat in Seats.Where(s => s.room_id == r.id)
+                                        where seat.status == "EMPTY"
+                                        select seat).Count()
+                     }).Distinct().ToList();
+            return q;
+        }
+
         // GET ROOM BY ID
         public Room GetRoom(int id) => Rooms.Where(f => f.id == id).FirstOrDefault();
+
+        // GET ROOM BY ID SPECIAL
+        public Object GetRoom_special(int id)
+        {
+            // Obtener todas las salas de la sucursal que coincide con el cinema_name ingresado.
+            var q = (from r in Rooms.Where(r => r.id == id)
+                     join s in Seats on r.id equals s.room_id
+                     select new
+                     {
+                         //branch_name = r.branch_name,
+                         id = r.id,
+                         //column_quantity = r.column_quantity,
+                         //row_quantity = r.row_quantity,
+                         capacity = r.column_quantity * r.row_quantity,
+                         free_spaces = (from seat in Seats.Where(s => s.room_id == r.id)
+                                        where seat.status == "EMPTY"
+                                        select seat).Count()
+                     }).FirstOrDefault();
+            return q;
+        }
 
         // GET especifico
         /// Retorna todas las sillas de una sala que coincida con el id ingresado y a su vez que sea parte de la

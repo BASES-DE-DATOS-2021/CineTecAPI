@@ -24,15 +24,15 @@ namespace CineTec.Controllers
 
         // GET: api/Rooms
         [HttpGet]
-        public IEnumerable<Room> Get()
+        public Object Get()
         {
-            return _CRUDContext.Rooms;
+            return _CRUDContext.GetRooms_special();
         }
 
         // GET api/Rooms/5
         [HttpGet("{id}")]
-        public Room Get(int id) => _CRUDContext.Rooms.SingleOrDefault(x => x.id == id);
-        
+        public Object Get(int id) => _CRUDContext.GetRoom_special(id);
+
         // GET api/Rooms/all_seats?cinema_name=a&room_id=b
         [HttpGet("all_seats")]
         public IList<Seat> Get_all_seats(string cinema_name, int room_id) => _CRUDContext.Get_all_seats_of_a_room(cinema_name, room_id);
