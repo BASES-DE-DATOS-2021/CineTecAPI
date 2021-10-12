@@ -54,21 +54,21 @@ namespace CineTec.Controllers
         }
 
         // PUT api/Movies/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] MovieCreation movie_stats)
+        [HttpPut("byName/{name}")]
+        public IActionResult PutByName(string name, [FromBody] MovieCreation movie_stats)
         {
-           
-            string x = _CRUDContext.Put_movie(id, movie_stats);
+            string x = _CRUDContext.Put_movie_by_name(name, movie_stats);
             if (x == "") return Ok();
             return BadRequest(x);
         }
 
 
-        // DELETE api/Movies/byName/Shuek
-        [HttpDelete("byName/{name}")]
-        public IActionResult DeleteByName(string name)
+
+        // DELETE api/Movies/1
+        [HttpDelete("byId/{id}")]
+        public IActionResult DeleteById(int id)
         {
-            string x = _CRUDContext.Delete_movie(name);
+            string x = _CRUDContext.Delete_movie_by_id(id);
             if (x == "") return Ok();
             return BadRequest(x);
         }
