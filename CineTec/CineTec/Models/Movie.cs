@@ -16,9 +16,6 @@ namespace CineTec.Models
         public int director_id { get; set; }
 
         [Required]
-        public string image { get; set; }
-
-        [Required]
         public string original_name { get; set; }
         public string name { get; set; }
 

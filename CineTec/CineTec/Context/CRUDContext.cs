@@ -765,7 +765,6 @@ namespace CineTec.Context
                              original_name = m.original_name,
                              name = m.name,
                              length = m.length,
-                             image = m.image,
                              code = c.code,
                              age_rating = c.age_rating,
                              details = c.details,
@@ -802,7 +801,6 @@ namespace CineTec.Context
                 name = movie_stats.name,
                 classification_id = movie_stats.classification_id,
                 length = movie_stats.length,
-                image = movie_stats.image,
                 director_id = director_id
             };
             Movies.Add(movie);
@@ -869,7 +867,6 @@ namespace CineTec.Context
                              original_name = m.original_name,
                              name = m.name,
                              length = m.length,
-                             image = m.image,
                              code = c.code,
                              age_rating = c.age_rating,
                              details = c.details,
@@ -931,7 +928,6 @@ namespace CineTec.Context
             movie.original_name = movie_stats.original_name;
             movie.director_id = director_id;
             movie.name = movie_stats.name;
-            movie.image = movie_stats.image;
             movie.length = movie_stats.length;
             Movies.Update(movie);
             SaveChanges();
