@@ -313,10 +313,13 @@ namespace CineTec.Context
         // Tiene toda la informacion de las peliculas que salen ese dia.
         public Object GetBranches_Movie_Projection_select(string cinema_name, string date)
         {
+            DateTime convertedDate = DateTime.Parse(date);
+            DateTime t = convertedDate.Date;
+
             var query = (from b in Branches.Where(b => b.cinema_name == cinema_name)
                          join r in Rooms on b.cinema_name equals r.branch_name
                          join p in Projections on r.id equals p.room_id
-                         where p.FormattedDate == date
+                         where p.date == t
                          join m in Movies on p.movie_id equals m.id
                          join d in Directors on m.director_id equals d.id
                          join c in Classifications on m.classification_id equals c.code
@@ -1061,8 +1064,8 @@ namespace CineTec.Context
             return query;
         }
 
-        public Projection GetProjection_byRoom_Movie_Date(int room_id, DateTime date, string schedule)
-            => Projections.Where(f => f.room_id == room_id && f.date == date && f.schedule == schedule).FirstOrDefault();
+        public Projection GetProjection_byRoom_Movie_Date(int movie_id, int room_id, DateTime date, string schedule)
+            => Projections.Where(f => f.movie_id == movie_id && f.room_id == room_id && f.date == date && f.schedule == schedule).FirstOrDefault();
 
         // GET PROJECTION BY ROOM_ID
         public IEnumerable<Projection> GetProjections_byRoomId(int room_id) => Projections.Where(f => f.room_id == room_id);
@@ -1081,6 +1084,7 @@ namespace CineTec.Context
                         select p.FormattedDate).ToList();
 
             List<string> ouput = new List<string>();
+
             // Remove duplicates
             foreach(string s in query)
             {
@@ -1096,7 +1100,7 @@ namespace CineTec.Context
         public string Post_projection(Projection p)
         {
             // Verificar la existencia de otra proyeccion igual.
-            Projection myList = GetProjection_byRoom_Movie_Date(p.room_id, p.date, p.schedule);
+            Projection myList = GetProjection_byRoom_Movie_Date(p.movie_id, p.room_id, p.date, p.schedule);
 
             if (myList != null)
                 return "Esa sala ya se encuentra asignada a otra proyeccion durante el horario ingresado.";
@@ -1104,13 +1108,12 @@ namespace CineTec.Context
             Projections.Add(p);
             SaveChanges();
 
-            Projection x = GetProjection_byRoom_Movie_Date(p.room_id, p.date, p.schedule);
+            Projection x = GetProjection_byRoom_Movie_Date(p.movie_id, p.room_id, p.date, p.schedule);
             int capacity = (from r in Rooms.Where(b => b.id == x.id)
                             join proj in Projections on r.id equals proj.room_id
                             select r.column_quantity*r.row_quantity).FirstOrDefault();
 
             Add_seats_for_proyection(x.id, capacity);
-            SaveChanges();
             return ""; // Se logra agregar.
         }
         // Crear una cantidad de sillas para una projection. Todas estan vacias.
@@ -1130,6 +1133,7 @@ namespace CineTec.Context
         }
 
         // PUT PROJECTION
+        // nota: No se puede modificar la sala de una projeccion. 
         public string Put_projection(Projection p)
         {
             // Verificar la existencia.
@@ -1138,18 +1142,17 @@ namespace CineTec.Context
                 return "No se ha encontrado ninguna proyeccion que coincida con el ID ingresado.";
 
             // Verificar la existencia de otra proyeccion igual.
-            Projection myList = GetProjection_byRoom_Movie_Date(p.room_id, p.date, p.schedule);
+            Projection myList = GetProjection_byRoom_Movie_Date(p.movie_id, p.room_id, p.date, p.schedule);
 
             if (myList != null)
                 return "Esa sala ya se encuentra asignada a otra proyeccion durante el horario ingresado.";
             existing.movie_id = p.movie_id;
-            existing.room_id = p.room_id;
+            existing.date = p.date;
             existing.schedule = p.schedule;
             Projections.Update(existing);
             SaveChanges();
             return ""; // Se logra actualizar.
         }
-
 
         // DELETE especial de projection
         // Tomando en cuenta si hay alguna referencia.
@@ -1158,6 +1161,9 @@ namespace CineTec.Context
             var projection = GetProjection(id);
             if (projection == null)
                 return "No existe ninguna proyeccion que coincida con el ID ingresado."; // No exite.
+
+            // ELIMINAR LAS SILLAS ASOCIADAS A LA PROJECTION
+            Delete_seats_of_a_projection(id);
 
             // ELIMINAR PROJECTION
             Projections.Remove(projection);
@@ -1176,41 +1182,11 @@ namespace CineTec.Context
             return query;
         }
 
-        // DELETE especifico de room.
-        // elimina las sillas de una sala y luego elimina la sala misma.
-        public int Delete_seats_of_a_projection(int id)
-        {
-            if (!Exist_room(id)) { return -1; } // no existe
-            else if (Room_has_relation_with_proyection(id)) { return 2; } // relacion con projection.
-            else
-            {
-                Delete_seats_of_a_room(id);
-                Rooms.Remove(GetRoom(id));
-                SaveChanges();
-                return 1;
-            }
-        }
 
 
         /*
          *      ROOM
          */
-
-        // GET ROOMS BY ID SPECIAL
-        public Object GetRooms_special()
-        {
-            // Obtener todas las salas de la sucursal que coincide con el cinema_name ingresado.
-            var q = (from r in Rooms
-                     select new
-                     {
-                         branch_name = r.branch_name,
-                         id = r.id,
-                         column_quantity = r.column_quantity,
-                         row_quantity = r.row_quantity,
-                         capacity = r.column_quantity * r.row_quantity,
-                     }).ToList();
-            return q;
-        }
 
         // GET ROOM BY ID
         public Room GetRoom(int id) => Rooms.Where(f => f.id == id).FirstOrDefault();
@@ -1231,34 +1207,28 @@ namespace CineTec.Context
             return q;
         }
 
-        // POST 
+        // GET ROOMS BY ID SPECIAL
+        public Object GetRooms_special()
+        {
+            // Obtener todas las salas de la sucursal que coincide con el cinema_name ingresado.
+            var q = (from r in Rooms
+                     select new
+                     {
+                         branch_name = r.branch_name,
+                         id = r.id,
+                         column_quantity = r.column_quantity,
+                         row_quantity = r.row_quantity,
+                         capacity = r.column_quantity * r.row_quantity,
+                     }).ToList();
+            return q;
+        }
+
+        // POST
         public void Post_room(Room room)
         {
             Rooms.Add(room);
             SaveChanges();            
         }
-
-        //// PUT A ROOM
-        //public int Put_room(int id, Room r)
-        //{
-        //    var room = GetRoom(id);
-        //    if (room == null)
-        //        return -1; // No existe.
-
-        //    if (room.column_quantity != r.column_quantity || room.row_quantity != r.row_quantity)
-        //    {
-        //        room.column_quantity = r.column_quantity;
-        //        room.row_quantity = r.row_quantity;
-        //        Rooms.Update(room);
-        //        SaveChanges();
-
-        //        // ELIMINAR SILLAS Y RECREARLAS.
-        //        Delete_seats_of_a_room(id);
-        //        int size = room.row_quantity * room.column_quantity;
-        //        Add_seats_in_a_room(id, size);
-        //    }
-        //    return 1; // Se edita y se crean las sillas si es necesario.
-        //}
  
         public bool Exist_room(int id) => (GetRoom(id) != null);
 
@@ -1299,7 +1269,7 @@ namespace CineTec.Context
 
 
         // DELETE para eliminar las sillas de una sala.
-        public void Delete_seats_of_a_room(int id)
+        public void Delete_seats_of_a_projection(int id)
         {
             Seats.RemoveRange(Seats.Where(x => x.projection_id == id));
             SaveChanges();
