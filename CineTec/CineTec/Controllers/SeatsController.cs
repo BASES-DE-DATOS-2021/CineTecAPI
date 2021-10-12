@@ -28,19 +28,10 @@ namespace CineTec.Controllers
 
         // GET api/Seats/byId?room_id=a&number=b
         [HttpGet("byId")]
-        public Seat Get(int room_id, int number)
+        public Seat Get(int projection_id, int number)
         {
-            return _CRUDContext.GetSeat(room_id, number);
+            return _CRUDContext.GetSeat(projection_id, number);
         }
-
-
-        //// POST api/Seats
-        //[HttpPost]
-        //public void Post([FromBody] Seat Seat)
-        //{
-        //    _CRUDContext.Seats.Add(Seat);
-        //    _CRUDContext.SaveChanges();
-        //}
 
         // PUT api/Seats/byId?room_id=a&number=b
         [HttpPut("byId")]

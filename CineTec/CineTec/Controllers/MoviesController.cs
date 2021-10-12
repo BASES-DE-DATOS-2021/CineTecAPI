@@ -62,7 +62,25 @@ namespace CineTec.Controllers
             return BadRequest(x);
         }
 
+        // PUT api/Movies/5
+        [HttpPut("byId/{id}")]
+        public IActionResult Put(int id, [FromBody] MovieCreation movie_stats)
+        {
 
+            string x = _CRUDContext.Put_movie(id, movie_stats);
+            if (x == "") return Ok();
+            return BadRequest(x);
+        }
+
+
+        // DELETE api/Movies/byName/Shuek
+        [HttpDelete("byName/{name}")]
+        public IActionResult DeleteByName(string name)
+        {
+            string x = _CRUDContext.Delete_movie(name);
+            if (x == "") return Ok();
+            return BadRequest(x);
+        }
 
         // DELETE api/Movies/1
         [HttpDelete("byId/{id}")]

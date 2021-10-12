@@ -41,15 +41,6 @@ CREATE TABLE "Rooms"
 	PRIMARY KEY(id)
 );
 
--- Seats
-CREATE TABLE "Seats"
-(
-	room_id 			INT NOT NULL,
-    number 				INT NOT NULL,
-	status		 		VARCHAR(30) NOT NULL,
-	PRIMARY KEY(room_id, number)
-);
-
 -- Directors
 CREATE TABLE "Directors"
 (
@@ -110,6 +101,15 @@ CREATE TABLE "Projections"
 	PRIMARY KEY(id)
 );
 
+-- Seats
+CREATE TABLE "Seats"
+(
+	projection_id 			INT NOT NULL,
+    number 					INT NOT NULL,
+	status		 			VARCHAR(30) NOT NULL,
+	PRIMARY KEY(projection_id, number)
+);
+
 -- Clients
 CREATE TABLE "Clients"
 (
@@ -152,8 +152,8 @@ REFERENCES "Branches"(cinema_name);
 
 -- Seats
 ALTER TABLE "Seats"
-ADD CONSTRAINT SEAT_ROOM_FK FOREIGN KEY(room_id)
-REFERENCES "Rooms"(id);
+ADD CONSTRAINT SEAT_PROJECTION_FK FOREIGN KEY(projection_id)
+REFERENCES "Projections"(id);
 
 -- Movies
 ALTER TABLE "Movies"

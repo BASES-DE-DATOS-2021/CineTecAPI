@@ -9,9 +9,9 @@ namespace CineTec.Models
     public class Seat
     {
 
-        [ForeignKey("Room")]
+        [ForeignKey("Projection")]
         [Key, Column(Order = 0)]
-        public int room_id { get; set; }
+        public int projection_id { get; set; }
         [Key, Column(Order = 1)]
         public int number { get; set; }
         public string status { get; set; }
