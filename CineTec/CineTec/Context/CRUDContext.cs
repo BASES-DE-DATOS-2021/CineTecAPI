@@ -930,7 +930,7 @@ namespace CineTec.Context
             SaveChanges();
 
             movie.classification_id = movie_stats.classification_id;
-            movie.original_name = movie_stats.name;
+            movie.original_name = movie_stats.original_name;
             movie.director_id = director_id;
             movie.name = movie_stats.name;
             movie.image = movie_stats.image;
