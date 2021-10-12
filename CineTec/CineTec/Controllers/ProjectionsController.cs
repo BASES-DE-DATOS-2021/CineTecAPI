@@ -37,10 +37,10 @@ namespace CineTec.Controllers
         //public IEnumerable<Projection> Get_byRoomId(int room_id) => _CRUDContext.GetProjections_byRoomId(room_id);
         
         // POST api/Projections
-        [HttpPost]
-        public IActionResult Post([FromBody] Projection projection)
+        [HttpPost("{covid}")]
+        public IActionResult Post(int covid, [FromBody] Projection projection)
         {
-            string x = _CRUDContext.Post_projection(projection);
+            string x = _CRUDContext.Post_projection(projection, covid);
             if (x == "") return Ok();
             return BadRequest(x);
         }

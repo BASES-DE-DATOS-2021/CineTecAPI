@@ -1097,7 +1097,7 @@ namespace CineTec.Context
         }
 
         // POST A PROJECTION
-        public string Post_projection(Projection p)
+        public string Post_projection(Projection p, int covid)
         {
             // Verificar la existencia de otra proyeccion igual.
             Projection myList = GetProjection_byRoom_Movie_Date(p.movie_id, p.room_id, p.date, p.schedule);
@@ -1113,19 +1113,200 @@ namespace CineTec.Context
                             join proj in Projections on r.id equals proj.room_id
                             select r.column_quantity*r.row_quantity).FirstOrDefault();
 
-            Add_seats_for_proyection(x.id, capacity);
+            Room room = GetRoom(x.room_id);
+
+
+            Add_seats_for_proyection(x.id, room.row_quantity, room.column_quantity, covid);
+
+
+
+
             return ""; // Se logra agregar.
         }
-        // Crear una cantidad de sillas para una projection. Todas estan vacias.
-        public void Add_seats_for_proyection(int id, int capacity)
+
+
+        private int[] convert_matriz_to_array(int[,] mat, int row, int column)
         {
-            for (int i = 1; i < capacity + 1; i++)
+
+            int[] array = new int[row*column];
+            int contador = 0;
+
+            for (int i = 0; i < row; i++)
             {
+                for (int e = 0; e < column; e++)
+                {
+
+                    array[contador] = mat[i, e];
+                    contador++;
+
+                }
+            }
+
+            return array;
+        }
+
+        private int[,] covid25(int[,] matriz, int row, int column) {
+
+            int i = 0;
+            int e = 0;
+            int contador = 0;
+
+            for(int f = 0; f < row; f++)
+            {
+                for (int c = 0; c < column; c++)
+                {
+
+                    if (i % 2 == 0 && (contador + 1) < column && (e + f) < row)
+                    {
+                        matriz[f + e,contador] = 1;
+                        matriz[f + e,contador + 1] = 1;
+                    }
+                    contador += 2;
+                    i += 1;
+
+
+                }
+                contador = 0;
+                if (e + f < row && matriz[f + e,0] == 1 && i % 2 == 0){
+                    i += 1;
+                }
+                else if(e + f < row && matriz[f + e,0] == 0 && i % 2 != 0)
+                {
+                    i += 1;
+                }
+                e += 1;
+            }
+
+            return matriz;
+        }
+
+        private int[,] covid50(int[,] matriz, int row, int column)
+        {
+
+            int i = 0;
+            int contador = 0;
+
+            for (int f = 0; f < row; f++)
+            {
+                for (int c = 0; c < column; c++)
+                {
+                    if (i % 2 == 0 && (contador + 1) < column && (f) < row)
+                    {
+                        matriz[f , contador] = 1;
+                        matriz[f , contador + 1] = 1;
+                    }
+                    contador += 2;
+                    i += 1;
+
+                }
+                contador = 0;
+                if (matriz[f, 0] == 1 && i % 2 == 0)
+                {
+                    i += 1;
+                }
+                else if (matriz[f, 0] == 0 && i % 2 != 0)
+                {
+                    i += 1;
+                }
+            }
+
+            return matriz;
+        }
+
+        private int[,] mat_ones(int[,] matriz, int row, int column)
+        {
+
+            for(int i=0; i < row; i++)
+            {
+                for(int e=0; e < column; e++)
+                {
+                    matriz[i, e] = 1;
+                }
+            }
+
+            return matriz;
+
+        }
+
+        private int[,] covid75(int[,] matriz, int row, int column)
+        {
+            matriz = mat_ones(matriz,row,column);
+
+            for (int f = 0; f < row; f++)
+            {
+                for (int c = 0; c < column; c++)
+                {
+                    if ((c + 1)% 3 == 0)
+                    {
+                        matriz[f,c] = 0;
+                    }
+                }
+            }
+
+            return matriz;
+        }
+
+        private int[] getArrayCovid(int row, int column, int covid)
+        {
+
+            int[,] mat = new int[row,column];
+
+            foreach (int item in mat)
+            {
+                var a = item;
+            }
+
+            switch (covid)
+            {
+
+                case 0:
+                    return convert_matriz_to_array(mat, row, column);
+
+                case 25:
+                    return convert_matriz_to_array(covid25(mat, row, column), row, column);
+
+                case 50:
+                    return convert_matriz_to_array(covid50(mat, row, column), row, column);
+
+                case 75:
+                    return convert_matriz_to_array(covid75(mat, row, column), row, column);
+
+                case 100:
+                    return convert_matriz_to_array(mat_ones(mat,row,column), row, column);
+
+            }
+
+
+            return null;
+        }
+
+
+
+
+        // Crear una cantidad de sillas para una projection. Todas estan vacias.
+        public void Add_seats_for_proyection(int id, int row, int column, int covid)
+        {
+            var array = getArrayCovid(row, column, covid);
+
+            int capacity = row * column;
+
+            for (int i = 1; i < array.Length + 1; i++)
+            {
+                string stat;
+                if (array[i-1] == 0)
+                {
+                    stat = "COVID";
+                }
+                else
+                {
+                    stat = "EMPTY";
+                }
+
                 Seat s = new Seat
                 {
                     projection_id = id,
                     number = i,
-                    status = "EMPTY"
+                    status = stat
                 };
                 Seats.Add(s);
             }
