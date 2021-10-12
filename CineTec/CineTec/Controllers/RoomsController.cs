@@ -33,10 +33,6 @@ namespace CineTec.Controllers
         [HttpGet("{id}")]
         public Object Get(int id) => _CRUDContext.GetRoom_special(id);
 
-        // GET api/Rooms/all_seats?cinema_name=a&room_id=b
-        [HttpGet("all_seats")]
-        public IList<Seat> Get_all_seats(string cinema_name, int room_id) => _CRUDContext.Get_all_seats_of_a_room(cinema_name, room_id);
-
         // POST api/Rooms
         [HttpPost]
         public IActionResult Post([FromBody] Room room)
@@ -52,29 +48,19 @@ namespace CineTec.Controllers
             return Ok();
         }
 
-        // PUT api/Rooms/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Room room)
-        {
-            int x = _CRUDContext.Put_room(id, room);
-            if (x == -1)
-                return BadRequest("No ha encontrado una sala con ese id");
-            return Ok();
-        }
 
-
-        // DELETE api/Rooms/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            int x = _CRUDContext.Delete_room_and_seats(id);
-            return x switch
-            {
-                2 => BadRequest("No se puede eliminar una sala que tiene projecciones relacionadas."),
-                -1 => BadRequest("No se ha encontrado esta sala."),
-                _ => Ok(), // Se elimina correctamente.
-            };
-        }
+        //// DELETE api/Rooms/5
+        //[HttpDelete("{id}")]
+        //public IActionResult Delete(int id)
+        //{
+        //    int x = _CRUDContext.Delete_room_and_seats(id);
+        //    return x switch
+        //    {
+        //        2 => BadRequest("No se puede eliminar una sala que tiene projecciones relacionadas."),
+        //        -1 => BadRequest("No se ha encontrado esta sala."),
+        //        _ => Ok(), // Se elimina correctamente.
+        //    };
+        //}
 
 
 

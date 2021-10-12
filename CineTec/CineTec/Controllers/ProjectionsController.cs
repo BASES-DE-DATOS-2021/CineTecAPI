@@ -20,25 +20,22 @@ namespace CineTec.Controllers
             _CRUDContext = CRUDContext;
         }
 
-
         // GET api/Projections/5
         [HttpGet()]
         public Object Get() => _CRUDContext.GetProjections();
 
+        // GET api/Projections/seats/
+        [HttpGet("seats/{id}")]
+        public Object Get(int id) => _CRUDContext.Get_all_seats_assgined_to_projection(id);
 
-        //// GET api/Projections/byIds/?movie_id=a&room_id=b
-        //[HttpGet("/{movie_id}")]
-        //public IEnumerable<Projection> Get(int movie_id, int room_id) => _CRUDContext.GetProjection(movie_id, room_id);
+        //// GET api/Projections/byMovieId/
+        //[HttpGet("byMovieId/{movie_id}")]
+        //public IEnumerable<Projection> Get_byMovieId(int movie_id) => _CRUDContext.GetProjections_byMovieId(movie_id);
 
-        // GET api/Projections/byMovieId/
-        [HttpGet("byMovieId/{movie_id}")]
-        public IEnumerable<Projection> Get_byMovieId(int movie_id) => _CRUDContext.GetProjections_byMovieId(movie_id);
-
-        // GET api/Projections/byRoomId?room_id=a
-        [HttpGet("byRoomId/{room_id}")]
-        public IEnumerable<Projection> Get_byRoomId(int room_id) => _CRUDContext.GetProjections_byRoomId(room_id);
+        //// GET api/Projections/byRoomId?room_id=a
+        //[HttpGet("byRoomId/{room_id}")]
+        //public IEnumerable<Projection> Get_byRoomId(int room_id) => _CRUDContext.GetProjections_byRoomId(room_id);
         
-
         // POST api/Projections
         [HttpPost]
         public IActionResult Post([FromBody] Projection projection)

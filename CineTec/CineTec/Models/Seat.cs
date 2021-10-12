@@ -15,7 +15,6 @@ namespace CineTec.Models
         [Key, Column(Order = 1)]
         public int number { get; set; }
         public string status { get; set; }
-
     }
 
 }

@@ -40,7 +40,7 @@ namespace CineTec.Controllers
 
         // GET: api/Branches/projections_by_date?cinema_name=a&date=b
         [HttpGet("projections_by_date")]
-        public Object Get(string cinema_name, DateTime date)
+        public Object Get(string cinema_name, string date)
         {
             return _CRUDContext.GetBranches_Movie_Projection_select(cinema_name, date);
         }
