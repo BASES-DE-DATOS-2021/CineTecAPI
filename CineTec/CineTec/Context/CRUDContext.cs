@@ -314,48 +314,68 @@ namespace CineTec.Context
         // Listado de todas las projection que hay para un dia en especifico para una sucursal en especifico.
         // Tiene toda la informacion de las peliculas que salen ese dia.
 
-        // GET ALL
-        public Object GetBranches_Movie_Projection_select(string cinema_name, DateTime date)
-        {
+        //// GET ALL
+        //public Object GetBranches_Movie_Projection_select(string cinema_name, DateTime date)
+        //{
 
-            var sinRep = (from b in Branches.Where(b => b.cinema_name == cinema_name)
-                          join r in Rooms on b.cinema_name equals r.branch_name
-                          join pro in Projections on r.id equals pro.room_id
-                          where pro.date == date
+        //                 //select new
+        //                 //{
+        //                 //    original_name = m.original_name,
+        //                 //    name = m.name,
+        //                 //    length = m.length,
+        //                 //    image = m.image,
+        //                 //    code = c.code,
+        //                 //    age_rating = c.age_rating,
+        //                 //    details = c.details,
+        //                 //    director = d.name,
+        //                 //    actors = (from a in Acts.Where(x => x.movie_id == m.id)
+        //                 //              join p in Actors on a.actor_id equals p.id
+        //                 //              select p.name).ToList()
+        //                 //}).ToList();
 
-                          select new
-                          {
-                              movie = (from m in Movies
-                                       where m.id == pro.movie_id
-                                       select m.original_name).FirstOrDefault(),
-                              date = pro.date
-                          }).Distinct().ToList();
+        //    var query = (from b in Branches.Where(b => b.cinema_name == cinema_name)
+        //                 join r in Rooms on b.cinema_name equals r.branch_name
+        //                 join p in Projections on r.id equals p.room_id
+        //                 where p.date == date
+        //                 join m in Movies on p.movie_id equals m.id
+        //                 join d in Directors on m.director_id equals d.id
+        //                 join c in Classifications on m.classification_id equals c.code
 
-            var query = (from b in Branches.Where(b => b.cinema_name == cinema_name)
-                         join r in Rooms on b.cinema_name equals r.branch_name
-                         join p in Projections on r.id equals p.room_id
-                         where p.date == date
+        //                 select new ProjectionJSON
+        //                 {
+        //                     //id = p.id,
+        //                     movie = (from m in Movies
+        //                              where m.id == p.movie_id
+        //                              select m.original_name).FirstOrDefault(),
+        //                     //room = p.room_id,
+        //                     date = p.FormattedDate,
+        //                     schedule = (from t in Projections.Where(f => f.date == p.date)
+        //                                 select t.schedule).ToList()
+        //                 }).ToList();
 
-                         select new ProjectionJSON
-                         {
-                             //id = p.id,
-                             movie = (from m in Movies
-                                      where m.id == p.movie_id
-                                      select m.original_name).FirstOrDefault(),
-                             //room = p.room_id,
-                             date = p.FormattedDate,
-                             schedule = (from t in Projections.Where(f => f.date == p.date)
-                                         select t.schedule).ToList()
-                         }).ToList();
 
-            List<ProjectionJSON> lista = new List<ProjectionJSON>();
-            for (int i = 0; i < sinRep.Count(); i++)
-            {
-                var x = sinRep.ElementAt(i);
-                lista.Add(query.Where(f => f.movie == x.movie && f.date == string.Format("{0:MM/dd/yy}", x.date)).FirstOrDefault());
-            }
-            return lista;
-        }
+
+        //    //List<ProjectionJSON> lista = new List<ProjectionJSON>();
+        //    //for (int i = 0; i < sinRep.Count(); i++)
+        //    //{
+        //    //    var x = sinRep.ElementAt(i);
+        //    //    lista.Add(query.Where(f => f.movie == x.movie && f.date == string.Format("{0:MM/dd/yy}", x.date)).FirstOrDefault());
+        //    //}
+        //    return lista;
+        //}
+
+        //var sinRep = (from b in Branches.Where(b => b.cinema_name == cinema_name)
+        //              join r in Rooms on b.cinema_name equals r.branch_name
+        //              join p in Projections on r.id equals p.room_id where p.date == date
+
+
+        //              select new
+        //              {
+        //                  movie = (from m in Movies
+        //                           where m.id == pro.movie_id
+        //                           select m.original_name).FirstOrDefault(),
+        //                  date = pro.date
+        //              }).Distinct().ToList();
 
         // POST BRANCH
         public int Post_branch(Branch branch)
@@ -860,6 +880,29 @@ namespace CineTec.Context
                 }
             }
             return ids;
+        }
+
+
+        public IEnumerable<object> GetMovie_select_All()
+        {
+            var query = (from m in Movies
+                         join d in Directors on m.director_id equals d.id
+                         join c in Classifications on m.classification_id equals c.code
+                         select new
+                         {
+                             original_name = m.original_name,
+                             name = m.name,
+                             length = m.length,
+                             image = m.image,
+                             code = c.code,
+                             age_rating = c.age_rating,
+                             details = c.details,
+                             director = d.name,
+                             actors = (from a in Acts.Where(x => x.movie_id == m.id)
+                                       join p in Actors on a.actor_id equals p.id
+                                       select p.name).ToList()
+                         }).ToList();
+            return query;
         }
 
         // PUT
