@@ -740,8 +740,15 @@ namespace CineTec.Context
          *      MOVIE
          */
 
+        // GET MOVIE NAME BY ID
+        public string GetMovieName(int id) => Movies.SingleOrDefault(x => x.id == id).original_name;
+
+
+        // GET MOVIE BY ID
+        public Movie GetMovie_by_id(int id) => Movies.SingleOrDefault(x => x.id == id);
+
         // GET MOVIE BY NAME
-        public Movie GetMovie(string name) => Movies.SingleOrDefault(x => x.original_name == name || x.name == name);
+        public Movie GetMovie_by_name(string name) => Movies.SingleOrDefault(x => x.original_name == name || x.name == name);
 
         // GET MOVIE MODIFIED
         public object GetMovie_select(string name)
@@ -770,14 +777,6 @@ namespace CineTec.Context
             return query;
         }
 
-        // GET MOVIE NAME BY ID
-        public string GetMovieName(int id) => Movies.SingleOrDefault(x => x.id == id).original_name;
-
-
-        // GET MOVIE BY ID
-        public Movie GetMovie(int id) => Movies.SingleOrDefault(x => x.id == id);
-
-
 
         // POST A MOVIE
         public string Post_movie(MovieCreation movie_stats)
@@ -790,6 +789,11 @@ namespace CineTec.Context
 
             // OBTENER ID ACTORES.
             int[] actors_ids = Get_movie_actors_id(movie_stats.actors);
+
+            if (GetMovie_by_name(movie_stats.name) != null || GetMovie_by_name(movie_stats.original_name) != null)
+            {
+                return "No se puede crear la pelicula debido a que ya existe una pelicula con este nombre";
+            }
 
             // CREAR PELICULA.
             Movie movie = new Movie
@@ -804,7 +808,7 @@ namespace CineTec.Context
             Movies.Add(movie);
             SaveChanges();
             // GetMOVIE ID
-            int movie_id = GetMovie(movie_stats.original_name).id;
+            int movie_id = GetMovie_by_name(movie_stats.original_name).id;
 
             // AGREGAR RELACION CON ACTORES en ACTS.
             foreach (int id in actors_ids)
@@ -890,14 +894,36 @@ namespace CineTec.Context
             int[] actors_ids = Get_movie_actors_id(movie_stats.actors);
 
             // GET MOVIE
-            Movie movie = GetMovie(id);
+            Movie movie = GetMovie_by_id(id);
 
+            if (movie == null)
+            {
+                return "No existe la pelicula con este id";
+            }
+
+            if (GetMovie_by_name(movie_stats.name) != null || GetMovie_by_name(movie_stats.original_name) != null)
+            {
+                var temp = GetMovie_by_name(movie_stats.name);
+                var temp2 = GetMovie_by_name(movie_stats.original_name);
+                if ((temp != null && temp.id == movie.id) || (temp2 != null && temp2.id == movie.id))
+                {
+                    return update_Movie(movie, movie_stats, director_id, actors_ids);
+                }
+                return "No se puede modificar la pelicula debido a que ya existe una pelicula con este nombre";
+            }
+
+            return update_Movie(movie, movie_stats, director_id, actors_ids);
+
+        }
+
+        public string update_Movie(Movie movie, MovieCreation movie_stats, int director_id, int[] actors_ids)
+        {
 
             // ELIMINAR RELACION ANTERIOR CON ACTORES.
-            List<int> current_actors_ids = GetActors_ids(id);
+            List<int> current_actors_ids = GetActors_ids(movie.id);
             foreach (int actor_id in current_actors_ids)
             {
-                Delete_acts_background(id, actor_id);
+                Delete_acts_background(movie.id, actor_id);
             }
             SaveChanges();
 
@@ -913,16 +939,79 @@ namespace CineTec.Context
             // AGREGAR RELACION CON ACTORES en ACTS.
             foreach (int actor_id in actors_ids)
             {
-                Post_acts(id, actor_id);
+                Post_acts(movie.id, actor_id);
             }
             return "";
+
+        }
+
+        public string Put_movie_by_name(string name, MovieCreation movie_stats)
+        {
+            // VERIFICAR CLASIFICACION.
+            if (!Check_movie_classification(movie_stats.classification_id)) return "No existe esta clasificacion";
+
+            // OBTENER ID DIRECTOR.
+            int director_id = Get_movie_director_id(movie_stats.director);
+
+            // OBTENER ID ACTORES.
+            int[] actors_ids = Get_movie_actors_id(movie_stats.actors);
+
+            // GET MOVIE
+
+            Movie movie = GetMovie_by_name(name);
+
+            if (movie == null)
+            {
+                return "No existe la pelicula con este nombre";
+            }
+
+            if (GetMovie_by_name(movie_stats.name) != null || GetMovie_by_name(movie_stats.original_name) != null)
+            {
+                var temp = GetMovie_by_name(movie_stats.name);
+                var temp2 = GetMovie_by_name(movie_stats.original_name);
+                if ((temp != null && temp.id == movie.id) || (temp2 != null && temp2.id == movie.id))
+                {
+                    return update_Movie(movie, movie_stats, director_id, actors_ids);
+                }
+                return "No se puede modificar la pelicula debido a que ya existe una pelicula con este nombre";
+            }
+
+            return update_Movie(movie, movie_stats, director_id, actors_ids);
+
+        }
+
+        public string Delete_movie_by_id(int id)
+        {
+            var movie = GetMovie_by_id(id);
+            if (movie == null)
+                return "No existe esta pelicula.";
+
+            // No se puede eliminar si existen proyecciones.        
+            // verificar si hay una proyeccion asociada a este cliente.
+            var pr = GetProjections_byMovieId(movie.id);
+            if (pr.Count() == 0)
+            {
+                // ELIMINAR RELACION ANTERIOR CON ACTORES.
+                List<int> current_actors_ids = GetActors_ids(movie.id);
+                foreach (int actor_id in current_actors_ids)
+                {
+                    Delete_acts_background(movie.id, actor_id);
+                }
+                SaveChanges();
+
+                // ELIMINAR PELICULA
+                Movies.Remove(movie);
+                SaveChanges();
+                return ""; // Se logra agregar.
+            }
+            return "No se puede eliminar esta pelicula, tiene proyecciones asociadas.";
         }
 
 
         // DELETE especial de projection tomando en cuenta si hay alguna referencia.
         public string Delete_movie(string name)
         {
-            var movie = GetMovie(name);
+            var movie = GetMovie_by_name(name);
             if (movie == null)
                 return "No existe esta pelicula.";
 
@@ -1233,7 +1322,4 @@ namespace CineTec.Context
         }
     }
 
-    internal class PInform
-    {
-    }
 }

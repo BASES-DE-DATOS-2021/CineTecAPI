@@ -26,7 +26,7 @@ namespace CineTec.Controllers
 
         // GET api/Movies/5
         [HttpGet("{id}")]
-        public Movie Get(int id) => _CRUDContext.GetMovie(id);
+        public Movie Get(int id) => _CRUDContext.GetMovie_by_id(id);
 
         // GET api/Movies/
         [HttpGet("special_all")]
@@ -41,7 +41,7 @@ namespace CineTec.Controllers
 
         // GET api/Movies/byName/Shrek
         [HttpGet("byName/{name}")]
-        public Movie GetByName(string name) => _CRUDContext.GetMovie(name);
+        public Movie GetByName(string name) => _CRUDContext.GetMovie_by_name(name);
 
 
         // POST api/Movies
