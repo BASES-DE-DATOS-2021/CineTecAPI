@@ -23,7 +23,7 @@ namespace CineTec.Controllers
 
         // GET api/Projections/5
         [HttpGet()]
-        public IEnumerable<Projection> Get() => _CRUDContext.Projections;
+        public Object Get() => _CRUDContext.GetProjections();
 
 
         //// GET api/Projections/byIds/?movie_id=a&room_id=b

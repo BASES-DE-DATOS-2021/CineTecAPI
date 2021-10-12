@@ -297,85 +297,52 @@ namespace CineTec.Context
         {
             // Obtener todas las salas de la sucursal que coincide con el cinema_name ingresado.
             var q = (from r in Rooms.Where(r => r.branch_name == cinema_name)
+                     join s in Seats on r.id equals s.room_id
                      select new
                      {
-                         branch_name = r.branch_name,
-                         column_quantity = r.column_quantity,
-                         row_quantity = r.row_quantity,
+                         //branch_name = r.branch_name,
+                         id = r.id,
+                         //column_quantity = r.column_quantity,
+                         //row_quantity = r.row_quantity,
                          capacity = r.column_quantity * r.row_quantity,
-                         free_spaces = (from seat in Seats.Where(s => s.room_id == r.id)                                       //join s in Seats on room.branch_name equals s.room_id
+                         free_spaces = (from seat in Seats.Where(s => s.room_id == r.id)                                      
                                         where seat.status == "EMPTY"
                                         select seat).Count()
-                     });
+                     }).Distinct().ToList();
             return q;
         }
 
         // Projection x Movie x Branch x dia.
         // Listado de todas las projection que hay para un dia en especifico para una sucursal en especifico.
         // Tiene toda la informacion de las peliculas que salen ese dia.
+        public Object GetBranches_Movie_Projection_select(string cinema_name, DateTime date)
+        {
+            var query = (from b in Branches.Where(b => b.cinema_name == cinema_name)
+                         join r in Rooms on b.cinema_name equals r.branch_name
+                         join p in Projections on r.id equals p.room_id
+                         where p.date == date
+                         join m in Movies on p.movie_id equals m.id
+                         join d in Directors on m.director_id equals d.id
+                         join c in Classifications on m.classification_id equals c.code
 
-        //// GET ALL
-        //public Object GetBranches_Movie_Projection_select(string cinema_name, DateTime date)
-        //{
-
-        //                 //select new
-        //                 //{
-        //                 //    original_name = m.original_name,
-        //                 //    name = m.name,
-        //                 //    length = m.length,
-        //                 //    image = m.image,
-        //                 //    code = c.code,
-        //                 //    age_rating = c.age_rating,
-        //                 //    details = c.details,
-        //                 //    director = d.name,
-        //                 //    actors = (from a in Acts.Where(x => x.movie_id == m.id)
-        //                 //              join p in Actors on a.actor_id equals p.id
-        //                 //              select p.name).ToList()
-        //                 //}).ToList();
-
-        //    var query = (from b in Branches.Where(b => b.cinema_name == cinema_name)
-        //                 join r in Rooms on b.cinema_name equals r.branch_name
-        //                 join p in Projections on r.id equals p.room_id
-        //                 where p.date == date
-        //                 join m in Movies on p.movie_id equals m.id
-        //                 join d in Directors on m.director_id equals d.id
-        //                 join c in Classifications on m.classification_id equals c.code
-
-        //                 select new ProjectionJSON
-        //                 {
-        //                     //id = p.id,
-        //                     movie = (from m in Movies
-        //                              where m.id == p.movie_id
-        //                              select m.original_name).FirstOrDefault(),
-        //                     //room = p.room_id,
-        //                     date = p.FormattedDate,
-        //                     schedule = (from t in Projections.Where(f => f.date == p.date)
-        //                                 select t.schedule).ToList()
-        //                 }).ToList();
-
-
-
-        //    //List<ProjectionJSON> lista = new List<ProjectionJSON>();
-        //    //for (int i = 0; i < sinRep.Count(); i++)
-        //    //{
-        //    //    var x = sinRep.ElementAt(i);
-        //    //    lista.Add(query.Where(f => f.movie == x.movie && f.date == string.Format("{0:MM/dd/yy}", x.date)).FirstOrDefault());
-        //    //}
-        //    return lista;
-        //}
-
-        //var sinRep = (from b in Branches.Where(b => b.cinema_name == cinema_name)
-        //              join r in Rooms on b.cinema_name equals r.branch_name
-        //              join p in Projections on r.id equals p.room_id where p.date == date
-
-
-        //              select new
-        //              {
-        //                  movie = (from m in Movies
-        //                           where m.id == pro.movie_id
-        //                           select m.original_name).FirstOrDefault(),
-        //                  date = pro.date
-        //              }).Distinct().ToList();
+                         select new
+                         {
+                             id = p.id,
+                             name = m.original_name,
+                             classification = c.code,
+                             length = m.length,
+                             director = d.name,
+                             actors = (from a in Acts.Where(x => x.movie_id == m.id)
+                                       join p in Actors on a.actor_id equals p.id
+                                       select p.name).ToList(),
+                             price = 3600,
+                             room = p.room_id,
+                             schedule = p.schedule
+                             //schedule = (from t in Projections.Where(f => f.date == p.date)
+                             //            select t.schedule).ToList()
+                         }).ToList();
+            return query;
+        }
 
         // POST BRANCH
         public int Post_branch(Branch branch)
@@ -398,7 +365,10 @@ namespace CineTec.Context
             if (existing == null)
                 return -1; // No existe.
 
-            Branches.Update(branch);
+            existing.district = branch.district;
+            existing.province = branch.province;
+
+            Branches.Update(existing);
             SaveChanges();
             return 1; // Se logra agregar.
         }
@@ -784,6 +754,7 @@ namespace CineTec.Context
                          join c in Classifications on m.classification_id equals c.code
                          select new
                          {
+                             id = m.id,
                              original_name = m.original_name,
                              name = m.name,
                              length = m.length,
@@ -890,6 +861,7 @@ namespace CineTec.Context
                          join c in Classifications on m.classification_id equals c.code
                          select new
                          {
+                             id = m.id,
                              original_name = m.original_name,
                              name = m.name,
                              length = m.length,
@@ -985,28 +957,21 @@ namespace CineTec.Context
         // GET PROJECTION BY ID
         public Projection GetProjection(int id) => Projections.Where(f => f.id == id).FirstOrDefault();
 
-
-
-
-        //// GET PROJECTION BY ID SPECIAL OUTPUT
-        //public Object GetProjection_select(int movie_id)
-        //{
-        //    var query = from p in Projections.Where(f => f.movie_id == movie_id)
-        //                select new
-        //                {
-        //                    id = p.id,
-        //                    //movie = GetMovieName(movie_id),
-        //                    room = p.room_id,
-        //                    date = p.FormattedDate,
-        //                    schedule = (from t in Projections.Where(f => f.date == p.date)
-        //                                select t.schedule).ToList()
-        //                };
-        //    return query;
-        //}
-
-
-
         // GET PROJECTION BY ROOM_ID, MOVIE_ID, DATE
+        public Object GetProjections()
+        {
+            var query = from p in Projections
+                        select new
+                        {
+                            id = p.id,
+                            movie = Movies.SingleOrDefault(x => x.id == p.movie_id).original_name,
+                            room = p.room_id,
+                            date = p.FormattedDate,
+                            schedule = p.schedule
+                        };
+            return query;
+        }
+
         public Projection GetProjection_byRoom_Movie_Date(int room_id, DateTime date, string schedule)
             => Projections.Where(f => f.room_id == room_id && f.date == date && f.schedule == schedule).FirstOrDefault();
 
@@ -1165,14 +1130,7 @@ namespace CineTec.Context
             }
             return 1; // Se edita y se crean las sillas si es necesario.
         }
-
-        // PUT especifico
-        // Metodo que retorna las sillas modificadas de un cuarto con el estado dependiendo de la probabilidad recibida.
-        public void Update_room_seats_status_restriction(int room_id, int prob)
-        {
-            //Room r = GetRoom(room_id);
-            // implementar
-        }
+ 
 
         // DELETE especifico de room.
         // elimina las sillas de una sala y luego elimina la sala misma.
