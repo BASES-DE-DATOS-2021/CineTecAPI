@@ -24,7 +24,6 @@ namespace CineTec.Context
         public DbSet<Branch> Branches { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Seat> Seats { get; set; }
-        public DbSet<Bill> Bills { get; set; }
         public DbSet<Projection> Projections { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Classification> Classifications { get; set; }
@@ -222,36 +221,6 @@ namespace CineTec.Context
                 SaveChanges();
                 // NOTA: Los actores no se borran, solo quedan en la tabla sin relacion alguna. 
             }
-        }
-
-
-
-        /*
-         *      BILL
-         */
-
-        // GET BILL BY ID
-        public Bill GetBill(int cedula) => Bills.SingleOrDefault(x => x.client_id == cedula);
-
-        // GET ALL CLIENT BILLS
-        public IEnumerable<Bill> GetBills_byClientId(int cedula) => Bills.Where(x => x.client_id == cedula);
-
-        // POST BILL
-        public void Post_bill(Bill bill)
-        {
-            Bills.Add(bill);
-            SaveChanges();
-        }
-
-        // DELETE
-        public int Delete_bill(int cedula)
-        {
-            var bill = GetBill(cedula);
-            if (bill == null)
-                return -1;  // No existe.
-            Bills.Remove(bill);
-            SaveChanges();
-            return 1; // Se logra eliminar.
         }
 
 
@@ -563,11 +532,6 @@ namespace CineTec.Context
             var client = GetClient(cedula);
             if (client == null)
                 return -1; // No existe.
-
-            // verificar si hay una factura asociada a este cliente.
-            var bill = GetBill(client.cedula);
-            if (bill != null)
-                return 0; // Tiene relacion con facturas.
 
             // ELIMINAR CLIENTE
             Clients.Remove(client);
@@ -1409,7 +1373,25 @@ namespace CineTec.Context
  
         public bool Exist_room(int id) => (GetRoom(id) != null);
 
-        public bool Room_has_relation_with_proyection(int id)
+        // DELETE especial de salas tomando en cuenta si hay alguna referencia con projection.
+        public string Delete_room(int id)
+        {
+            var room = GetRoom(id);
+            if (room == null)
+                return "No existe esta sala.";
+
+            // verificar referencias.
+            var proj = GetProjections_byRoomId(id);
+            if (proj.Count() != 0)
+                return "No se puede eliminar esta sala, tiene relacion con alguna(s) de las proyecciones.";
+
+            // ELIMINAR ROOM
+            Rooms.Remove(room);
+            SaveChanges();
+            return "";
+        }
+
+        private bool Room_has_relation_with_proyection(int id)
         {
             var query = from x in Projections
                         where x.room_id == id

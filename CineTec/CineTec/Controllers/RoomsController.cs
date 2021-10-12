@@ -49,18 +49,15 @@ namespace CineTec.Controllers
         }
 
 
-        //// DELETE api/Rooms/5
-        //[HttpDelete("{id}")]
-        //public IActionResult Delete(int id)
-        //{
-        //    int x = _CRUDContext.Delete_room_and_seats(id);
-        //    return x switch
-        //    {
-        //        2 => BadRequest("No se puede eliminar una sala que tiene projecciones relacionadas."),
-        //        -1 => BadRequest("No se ha encontrado esta sala."),
-        //        _ => Ok(), // Se elimina correctamente.
-        //    };
-        //}
+        // DELETE api/Rooms/5
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            string x = _CRUDContext.Delete_room(id);
+            if (x != "")
+                return BadRequest(x);
+            return Ok();
+        }
 
 
 
