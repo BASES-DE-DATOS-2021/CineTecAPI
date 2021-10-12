@@ -44,10 +44,10 @@ CREATE TABLE "Rooms"
 -- Seats
 CREATE TABLE "Seats"
 (
-	room_id 			INT NOT NULL,
+	projection_id 		INT NOT NULL,
     number 				INT NOT NULL,
 	status		 		VARCHAR(30) NOT NULL,
-	PRIMARY KEY(room_id, number)
+	PRIMARY KEY(projection_id, number)
 );
 
 -- Directors
@@ -151,8 +151,8 @@ REFERENCES "Branches"(cinema_name);
 
 -- Seats
 ALTER TABLE "Seats"
-ADD CONSTRAINT SEAT_ROOM_FK FOREIGN KEY(room_id)
-REFERENCES "Rooms"(id);
+ADD CONSTRAINT SEAT_PROJECTION_FK FOREIGN KEY(projection_id)
+REFERENCES "Projections"(id);
 
 -- Movies
 ALTER TABLE "Movies"
