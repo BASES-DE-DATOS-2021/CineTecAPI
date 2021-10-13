@@ -48,6 +48,17 @@ namespace CineTec.Controllers
             return Ok();
         }
 
+        //// PUT api/Acts/actsIn?movie_id=a&actor_id=b
+        [HttpPut]
+        public ActionResult Put(int room_id, [FromBody] Room room)
+        {
+            Room r = _CRUDContext.Rooms.SingleOrDefault(x => x.id == room_id);
+            r.column_quantity = room.column_quantity;
+            r.row_quantity = room.row_quantity;
+            _CRUDContext.Rooms.Update(r);
+            _CRUDContext.SaveChanges();
+            return Ok();
+        }
 
         // DELETE api/Rooms/5
         [HttpDelete("{id}")]

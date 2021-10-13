@@ -277,6 +277,42 @@ namespace CineTec.Context
             return q;
         }
 
+
+
+        // Projection x Movie x Branch x dia.
+        // Listado de todas las projection que hay para un dia en especifico para una sucursal en especifico.
+        // Tiene toda la informacion de las peliculas que salen ese dia.
+        public Object GetBranches_Movie_Projection_no_date_select(string cinema_name)
+        {
+
+            var query = (from b in Branches.Where(b => b.cinema_name == cinema_name)
+                         join r in Rooms on b.cinema_name equals r.branch_name
+                         join p in Projections on r.id equals p.room_id
+                         join m in Movies on p.movie_id equals m.id
+                         join d in Directors on m.director_id equals d.id
+                         join c in Classifications on m.classification_id equals c.code
+
+                         select new
+                         {
+                             id = p.id,
+                             name = m.original_name,
+                             classification = c.code,
+                             length = m.length,
+                             date = p.date,
+                             director = d.name,
+                             actors = (from a in Acts.Where(x => x.movie_id == m.id)
+                                       join p in Actors on a.actor_id equals p.id
+                                       select p.name).ToList(),
+                             price = 3600,
+                             schedule = p.schedule,
+                             room = p.room_id,
+                             free_spaces = (from seat in Seats.Where(s => s.projection_id == p.id)
+                                            where seat.status == "EMPTY"
+                                            select seat).Count()
+                         }).ToList();
+            return query;
+        }
+
         // Projection x Movie x Branch x dia.
         // Listado de todas las projection que hay para un dia en especifico para una sucursal en especifico.
         // Tiene toda la informacion de las peliculas que salen ese dia.

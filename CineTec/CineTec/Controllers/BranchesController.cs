@@ -45,6 +45,13 @@ namespace CineTec.Controllers
             return _CRUDContext.GetBranches_Movie_Projection_select(cinema_name, date);
         }
 
+        // GET: api/Branches/projections_by_date?cinema_name=a&date=b
+        [HttpGet("projections_by_branch")]
+        public Object Get_projections_by_branch(string cinema_name)
+        {
+            return _CRUDContext.GetBranches_Movie_Projection_no_date_select(cinema_name);
+        }
+
 
 
         // GET api/Branches/all_projections_dates?cinema_name=a
