@@ -1366,6 +1366,7 @@ namespace CineTec.Context
             var query = (from p in Projections.Where(b => b.id == id)
                          join seat in Seats
                             on p.id equals seat.projection_id
+                         orderby seat.number ascending
                         select new 
                         {
                           number = seat.number,
@@ -1374,7 +1375,7 @@ namespace CineTec.Context
                         
                         }).ToList();
 
-            query.OrderBy(x => x.number);
+
 
             return query;
         }
