@@ -1358,6 +1358,8 @@ namespace CineTec.Context
         // GET especifico
         /// Retorna todas las sillas asignadas a una projeccion en especifico.
         public Object Get_all_seats_assgined_to_projection(int id)
+
+
         {
             var query = (from p in Projections.Where(b => b.id == id)
                          join seat in Seats
@@ -1369,6 +1371,9 @@ namespace CineTec.Context
                           status = seat.status
                         
                         }).ToList();
+
+            query.OrderBy(x => x.number);
+
             return query;
         }
 
