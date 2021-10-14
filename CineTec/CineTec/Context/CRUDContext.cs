@@ -1086,6 +1086,8 @@ namespace CineTec.Context
                             on r.id equals p.room_id
                         select p.FormattedDate).ToList();
 
+            query.Sort();
+
             List<string> ouput = new List<string>();
 
             // Remove duplicates
