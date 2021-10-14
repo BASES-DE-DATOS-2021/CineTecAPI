@@ -18,7 +18,6 @@ namespace CineTec.Context
         }
 
         // Entities
-        public DbSet<Student> Students { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Branch> Branches { get; set; }

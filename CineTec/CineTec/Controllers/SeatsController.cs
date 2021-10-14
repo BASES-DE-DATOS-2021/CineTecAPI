@@ -33,7 +33,7 @@ namespace CineTec.Controllers
             return _CRUDContext.GetSeat(projection_id, number);
         }
 
-        // PUT api/Seats/byId?room_id=a&number=b
+        // PUT api/Seats/byId?_id=a&number=b
         [HttpPut("byId")]
         public IActionResult Put(int projection_id, int number, [FromBody] Seat Seat)
         {
