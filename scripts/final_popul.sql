@@ -44,32 +44,32 @@ INSERT INTO public."Rooms"( branch_name, row_quantity, column_quantity) VALUES (
 
 -- EMPLOYEES
 INSERT INTO public."Employees"(
-	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, phone_number, username, password)
-	VALUES ('Del Este', 117920956, 'Michael', 'Shakime', 'Richards', 'Sparks', '10/21/2000', 22489340, 'Jeykime', 2100);
+	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, start_date, phone_number, username, password)
+	VALUES ('Del Este', 117920956, 'Michael', 'Shakime', 'Richards', 'Sparks', '10/21/2000', '11/21/2001', 22489340, 'Jeykime', 2100);
 
 INSERT INTO public."Employees"(
-	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, phone_number, username, password)
-	VALUES ('Lincoln', 604530340, 'Carlos', 'Adrian', 'Araya', 'Ramirez', '07/05/1999', 89573290, 'Heutlett', 1234);
+	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, start_date, phone_number, username, password)
+	VALUES ('Lincoln', 604530340, 'Carlos', 'Adrian', 'Araya', 'Ramirez', '07/05/1999', '7/24/2010', 89573290, 'Heutlett', 1234);
 
 INSERT INTO public."Employees"(
-	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, phone_number, username, password)
-	VALUES ('Lincoln', 34543562, 'Jean', 'Pool', 'Tubito', 'Baez', '12/31/1999', 42948924, 'Tubito', 9988);
+	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, start_date, phone_number, username, password)
+	VALUES ('Lincoln', 34543562, 'Jean', 'Pool', 'Tubito', 'Baez', '12/31/1999', '1/20/2001', 42948924, 'Tubito', 9988);
 
 INSERT INTO public."Employees"(
-	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, phone_number, username, password)
-	VALUES ('Terramall', 118190603, 'Jose', 'Alejandro', 'Chavarria', 'Madriz', '08/11/2001', 70372813, 'Jachm', 123);
+	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, start_date, phone_number, username, password)
+	VALUES ('Terramall', 118190603, 'Jose', 'Alejandro', 'Chavarria', 'Madriz', '4/13/2011', '10/21/2000', 70372813, 'Jachm', 123);
 
 INSERT INTO public."Employees"(
-	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, phone_number, username, password)
-	VALUES ('Escazu', 117790130, 'Sebastian', null, 'Mora', 'Godinez', '08/11/2001', 83200846, 'Sebas', 123);
+	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, start_date, phone_number, username, password)
+VALUES ('Escazu', 117790130, 'Sebastian', null, 'Mora', 'Godinez', '08/11/2001', '6/11/2009', 83200846, 'Sebas', 123);
 
 INSERT INTO public."Employees"(
-	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, phone_number, username, password)
-	VALUES ('Del Este', 117677100, 'Alexandra', null, 'Jara', 'Zeledón', '01/07/2000', 87463210, 'ale_jze', 0701);
+	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date,start_date, phone_number, username, password)
+	VALUES ('Del Este', 117677100, 'Alexandra', null, 'Jara', 'Zeledón', '7/07/2000', '10/04/2020', 87463210, 'ale_jze', 0701);
 
 INSERT INTO public."Employees"(
-	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, phone_number, username, password)
-	VALUES ('Terramall', 113764093, 'José', 'Andrés', 'Solano', 'Mora', '07/02/2000', 60927751, 'josesol_m', 0207);
+	branch_id, cedula, first_name, middle_name, first_surname, second_surname, birth_date, start_date, phone_number, username, password)
+	VALUES ('Terramall', 113764093, 'José', 'Andrés', 'Solano', 'Mora', '8/02/2000', '10/12/2021', 60927751, 'josesol_m', 0207);
 	
 ------------------------------------------------------------------------------------------------------------------------------------
 

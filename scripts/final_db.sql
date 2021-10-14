@@ -16,6 +16,7 @@ CREATE TABLE "Employees"
 	second_surname	 	VARCHAR(30),
 	birth_date		 	DATE NOT NULL,
     phone_number 		VARCHAR(30),
+	start_date			DATE NOT NULL,
 	username			VARCHAR(30) NOT NULL,
 	password			VARCHAR(30) NOT NULL,
 	UNIQUE(username),

@@ -21,6 +21,9 @@ namespace CineTec.Models
 
         [Required]
         public DateTime birth_date { get; set; }
+
+        [Required]
+        public DateTime start_date { get; set; }
         public string phone_number { get; set; }
 
         [Required]
@@ -37,6 +40,14 @@ namespace CineTec.Models
             get
             {
                 return string.Format("{0:dd/MM/yy}", birth_date);
+            }
+        }
+
+        public string FormattedStart_date
+        {
+            get
+            {
+                return string.Format("{0:dd/MM/yy}", start_date);
             }
         }
     }

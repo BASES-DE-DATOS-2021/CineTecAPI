@@ -492,6 +492,7 @@ namespace CineTec.Context
                         first_surname = r.first_surname,
                         second_surname = r.second_surname,
                         birth_date = r.FormattedBirth_date,
+                        phone_number = r.phone_number,
                         age = DateTime.Now.Year - r.birth_date.Year - 1,
                         username = r.username,
                         password = r.password,
@@ -514,6 +515,7 @@ namespace CineTec.Context
                         first_surname = r.first_surname,
                         second_surname = r.second_surname,
                         birth_date = r.FormattedBirth_date,
+                        phone_number = r.phone_number,
                         age = DateTime.Now.Year - r.birth_date.Year - 1,
                         username = r.username,
                         password = r.password,
@@ -650,6 +652,8 @@ namespace CineTec.Context
                         first_surname = r.first_surname,
                         second_surname = r.second_surname,
                         birth_date = r.FormattedBirth_date,
+                        start_date = r.FormattedStart_date,
+                        phone_number = r.phone_number,
                         age = DateTime.Now.Year - r.birth_date.Year - 1,
                         username = r.username,
                         password = r.password,
@@ -673,6 +677,8 @@ namespace CineTec.Context
                         first_surname = r.first_surname,
                         second_surname = r.second_surname,
                         birth_date = r.FormattedBirth_date,
+                        start_date = r.FormattedStart_date,
+                        phone_number = r.phone_number,
                         age = DateTime.Now.Year - r.birth_date.Year - 1,
                         username = r.username,
                         password = r.password,
@@ -714,6 +720,7 @@ namespace CineTec.Context
             existing.first_surname = employee.first_surname;
             existing.second_surname = employee.second_surname;
             existing.birth_date = employee.birth_date;
+            existing.start_date = employee.start_date;
             existing.phone_number = employee.phone_number;
             existing.password = employee.password;
 
