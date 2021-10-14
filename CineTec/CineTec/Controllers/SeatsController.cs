@@ -35,11 +35,10 @@ namespace CineTec.Controllers
 
         // PUT api/Seats/byId?room_id=a&number=b
         [HttpPut("byId")]
-        public IActionResult Put([FromBody] Seat Seat)
+        public IActionResult Put(int projection_id, int number, [FromBody] Seat Seat)
         {
 
-            var s = _CRUDContext.GetSeat(Seat.projection_id,Seat.number);
-
+            var s = _CRUDContext.GetSeat(projection_id, number);
             if (s == null)
                 return BadRequest("No se encuentra ninguna silla que coincida.");
 
