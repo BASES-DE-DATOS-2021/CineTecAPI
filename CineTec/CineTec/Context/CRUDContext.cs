@@ -1355,7 +1355,13 @@ namespace CineTec.Context
             var query = (from p in Projections.Where(b => b.id == id)
                          join seat in Seats
                             on p.id equals seat.projection_id
-                        select new { seat }).ToList();
+                        select new 
+                        {
+                          number = seat.number,
+                          projection_id = seat.projection_id,
+                          status = seat.status
+                        
+                        }).ToList();
             return query;
         }
 
@@ -1372,7 +1378,7 @@ namespace CineTec.Context
         public Object GetRoom_special(int id)
         {
             // Obtener todas las salas de la sucursal que coincide con el cinema_name ingresado.
-            var q = (from r in Rooms
+            var q = (from r in Rooms.Where(f => f.id == id)
                      select new
                      {
                          branch_name = r.branch_name,
