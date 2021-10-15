@@ -1,11 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CineTec.JSON_Models;
 using CineTec.Models;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using EntityFramework.Exceptions.Common;
-using Npgsql;
-using CineTec.JSON_Models;
+using System.Linq;
 
 namespace CineTec.Context
 {
@@ -113,19 +111,6 @@ namespace CineTec.Context
         // de no encontrar ningun actor, retorna null.
         public Actor GetActor(int id) => Actors.SingleOrDefault(x => x.id == id);
 
-        // GET ACTORS NAMES BY MOVIE_ID
-        // Retornar el nombre de los actores que protagonizan en la pelicula del id recibido por parametro,
-        // en caso de no encontrar ningun actor, retorna null.
-        public List<string> GetActors_names(int movie_id)
-        {
-            var query = from a in Acts.Where(x => x.movie_id == movie_id)
-                        join p in Actors
-                            on a.actor_id equals p.id
-                        select p.name;
-            var actors = query.ToList();
-            return actors;
-        }
-
         // GET ACTORS IDS BY MOVIE_ID
         // Retornar el id de los actores que protagonizan en la pelicula del id recibido por parametro,
         // en caso de no encontrar ningun actor, retorna null.
@@ -137,21 +122,6 @@ namespace CineTec.Context
                         select p.id;
             var actors = query.ToList();
             return actors;
-        }
-
-
-        // POST
-        // Inserta el actor recibido como parametro a la tabla de actores en la base de datos.
-        public int Post_actor(Actor actor)
-        {
-            // Verificar la existencia.
-            Actor existing = GetActor(actor.name);
-            if (existing != null)
-                return 0; //Ya existe
-
-            Actors.Add(actor);
-            SaveChanges();
-            return 1; // Se logra agregar.
         }
 
         // PUT
@@ -462,10 +432,12 @@ namespace CineTec.Context
         // GET CLASSIFICATION BY CODE
         public Classification GetClassification(string code) => Classifications.SingleOrDefault(x => x.code == code);
 
-        // GET CLASSIFICATION BY CODE
+        // GET CLASSIFICATION BY Age
         public Classification GetClassification(int age) => Classifications.SingleOrDefault(x => x.age_rating == age);
 
         // POST A CLASSIFICATION
+        // Inserta la clasificacion recibida como parametro a la tabla de clasificaciones en la base de datos.
+
         public int Post_classification(Classification classif)
         {
             // Verificar la existencia.
@@ -479,6 +451,8 @@ namespace CineTec.Context
         }
 
         // PUT
+        // Actualiza la clasificacion recibida como parametro en la tabla de Classification
+        // en la base de datos, si no se logra envia texto explicando la razon.
         public int Put_classification(Classification classif)
         {
             // Verificar la existencia.
@@ -571,6 +545,8 @@ namespace CineTec.Context
 
 
         // POST A CLIENT
+        // Inserta el cliente recibido como parametro a la tabla de clientes en la base de datos.
+
         public int Post_client(Client client)
         {
             // Verificar la existencia.
@@ -630,25 +606,14 @@ namespace CineTec.Context
          *      DIRECTOR
          */
 
-        // GET ACTOR BY NAME
+        // GET DIRECTOR BY NAME
         public Director GetDirector(string name) => Directors.FirstOrDefault(x => x.name == name);
 
-        // GET ACTOR BY ID
+        // GET DIRECTOR BY ID
         public Director GetDirector(int id) => Directors.FirstOrDefault(x => x.id == id);
 
         // POST A DIRECTOR
-
-        public int Post_director(Director director)
-        {
-            // Verificar la existencia.
-            Director existing = GetDirector(director.name);
-            if (existing != null)
-                return 0; // Ya existe
-
-            Directors.Add(director);
-            SaveChanges();
-            return 1; // Se logra agregar.
-        }
+        // Inserta el director recibido como parametro a la tabla de directores en la base de datos.
 
         // PUT
         // Actualiza un director en la tabla Directors de la base de datos.
@@ -741,6 +706,8 @@ namespace CineTec.Context
         public bool Is_employee_username_free(string username) => (Employees.Where(f => f.username == username).FirstOrDefault() == null);
 
         // POST A EMPLOYEE
+        // Inserta el employee recibido como parametro a la tabla de employees en la base de datos.
+
         public int Post_employee(Employee employee)
         {
             // Verificar la existencia.
@@ -801,10 +768,6 @@ namespace CineTec.Context
          *      MOVIE
          */
 
-        // GET MOVIE NAME BY ID
-        public string GetMovieName(int id) => Movies.SingleOrDefault(x => x.id == id).original_name;
-
-
         // GET MOVIE BY ID
         public Movie GetMovie_by_id(int id) => Movies.SingleOrDefault(x => x.id == id);
 
@@ -839,6 +802,9 @@ namespace CineTec.Context
 
 
         // POST A MOVIE
+        // Crea e inserta todas las entidades necesarias para la creacion de una pelicula utilizando
+        // la infoamcion recibida como parametro en cada tabla respectiva de en la base de datos.
+
         public string Post_movie(MovieCreation movie_stats)
         {
             // VERIFICAR CLASIFICACION.
@@ -942,6 +908,8 @@ namespace CineTec.Context
         }
 
         // PUT
+        // Actualiza un la pelicula recibida como parametro en la tabla de peliculas
+        // en la base de datos, si no se logra envia texto explicando la razon.
         public string Put_movie(int id, MovieCreation movie_stats)
         {
             // VERIFICAR CLASIFICACION.
@@ -1163,6 +1131,8 @@ namespace CineTec.Context
         }
 
         // POST A PROJECTION
+        // Inserta la proyeccion recibida como parametro a la tabla de Projections en la base de datos.
+
         public string Post_projection(Projection p, int covid)
         {
             // Verificar la existencia de otra proyeccion igual.
@@ -1378,6 +1348,8 @@ namespace CineTec.Context
         }
 
         // PUT PROJECTION
+        // Actualiza una proyeccion recibida como parametro en la tabla de projections
+        // en la base de datos, si no se logra envia texto explicando la razon.
         // nota: No se puede modificar la sala de una projeccion. 
         public string Put_projection(Projection p)
         {
@@ -1490,10 +1462,6 @@ namespace CineTec.Context
             SaveChanges();            
         }
  
-        // Verifica la existencia de una sala.
-        public bool Exist_room(int id) => (GetRoom(id) != null);
-
-
         // DELETE
         // Eliminacion especial de room tomando en cuenta si hay alguna referencia.
         // Si no se logra eliminar envia la razon por la cual no se logra.
@@ -1512,17 +1480,6 @@ namespace CineTec.Context
             Rooms.Remove(room);
             SaveChanges();
             return "";
-        }
-
-        // Verifica la relacion existencia entre sala y proyeccion con un id especifico.
-        private bool Room_has_relation_with_proyection(int id)
-        {
-            var query = from x in Projections
-                        where x.room_id == id
-                        select x;
-            Projection[] y = query.ToArray();
-            bool b = y.Length > 0;
-            return b;
         }
 
 

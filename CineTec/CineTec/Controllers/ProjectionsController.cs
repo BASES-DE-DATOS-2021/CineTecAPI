@@ -28,14 +28,6 @@ namespace CineTec.Controllers
         [HttpGet("seats/{id}")]
         public Object Get(int id) => _CRUDContext.Get_all_seats_assgined_to_projection(id);
 
-        //// GET api/Projections/byMovieId/
-        //[HttpGet("byMovieId/{movie_id}")]
-        //public IEnumerable<Projection> Get_byMovieId(int movie_id) => _CRUDContext.GetProjections_byMovieId(movie_id);
-
-        //// GET api/Projections/byRoomId?room_id=a
-        //[HttpGet("byRoomId/{room_id}")]
-        //public IEnumerable<Projection> Get_byRoomId(int room_id) => _CRUDContext.GetProjections_byRoomId(room_id);
-        
         // POST api/Projections
         [HttpPost("{covid}")]
         public IActionResult Post(int covid, [FromBody] Projection projection)

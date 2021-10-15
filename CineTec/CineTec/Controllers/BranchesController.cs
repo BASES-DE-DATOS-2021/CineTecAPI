@@ -93,15 +93,5 @@ namespace CineTec.Controllers
                 _ => Ok(), // Se elimina correctamente.
             };
         }
-
-        //// DELETE api/Branches/Cinectec Cartago
-        //[HttpDelete("with_rooms/{cinema_name}")]
-        //public ActionResult Delete_branch_with_rooms(string cinema_name)
-        //{
-        //    _CRUDContext.Delete_branch_with_rooms(cinema_name);
-        //    return Ok();
-        //}
-
-
     }
 }

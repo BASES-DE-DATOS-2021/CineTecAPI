@@ -32,16 +32,5 @@ namespace CineTec.Controllers
         // GET api/Acts/actsIn?actor_id=a
         [HttpGet("byActorsId/{actor_id}")]
         public IEnumerable<Acts> GetActs_byActorsId(int actor_id) => _CRUDContext.GetActs_byActorsId(actor_id);
-
-        //// PUT api/Acts/actsIn?movie_id=a&actor_id=b
-        //[HttpPut("acts")]
-        //public ActionResult Put(int movie_id, int actor_id, [FromBody] Acts acts)
-        //{
-        //    acts.movie_id = movie_id;
-        //    acts.actor_id = actor_id;
-        //    _CRUDContext.Acts.Update(acts);
-        //    _CRUDContext.SaveChanges();
-        //    return Ok();
-        //}
     }
 }
