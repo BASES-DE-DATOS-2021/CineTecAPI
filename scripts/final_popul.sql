@@ -254,89 +254,89 @@ INSERT INTO public."Acts"(movie_id, actor_id) VALUES (10, 40);
 
 
 -- lincoln
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (6, 1, '10/24/2021','16:10');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (7, 2, '10/24/2021','15:20');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (8, 1, '10/24/2021','17:35');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (9, 2, '10/24/2021','08:40');
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (6, 1, '10/24/2021','16:10', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (7, 2, '10/24/2021','15:20', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (8, 1, '10/24/2021','17:35', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (9, 2, '10/24/2021','08:40', 50);
 
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (6, 3, '10/26/2021','16:15');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (7, 7, '10/26/2021','16:00');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (8, 3, '10/26/2021','17:00');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (9, 7, '10/26/2021','11:40');
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (6, 3, '10/26/2021','16:15', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (7, 7, '10/26/2021','16:00', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (8, 3, '10/26/2021','17:00', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (9, 7, '10/26/2021','11:40', 50);
 
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (9, 5, '10/25/2021','16:10');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (7, 2, '10/25/2021','15:20');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (9, 2, '10/25/2021','08:40');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (6, 3, '10/25/2021','16:15');
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (9, 5, '10/25/2021','16:10', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (7, 2, '10/25/2021','15:20', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (9, 2, '10/25/2021','08:40', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (6, 3, '10/25/2021','16:15', 50);
 
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (6, 4, '10/27/2021','16:00');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (9, 9, '10/27/2021','14:15');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (8, 8, '10/27/2021','17:45');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (9, 2, '10/27/2021','14:25');
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (6, 4, '10/27/2021','16:00', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (9, 9, '10/27/2021','14:15', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (8, 8, '10/27/2021','17:45', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (9, 2, '10/27/2021','14:25', 50);
 
 
 -- escazu
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (13, 8, '10/24/2021','17:10');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (17, 8, '10/24/2021','11:20');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (15, 8, '10/24/2021','12:40');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (14, 9, '10/24/2021','09:55');
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (13, 8, '10/24/2021','17:10', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (17, 8, '10/24/2021','11:20', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (15, 8, '10/24/2021','12:40', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (14, 9, '10/24/2021','09:55', 50);
 
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (15, 9, '10/26/2021','14:15');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (13, 2, '10/26/2021','18:15');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (17, 10, '10/26/2021','13:50');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (13, 10, '10/26/2021','15:30');
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (15, 9, '10/26/2021','14:15', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (13, 2, '10/26/2021','18:15', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (17, 10, '10/26/2021','13:50', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (13, 10, '10/26/2021','15:30', 50);
 
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (13, 9, '10/25/2021','17:10');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (10, 9, '10/25/2021','11:20');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (15, 2, '10/25/2021','12:40');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (14, 10, '10/25/2021','09:55');
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (13, 9, '10/25/2021','17:10', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (10, 9, '10/25/2021','11:20', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (15, 2, '10/25/2021','12:40', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (14, 10, '10/25/2021','09:55', 50);
 
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (15, 10, '10/27/2021','14:15');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (13, 8, '10/27/2021','18:15');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (10, 2, '10/27/2021','13:50');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (13, 9, '10/27/2021','15:30');
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (15, 10, '10/27/2021','14:15', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (13, 8, '10/27/2021','18:15', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (10, 2, '10/27/2021','13:50', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (13, 9, '10/27/2021','15:30', 50);
 
 -- del este
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (2, 5, '10/24/2021','14:15');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (5, 6, '10/24/2021','17:35');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (2, 6, '10/24/2021','16:20');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (3, 9, '10/24/2021','19:00');
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (2, 5, '10/24/2021','14:15', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (5, 6, '10/24/2021','17:35', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (2, 6, '10/24/2021','16:20', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (3, 9, '10/24/2021','19:00', 50);
 
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (4, 9, '10/26/2021','15:50');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (1, 7, '10/26/2021','19:05');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (5, 7, '10/26/2021','18:15');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (2, 8, '10/26/2021','13:50');
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (4, 9, '10/26/2021','15:50', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (1, 7, '10/26/2021','19:05', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (5, 7, '10/26/2021','18:15', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (2, 8, '10/26/2021','13:50', 50);
 
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (1, 7, '10/25/2021','13:55');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (2, 7, '10/25/2021','14:15');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (5, 6, '10/25/2021','17:35');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (2, 8, '10/25/2021','16:20');
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (1, 7, '10/25/2021','13:55', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (2, 7, '10/25/2021','14:15', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (5, 6, '10/25/2021','17:35', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (2, 8, '10/25/2021','16:20', 50);
 
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (3, 4, '10/27/2021','19:00');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (1, 4, '10/27/2021','13:30');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (4, 1, '10/27/2021','15:50');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (4, 3, '10/27/2021','16:55');
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (3, 4, '10/27/2021','19:00', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (1, 4, '10/27/2021','13:30', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (4, 1, '10/27/2021','15:50', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (4, 3, '10/27/2021','16:55', 50);
 
 -- terramall
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (12, 10, '10/24/2021','12:55');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (10, 10, '10/24/2021','18:20');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (12, 3, '10/24/2021','13:35');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (11, 3, '10/24/2021','09:50');
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (12, 10, '10/24/2021','12:55', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (10, 10, '10/24/2021','18:20', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (12, 3, '10/24/2021','13:35', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (11, 3, '10/24/2021','09:50', 50);
 
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (10, 4, '10/26/2021','13:10');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (10, 5, '10/26/2021','15:45');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (11, 4, '10/26/2021','17:40');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (12, 3, '10/26/2021','13:35');
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (10, 4, '10/26/2021','13:10', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (10, 5, '10/26/2021','15:45', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (11, 4, '10/26/2021','17:40', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (12, 3, '10/26/2021','13:35', 50);
 
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (12, 6, '10/25/2021','12:55');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (10, 6, '10/25/2021','18:20');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (12, 1, '10/25/2021','13:35');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (11, 1, '10/25/2021','09:50');
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (12, 6, '10/25/2021','12:55', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (10, 6, '10/25/2021','18:20', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (12, 1, '10/25/2021','13:35', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (11, 1, '10/25/2021','09:50', 50);
 
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (10, 5, '10/27/2021','13:10');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (10, 5, '10/27/2021','15:45');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (11, 4, '10/27/2021','17:40');
-INSERT INTO public."Projections"(room_id, movie_id, date, schedule) VALUES (12, 3, '10/27/2021','16:55');
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (10, 5, '10/27/2021','13:10', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (10, 5, '10/27/2021','15:45', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (11, 4, '10/27/2021','17:40', 50);
+INSERT INTO public."Projections"(room_id, movie_id, date, schedule, covid) VALUES (12, 3, '10/27/2021','16:55', 50);
 
 ------------------------------------------------------------------------------------------------------------------------------------
 
