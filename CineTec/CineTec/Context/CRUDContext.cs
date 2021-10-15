@@ -1133,7 +1133,7 @@ namespace CineTec.Context
         // POST A PROJECTION
         // Inserta la proyeccion recibida como parametro a la tabla de Projections en la base de datos.
 
-        public string Post_projection(Projection p, int covid)
+        public string Post_projection(Projection p)
         {
             // Verificar la existencia de otra proyeccion igual.
             Projection myList = GetProjection_byRoom_Movie_Date(p.movie_id, p.room_id, p.date, p.schedule);
@@ -1152,7 +1152,7 @@ namespace CineTec.Context
             Room room = GetRoom(x.room_id);
 
 
-            Add_seats_for_proyection(x.id, room.row_quantity, room.column_quantity, covid);
+            Add_seats_for_proyection(x.id, room.row_quantity, room.column_quantity, x.covid);
 
 
 
@@ -1347,6 +1347,21 @@ namespace CineTec.Context
             SaveChanges();
         }
 
+        public bool is_any_seat_sold(Projection p)
+        {
+            List<Seat> seats = Get_all_seats_assgined_to_projection(p.id);
+
+            foreach(Seat s in seats)
+            {
+                if (s.status == "TAKEN"){
+                    return true;
+                }
+            }
+            return false;
+
+
+        }
+
         // PUT PROJECTION
         // Actualiza una proyeccion recibida como parametro en la tabla de projections
         // en la base de datos, si no se logra envia texto explicando la razon.
@@ -1358,6 +1373,12 @@ namespace CineTec.Context
             if (existing == null)
                 return "No se ha encontrado ninguna proyeccion que coincida con el ID ingresado.";
 
+            // Verifica si se ha vendido una silla.
+            if (is_any_seat_sold(p))
+            {
+                return "No se puede actualizar la proyeccion porque ya se han vendido sillas.";
+            }
+
             // Verificar la existencia de otra proyeccion igual.
             Projection myList = GetProjection_byRoom_Movie_Date(p.movie_id, p.room_id, p.date, p.schedule);
 
@@ -1366,6 +1387,7 @@ namespace CineTec.Context
             existing.movie_id = p.movie_id;
             existing.date = p.date;
             existing.schedule = p.schedule;
+ 
             Projections.Update(existing);
             SaveChanges();
             return ""; // Se logra actualizar.
@@ -1391,7 +1413,7 @@ namespace CineTec.Context
 
         // GET especifico
         /// Retorna todas las sillas asignadas a una projeccion en especifico.
-        public Object Get_all_seats_assgined_to_projection(int id)
+        public List<Seat> Get_all_seats_assgined_to_projection(int id)
 
 
         {
@@ -1399,13 +1421,7 @@ namespace CineTec.Context
                          join seat in Seats
                             on p.id equals seat.projection_id
                          orderby seat.number ascending
-                        select new 
-                        {
-                          number = seat.number,
-                          projection_id = seat.projection_id,
-                          status = seat.status
-                        
-                        }).ToList();
+                        select seat).ToList();
 
 
 

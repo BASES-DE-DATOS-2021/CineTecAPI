@@ -26,13 +26,13 @@ namespace CineTec.Controllers
 
         // GET api/Projections/seats/
         [HttpGet("seats/{id}")]
-        public Object Get(int id) => _CRUDContext.Get_all_seats_assgined_to_projection(id);
+        public List<Seat> Get(int id) => _CRUDContext.Get_all_seats_assgined_to_projection(id);
 
         // POST api/Projections
         [HttpPost("{covid}")]
-        public IActionResult Post(int covid, [FromBody] Projection projection)
+        public IActionResult Post([FromBody] Projection projection)
         {
-            string x = _CRUDContext.Post_projection(projection, covid);
+            string x = _CRUDContext.Post_projection(projection);
             if (x == "") return Ok();
             return BadRequest(x);
         }

@@ -24,6 +24,8 @@ namespace CineTec.Models
         [Required]
         public string schedule { get; set; }
 
+        public int covid { get; set; }
+
         public string FormattedDate
         {
             get
