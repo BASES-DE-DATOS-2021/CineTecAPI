@@ -1081,13 +1081,15 @@ namespace CineTec.Context
         // GET PROJECTION BY ROOM_ID, MOVIE_ID, DATE
         public Object GetProjections()
         {
-            var query = (from p in Projections
+
+             var query = (from p in Projections
                         select new
                         {
                             id = p.id,
                             movie = Movies.SingleOrDefault(x => x.id == p.movie_id).original_name,
                             date = p.FormattedDate,
                             schedule = p.schedule,
+                            covid = p.covid,
                             room = p.room_id,
                             free_spaces = (from seat in Seats.Where(s => s.projection_id == p.id)
                                            where seat.status == "EMPTY"

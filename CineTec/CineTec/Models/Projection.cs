@@ -24,8 +24,7 @@ namespace CineTec.Models
         [Required]
         public string schedule { get; set; }
 
-        public int covid { get; set; }
-
+        
         public string FormattedDate
         {
             get
@@ -33,6 +32,8 @@ namespace CineTec.Models
                 return string.Format("{0:MM/dd/yy}", date);
             }
         }
+        [Required]
+        public int covid { get; set; }
 
 
 

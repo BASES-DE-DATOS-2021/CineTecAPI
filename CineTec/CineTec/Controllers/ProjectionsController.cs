@@ -29,7 +29,7 @@ namespace CineTec.Controllers
         public List<Seat> Get(int id) => _CRUDContext.Get_all_seats_assgined_to_projection(id);
 
         // POST api/Projections
-        [HttpPost("{covid}")]
+        [HttpPost]
         public IActionResult Post([FromBody] Projection projection)
         {
             string x = _CRUDContext.Post_projection(projection);
