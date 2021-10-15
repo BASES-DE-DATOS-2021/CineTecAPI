@@ -36,12 +36,16 @@ namespace CineTec.Context
         // Overide del OnModelCreating para utilizar dos atributos como llave compuesta.
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            // SEAT COMPOSITE KEY
             modelBuilder.Entity<Seat>()
                 .HasKey(s => new { s.projection_id, s.number });
 
+            // ACTS COMPOSITE KEY
             modelBuilder.Entity<Acts>()
                 .HasKey(a => new { a.movie_id, a.actor_id });
 
+            // PROJECTIONJSON COMPOSITE KEY
             modelBuilder.Entity<ProjectionJSON>()
                 .HasKey(a => new { a.movie, a.date});
 
@@ -76,6 +80,8 @@ namespace CineTec.Context
          *  LOGINS
          */
 
+        // Metodo toma un usuario y contraseña y retorna la información del empleado
+        // de la cuenta a la que corresponde, null si no coincide con ninguna cuenta.
         public Employee Login_admin(string username, string password)
         {
             Employee admin = Employees.Where(x => x.username == username && x.password == password).FirstOrDefault();
@@ -83,6 +89,8 @@ namespace CineTec.Context
             return admin;
         }
 
+        // Metodo toma un usuario y contraseña y retorna la información del cliente
+        // de la cuenta a la que corresponde, null si no coincide con ninguna cuenta.
         public Client Login_client(string username, string password)
         {
             Client user = Clients.Where(x => x.username == username && x.password == password).FirstOrDefault();
@@ -96,12 +104,18 @@ namespace CineTec.Context
          */
 
         // GET ACTOR BY NAME
+        // Retornar el actor que coincida con el nombre que se recibe de parámetro, en caso
+        // de no encontrar ningun actor, retorna null.
         public Actor GetActor(string name) => Actors.SingleOrDefault(x => x.name == name);
 
         // GET ACTOR BY ID
+        // Retornar el actor que coincida con el id que se recibe de parámetro, en caso
+        // de no encontrar ningun actor, retorna null.
         public Actor GetActor(int id) => Actors.SingleOrDefault(x => x.id == id);
 
         // GET ACTORS NAMES BY MOVIE_ID
+        // Retornar el nombre de los actores que protagonizan en la pelicula del id recibido por parametro,
+        // en caso de no encontrar ningun actor, retorna null.
         public List<string> GetActors_names(int movie_id)
         {
             var query = from a in Acts.Where(x => x.movie_id == movie_id)
@@ -113,6 +127,8 @@ namespace CineTec.Context
         }
 
         // GET ACTORS IDS BY MOVIE_ID
+        // Retornar el id de los actores que protagonizan en la pelicula del id recibido por parametro,
+        // en caso de no encontrar ningun actor, retorna null.
         public List<int> GetActors_ids(int movie_id)
         {
             var query = from a in Acts.Where(x => x.movie_id == movie_id)
@@ -125,6 +141,7 @@ namespace CineTec.Context
 
 
         // POST
+        // Inserta el actor recibido como parametro a la tabla de actores en la base de datos.
         public int Post_actor(Actor actor)
         {
             // Verificar la existencia.
@@ -138,6 +155,9 @@ namespace CineTec.Context
         }
 
         // PUT
+        // Actualiza un el actor recibido como parametro en la tabla de actores
+        // en la base de datos, si no se logra envia texto explicando la razon.
+
         public string Put_actor(Actor actor, string current_name)
         {
             // Verificar la existencia.
@@ -155,7 +175,9 @@ namespace CineTec.Context
             return "";
         }
 
-        // DELETE especial de director tomando en cuenta si hay alguna referencia.
+        // DELETE
+        // Eliminacion especial de actor tomando en cuenta si hay alguna referencia.
+        // Si no se logra eliminar envia la razon por la cual no se logra.
         public string Delete_actor(string name)
         {
             var actor = GetActor(name);
@@ -180,16 +202,24 @@ namespace CineTec.Context
          */
 
         // GET ACTS BY KEY (MOVIE_ID, ACTOR_ID)
+        // Retornar el acts que coincida con los ids que se reciben por parámetro, en caso
+        // de no encontrar ninguna coincidencia, retorna null.
         public Acts GetActs(int movie_id, int actor_id) => Acts.Where(f => f.movie_id == movie_id && f.actor_id == actor_id).FirstOrDefault();
 
         // GET ACTS BY MOVIE_ID
+        // Retornar una lista de atcs en los que el id de pelicula coincida con el parametro,
+        // en caso de no encontrar ninguna coincidencia, retorna null.
         public IEnumerable<Acts> GetActs_byMovieId(int movie_id) => Acts.Where(f => f.movie_id == movie_id);
 
         // GET ACTS BY ACTOR_ID
+        // Retornar una lista de atcs en los que el id de actor coincida con el parametro,
+        // en caso de no encontrar ninguna coincidencia, retorna null.
         public IEnumerable<Acts> GetActs_byActorsId(int actor_id) => Acts.Where(f => f.actor_id == actor_id);
 
 
         // POST AN ACTS
+        // Inserta el acts recibido como parametro a la tabla en la base de datos.
+
         public int Post_acts(int movie_id, int actor_id)
         {
             // Verificar la existencia.
@@ -207,9 +237,9 @@ namespace CineTec.Context
             return 1; // Se logra agregar.
         }
 
-        // PUT -> no hay.
-
-        // DELETE especial de acts tomando en cuenta si hay alguna referencia.
+        // DELETE
+        // Eliminacion especial de acts tomando en cuenta si hay alguna referencia.
+        // Si no se logra eliminar envia la razon por la cual no se logra.
         private void Delete_acts_background(int movie_id, int actor_id)
         {
             var acts = GetActs(movie_id, actor_id);
@@ -228,6 +258,7 @@ namespace CineTec.Context
          */
 
         // GET BRANCHES BY NAME
+        // Metodo que retorna las 
         public Object GetBranches()
         {
             var b = from r in Branches
@@ -349,6 +380,7 @@ namespace CineTec.Context
         }
 
         // POST BRANCH
+        // Agrega una sucursal a la tabla Branches de la base de datos.
         public int Post_branch(Branch branch)
         {
             // Verificar la existencia.
@@ -362,6 +394,8 @@ namespace CineTec.Context
         }
 
         // PUT BRANCH
+        // Modifica una sucursal a la tabla Branches de la base de datos,
+        // en caso de no lograrlo, devuelve la razon.
         public int Put_branch(Branch branch)
         {
             // Verificar la existencia.
@@ -377,6 +411,9 @@ namespace CineTec.Context
             return 1; // Se logra agregar.
         }
 
+
+        // Eliminacion especial de branch tomando en cuenta si hay alguna referencia.
+        // Si no se logra eliminar envia la razon por la cual no se logra.
         public int Delete_branch(string cinema_name)
         {
             if (!Exist_branch(cinema_name)) { return -1; } // no existe
@@ -391,7 +428,10 @@ namespace CineTec.Context
         }
 
         // AUXILIARES
+        // Verifica la existencia de una sucursal.
         public bool Exist_branch(string cinema_name) => (GetBranch(cinema_name) != null);
+
+        // Verifica la existencia de una relacon entre sucursal y sala.
         public bool Branch_has_relation_with_room(string cinema_name)
         {
             var query = from x in Rooms
@@ -401,6 +441,8 @@ namespace CineTec.Context
             bool b = y.Length > 0;
             return b;
         }
+
+        // Verifica la existencia de una relacion entre sucursal y empleado.
 
         public bool Branch_has_relation_with_employee(string cinema_name)
         {
@@ -456,7 +498,9 @@ namespace CineTec.Context
             return 1; // Se logra agregar.
         }
 
-        // DELETE especial de clasificacion tomando en cuenta si hay alguna referencia.
+        // DELETE
+        // Eliminacion especial de clasificacion tomando en cuenta si hay alguna referencia.
+        // Si no se logra eliminar envia la razon por la cual no se logra.
         public int Delete_classification(string code)
         {
             var classif = Classifications.FirstOrDefault(x => x.code == code);
@@ -543,6 +587,7 @@ namespace CineTec.Context
         }
 
         // PUT A CLIENT
+        // Actualiza un cliente en la tabla Clients de la base de datos.
         public int Put_client(Client client)
         {
             // Verificar la existencia.
@@ -563,7 +608,9 @@ namespace CineTec.Context
             return 1; // Se logra agregar.
         }
 
-        // DELETE especial de cliente tomando en cuenta si hay alguna referencia.
+        // DELETE
+        // Eliminacion especial de client tomando en cuenta si hay alguna referencia.
+        // Si no se logra eliminar envia la razon por la cual no se logra.
         public int Delete_client(int cedula)
         {
             var client = GetClient(cedula);
@@ -590,6 +637,7 @@ namespace CineTec.Context
         public Director GetDirector(int id) => Directors.FirstOrDefault(x => x.id == id);
 
         // POST A DIRECTOR
+
         public int Post_director(Director director)
         {
             // Verificar la existencia.
@@ -603,6 +651,7 @@ namespace CineTec.Context
         }
 
         // PUT
+        // Actualiza un director en la tabla Directors de la base de datos.
         public int Put_director(Director director, string current_name)
         {
             // Verificar la existencia.
@@ -615,7 +664,9 @@ namespace CineTec.Context
             return 1; // Se logra agregar.
         }
 
-        // DELETE especial de director tomando en cuenta si hay alguna referencia.
+        // DELETE
+        // Eliminacion especial de director tomando en cuenta si hay alguna referencia.
+        // Si no se logra eliminar envia la razon por la cual no se logra.
         public int Delete_director(string name)
         {
             var director = GetDirector(name);
@@ -706,6 +757,8 @@ namespace CineTec.Context
         }
 
         // PUT A EMPLOYEE
+        // Actualiza un emplpeado en la tabla Employees de la base de datos.
+
         public int Put_employee(Employee employee, int cedula)
         {
             // Verificar la existencia.
@@ -729,6 +782,8 @@ namespace CineTec.Context
         }
 
         // DELETE
+        // Eliminacion especial de employee tomando en cuenta si hay alguna referencia.
+        // Si no se logra eliminar envia la razon por la cual no se logra.
         public int Delete_employee(int cedula)
         {
             var emp = GetEmployee(cedula);
@@ -822,8 +877,10 @@ namespace CineTec.Context
             return "";
         }
 
+        // Verifica la existencia de una clasificacion con el codigo correspondiente al parametro.
         private bool Check_movie_classification(string code) => (GetClassification(code) != null);
 
+        // Retorna el id del director que corresponde al del nombre recibido por parametro.
         private int Get_movie_director_id(string director_name)
         {
             var dir = GetDirector(director_name);
@@ -982,6 +1039,9 @@ namespace CineTec.Context
 
         }
 
+        // DELETE
+        // Eliminacion especial de movie con el id tomando en cuenta si hay alguna referencia.
+        // Si no se logra eliminar envia la razon por la cual no se logra.
         public string Delete_movie_by_id(int id)
         {
             var movie = GetMovie_by_id(id);
@@ -1010,7 +1070,9 @@ namespace CineTec.Context
         }
 
 
-        // DELETE especial de projection tomando en cuenta si hay alguna referencia.
+        // DELETE
+        // Eliminacion especial de movie con el nombre tomando en cuenta si hay alguna referencia.
+        // Si no se logra eliminar envia la razon por la cual no se logra.
         public string Delete_movie(string name)
         {
             var movie = GetMovie_by_name(name);
@@ -1285,8 +1347,6 @@ namespace CineTec.Context
         }
 
 
-
-
         // Crear una cantidad de sillas para una projection. Todas estan vacias.
         public void Add_seats_for_proyection(int id, int row, int column, int covid)
         {
@@ -1339,8 +1399,9 @@ namespace CineTec.Context
             return ""; // Se logra actualizar.
         }
 
-        // DELETE especial de projection
-        // Tomando en cuenta si hay alguna referencia.
+        // DELETE
+        // Eliminacion especial de projection tomando en cuenta si hay alguna referencia.
+        // Si no se logra eliminar envia la razon por la cual no se logra.
         public string Delete_projection(int id)
         {
             var projection = GetProjection(id);
@@ -1405,6 +1466,7 @@ namespace CineTec.Context
         }
 
         // GET ROOMS BY ID SPECIAL
+        // Retorn
         public Object GetRooms_special()
         {
             // Obtener todas las salas de la sucursal que coincide con el cinema_name ingresado.
@@ -1421,15 +1483,20 @@ namespace CineTec.Context
         }
 
         // POST
+        // Agrega una sala a la tabla Rooms de la base de datos.
         public void Post_room(Room room)
         {
             Rooms.Add(room);
             SaveChanges();            
         }
  
+        // Verifica la existencia de una sala.
         public bool Exist_room(int id) => (GetRoom(id) != null);
 
-        // DELETE especial de salas tomando en cuenta si hay alguna referencia con projection.
+
+        // DELETE
+        // Eliminacion especial de room tomando en cuenta si hay alguna referencia.
+        // Si no se logra eliminar envia la razon por la cual no se logra.
         public string Delete_room(int id)
         {
             var room = GetRoom(id);
@@ -1447,6 +1514,7 @@ namespace CineTec.Context
             return "";
         }
 
+        // Verifica la relacion existencia entre sala y proyeccion con un id especifico.
         private bool Room_has_relation_with_proyection(int id)
         {
             var query = from x in Projections
@@ -1463,6 +1531,7 @@ namespace CineTec.Context
          */
 
         // GET SEAT BY PROJECTION_ID, NUMBER
+        // Retorna la silla que coincida con el numero y el id de projection.
         public Seat GetSeat(int projection_id, int number)
         {
             return Seats.Where(f => f.number == number && f.projection_id == projection_id)
